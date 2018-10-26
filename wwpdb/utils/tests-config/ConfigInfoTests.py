@@ -44,7 +44,7 @@ class ConfigInfoFileTests(unittest.TestCase):
         pass
 
     def testGetSiteId(self):
-        self.assertEqual(getSiteId(), 'TEST')
+        self.assertEqual(getSiteId(), 'WWPDB_DEPLOY_TEST')
 
     def testCache(self):
         cI = ConfigInfo()
