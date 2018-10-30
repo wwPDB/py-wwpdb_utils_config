@@ -72,7 +72,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
                              'WWPDB_DEPLOY_NEXT_RU': (800000, 999999),
                              'WWPDB_DEPLOY_PRODUCTION_UCSD': (1001200001, 1001300000),
                              'WWPDB_DEPLOY_BETA_RU': (1001300001, 1001310000),
-                             'PDBE_PROD':  (1200000001, 1290000000),
+                             'PDBE_PROD':  (1200000001, 1300000000),
                              'WWPDB_DEPLOY_PRODUCTION_PDBJ': (1300000001, 1400000000),
                              'BMRB': (800000, 999999),
                              'WWPDB_DEPLOY_TEST_RU': (8000210000, 8000215000),
