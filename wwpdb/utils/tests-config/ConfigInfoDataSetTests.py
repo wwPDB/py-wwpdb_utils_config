@@ -71,7 +71,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
         self.__siteIdRanges= {'WWPDB_DEPLOY_PRODUCTION_RU': (1000200000, 1001200000),
                              'WWPDB_DEPLOY_NEXT_RU': (800000, 999999),
                              'WWPDB_DEPLOY_PRODUCTION_UCSD': (1001200001, 1001300000),
-                             'WWPDB_DEPLOY_BETA_RU': (1001300001, 1001310000),
+                             'WWPDB_DEPLOY_BETA_RU': (8000240000, 8000250000),
                              'PDBE_PROD':  (1200000001, 1300000000),
                              'WWPDB_DEPLOY_PRODUCTION_PDBJ': (1300000001, 1400000000),
                              'BMRB': (800000, 999999),
