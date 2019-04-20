@@ -463,6 +463,7 @@ class ConfigInfoData(object):
                                    'PDBE_LEGACY': 'https://deposit-pdbe.wwpdb.org/deposition',
                                    'PDBE_STG': 'https://wwwdev.ebi.ac.uk/pdbe-da-staging/deposition',
                                    'PDBE_DEV': 'https://wwwdev.ebi.ac.uk/pdbe-da/deposition',
+                                   'PDBE_VAL': 'https://validate-pdbe.wwpdb.org/validservice',
                                    #'PDBE_DEV': 'https://dev.pdbe.org/deposition',
                                    'WWPDB_DEPLOY_ALPHA_RU': 'https://da-dep-alpha-0.rcsb.rutgers.edu/deposition',
                                    'WWPDB_DEPLOY_TEST_RU': 'https://wwpdb-deploy-test-1.wwpdb.org/deposition',
