@@ -185,7 +185,7 @@
 # 11-Oct-2017 ep   Add deposition-info and deposition-store types with tar suffix
 # 23-Oct-2017 jw   add session content types - disable all fallback behavior!
 # 17-Jan-2018 ep   add SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY to support testing datasets that are outside normal assignment range
-#  8-May-2019 my   add content tpye 'nmr-unified-data' and file format 'nmr-nef'
+#  8-May-2019 my   add content tpye 'nmr-unified-data' and file format 'nmr-nef', formerly defined as content type
 ##
 """
 Container for general and site-specific configuration data.
@@ -229,9 +229,9 @@ class ConfigInfoData(object):
                              'structure-factors': (['pdbx', 'mtz', 'txt'], 'sf'),
                              'structure-factors-legacy-rcsb': (['pdbx', 'mtz'], 'sf-legacy-rcsb'),
                              'nmr-unified-data': (['nmr-nef', 'nmr-star'], 'nmr-unified-data'),
-                             'nmr-parser-log': (['json'], 'nmr-parser-log'),           # DepUI for NMR unified data
-                             'nmr-consistency-log': (['json'], 'nmr-consistency-log'), # DepUI for NMR unified data
-                             'nmr-deposit-log': (['json'], 'nmr-deposit-log'),         # DepUI for NMR unified data
+                             'nmr-unified-data-parser-log': (['json'], 'nmr-unified-data-parser-log'),           # DepUI for NMR unified data
+                             'nmr-unified-data-consistency-log': (['json'], 'nmr-unified-data-consistency-log'), # DepUI for NMR unified data
+                             'nmr-unified-data-deposit-log': (['json'], 'nmr-unified-data-deposit-log'),         # DepUI for NMR unified data
                              'nmr-restraints': (['any', 'nmr-star', 'amber', 'amber-aux', 'cns', 'cyana', 'xplor', 'xplor-nih', 'pdb-mr', 'mr'], 'mr'),
                              'nmr-chemical-shifts': (['nmr-star', 'pdbx', 'any'], 'cs'),
                              'nmr-chemical-shifts-raw': (['nmr-star', 'pdbx'], 'cs-raw'),
