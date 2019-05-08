@@ -229,9 +229,7 @@ class ConfigInfoData(object):
                              'structure-factors': (['pdbx', 'mtz', 'txt'], 'sf'),
                              'structure-factors-legacy-rcsb': (['pdbx', 'mtz'], 'sf-legacy-rcsb'),
                              'nmr-unified-data': (['nmr-nef', 'nmr-star'], 'nmr-unified-data'),
-                             'nmr-unified-data-parser-log': (['json'], 'nmr-unified-data-parser-log'),           # DepUI for NMR unified data
-                             'nmr-unified-data-consistency-log': (['json'], 'nmr-unified-data-consistency-log'), # DepUI for NMR unified data
-                             'nmr-unified-data-deposit-log': (['json'], 'nmr-unified-data-deposit-log'),         # DepUI for NMR unified data
+                             'nmr-unified-data-report': (['json'], 'nmr-unified-data-report'),
                              'nmr-restraints': (['any', 'nmr-star', 'amber', 'amber-aux', 'cns', 'cyana', 'xplor', 'xplor-nih', 'pdb-mr', 'mr'], 'mr'),
                              'nmr-chemical-shifts': (['nmr-star', 'pdbx', 'any'], 'cs'),
                              'nmr-chemical-shifts-raw': (['nmr-star', 'pdbx'], 'cs-raw'),
