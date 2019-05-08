@@ -185,7 +185,7 @@
 # 11-Oct-2017 ep   Add deposition-info and deposition-store types with tar suffix
 # 23-Oct-2017 jw   add session content types - disable all fallback behavior!
 # 17-Jan-2018 ep   add SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY to support testing datasets that are outside normal assignment range
-#
+#  8-May-2019 my   add content tpye 'nmr-unified-data' and file format 'nmr-nef'
 ##
 """
 Container for general and site-specific configuration data.
@@ -228,6 +228,10 @@ class ConfigInfoData(object):
                              'model-legacy-rcsb': (['pdbx', 'pdb'], 'model-legacy-rcsb'),
                              'structure-factors': (['pdbx', 'mtz', 'txt'], 'sf'),
                              'structure-factors-legacy-rcsb': (['pdbx', 'mtz'], 'sf-legacy-rcsb'),
+                             'nmr-unified-data': (['nmr-nef', 'nmr-star'], 'nmr-unified-data'),
+                             'nmr-parser-log': (['json'], 'nmr-parser-log'),           # DepUI for NMR unified data
+                             'nmr-consistency-log': (['json'], 'nmr-consistency-log'), # DepUI for NMR unified data
+                             'nmr-deposit-log': (['json'], 'nmr-deposit-log'),         # DepUI for NMR unified data
                              'nmr-restraints': (['any', 'nmr-star', 'amber', 'amber-aux', 'cns', 'cyana', 'xplor', 'xplor-nih', 'pdb-mr', 'mr'], 'mr'),
                              'nmr-chemical-shifts': (['nmr-star', 'pdbx', 'any'], 'cs'),
                              'nmr-chemical-shifts-raw': (['nmr-star', 'pdbx'], 'cs-raw'),
@@ -238,7 +242,7 @@ class ConfigInfoData(object):
                              'nmr-bmrb-entry': (['nmr-star', 'pdbx'], 'nmr-bmrb-entry'),
                              'nmr-harvest-file': (['tgz'], 'nmr-harvest-file'),
                              'nmr-peaks': (['any'], 'nmr-peaks'),
-                             'nmr-nef': (['nmr-star', 'pdbx'], 'nmr-nef'),
+                             #'nmr-nef': (['nmr-star', 'pdbx'], 'nmr-nef'), # nmr-nef is format, not content.
                              'nmr-cs-check-report': (['html'], 'nmr-cs-check-report'),
                              'nmr-cs-xyz-check-report': (['html'], 'nmr-cs-xyz-check-report'),
                              'nmr-cs-path-list': (['txt'], 'nmr-cs-path-list'),
@@ -373,6 +377,7 @@ class ConfigInfoData(object):
                              'pdb': 'pdb',
                              'cifeps': 'cifeps',
                              'pdbml': 'xml',
+                             'nmr-nef': 'nef',
                              'nmr-star': 'str',
                              'gz': 'gz',
                              'tgz': 'tgz',
