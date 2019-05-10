@@ -467,15 +467,15 @@ class ConfigInfoData(object):
                                    #'PDBE_DEV': 'https://dev.pdbe.org/deposition',
                                    'WWPDB_DEPLOY_ALPHA_RU': 'https://da-dep-alpha-0.rcsb.rutgers.edu/deposition',
                                    'WWPDB_DEPLOY_TEST_RU': 'https://wwpdb-deploy-test-1.wwpdb.org/deposition',
-                                   'WWPDB_DEPLOY_VALSRV2_RU': 'https://validate-rcsb-1.wwpdb.org/validservice',
-                                   'WWPDB_DEPLOY_VALSRV2_UCSD': 'https://validate-rcsb-3.wwpdb.org/validservice',
+                                   'WWPDB_DEPLOY_VALSRV2_RU': 'https://validate-rcsb-east.wwpdb.org/validservice',
+                                   'WWPDB_DEPLOY_VALSRV2_UCSD': 'https://validate-rcsb-west.wwpdb.org/validservice',
                                    }
     """Dictionary of well known project deposition service entry points"""
 
     _projectCorrespondSiteServiceD = {'WWPDB_DEPLOY_PRODUCTION_RU': 'https://da-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg',
                                       'WWPDB_DEPLOY_PRODUCTION_UCSD': 'https://dna1.rcsb.org/service/messaging/archive_msg',
                                       'WWPDB_DEPLOY_LEGACY_RU': 'https://da-legacy-1-ann.rcsb.rutgers.edu/service/messaging/archive_msg',
-                                      'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://pdbjdaann.pdbj.org/service/messaging/archive_msg',
+                                      'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://onedep-ann-1.pdbj.org/service/messaging/archive_msg',
                                       'WWPDB_DEPLOY_ALPHA_RU': 'https://da-ann-alpha-0.rcsb.rutgers.edu/service/messaging/archive_msg',
                                       'WWPDB_DEPLOY_BETA_RU': 'http://onedep-beta-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg',
                                       'WWPDB_DEPLOY_DEPGRP1_RU': 'https://ann-group-2.rcsb.rutgers.edu/service/messaging/archive_msg',
@@ -490,7 +490,7 @@ class ConfigInfoData(object):
     _projectForwardingSiteServiceD = {'WWPDB_DEPLOY_PRODUCTION_RU': 'https://da-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg',
                                       'WWPDB_DEPLOY_PRODUCTION_UCSD': 'https://dna1.rcsb.org/service/messaging/forward_msg',
                                       'WWPDB_DEPLOY_LEGACY_RU': 'https://da-legacy-1-ann.rcsb.rutgers.edu/service/messaging/forward_msg',
-                                      'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://pdbjdaann.pdbj.org/service/messaging/forward_msg',
+                                      'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://onedep-ann-1.pdbj.org/service/messaging/forward_msg',
                                       'WWPDB_DEPLOY_ALPHA_RU': 'https://da-ann-alpha-0.rcsb.rutgers.edu/service/messaging/forward_msg',
                                       'WWPDB_DEPLOY_BETA_RU': 'https://onedep-beta-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg',
                                       'WWPDB_DEPLOY_DEPGRP1_RU': 'https://ann-group-2.rcsb.rutgers.edu/service/messaging/forward_msg',
