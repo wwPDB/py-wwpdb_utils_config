@@ -64,7 +64,7 @@ class ConfigInfoShellExec(object):
         self.__privateSectionNameList = ['os_environment', 'httpd_services', 'install_environment', 'database_services', 'validation_services']
         #
         # additional configuration sections added to the common namespace
-        self.__extraCommonSectionNameList = ['database_services', 'validation_services']
+        self.__extraCommonSectionNameList = ['database_services', 'validation_services', 'install_environment']
 
         #
         if topConfigPath is None:
