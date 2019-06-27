@@ -186,6 +186,7 @@
 # 23-Oct-2017 jw   add session content types - disable all fallback behavior!
 # 17-Jan-2018 ep   add SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY to support testing datasets that are outside normal assignment range
 # 20-Jun-2019 my   add content type 'nmr-unified-data-nef' and 'nmr-unified-data-str'
+# 27-Jun-2019 my   add content type 'nmr-unified-data-nef-report' and 'nmr-unified-data-str-report'
 ##
 """
 Container for general and site-specific configuration data.
@@ -230,7 +231,8 @@ class ConfigInfoData(object):
                              'structure-factors-legacy-rcsb': (['pdbx', 'mtz'], 'sf-legacy-rcsb'),
                              'nmr-unified-data-nef': (['nmr-star'], 'nmr-unified-data-nef'),
                              'nmr-unified-data-str': (['nmr-star'], 'nmr-unified-data-str'),
-                             'nmr-unified-data-report': (['json'], 'nmr-unified-data-report'),
+                             'nmr-unified-data-nef-report': (['json'], 'nmr-unified-data-nef-report'),
+                             'nmr-unified-data-str-report': (['json'], 'nmr-unified-data-str-report'),
                              'nmr-restraints': (['any', 'nmr-star', 'amber', 'amber-aux', 'cns', 'cyana', 'xplor', 'xplor-nih', 'pdb-mr', 'mr'], 'mr'),
                              'nmr-chemical-shifts': (['nmr-star', 'pdbx', 'any'], 'cs'),
                              'nmr-chemical-shifts-raw': (['nmr-star', 'pdbx'], 'cs-raw'),
