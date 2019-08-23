@@ -229,6 +229,7 @@ class ConfigInfoData(object):
                              'model-legacy-rcsb': (['pdbx', 'pdb'], 'model-legacy-rcsb'),
                              'structure-factors': (['pdbx', 'mtz', 'txt'], 'sf'),
                              'structure-factors-legacy-rcsb': (['pdbx', 'mtz'], 'sf-legacy-rcsb'),
+                             'nmr-unified-data-config': (['json'], 'nmr-unified-data-config'),
                              'nmr-unified-data-nef': (['nmr-star'], 'nmr-unified-data-nef'),
                              'nmr-unified-data-str': (['nmr-star'], 'nmr-unified-data-str'),
                              'nmr-unified-data-nef-report': (['json'], 'nmr-unified-data-nef-report'),
