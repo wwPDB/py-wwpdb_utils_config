@@ -482,7 +482,7 @@ class ConfigInfoData(object):
 
     _projectCorrespondSiteServiceD = {'WWPDB_DEPLOY_PRODUCTION_RU': 'https://da-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg',
                                       'WWPDB_DEPLOY_PRODUCTION_UCSD': 'https://dna1.rcsb.org/service/messaging/archive_msg',
-                                      'WWPDB_DEPLOY_LEGACY_RU': 'https://da-legacy-1-ann.rcsb.rutgers.edu/service/messaging/archive_msg',
+                                      'WWPDB_DEPLOY_LEGACY_RU': 'https://da-legacy-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg',
                                       'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://onedep-ann-1.pdbj.org/service/messaging/archive_msg',
                                       'WWPDB_DEPLOY_ALPHA_RU': 'https://da-ann-alpha-0.rcsb.rutgers.edu/service/messaging/archive_msg',
                                       'WWPDB_DEPLOY_BETA_RU': 'http://onedep-beta-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg',
@@ -497,7 +497,7 @@ class ConfigInfoData(object):
 
     _projectForwardingSiteServiceD = {'WWPDB_DEPLOY_PRODUCTION_RU': 'https://da-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg',
                                       'WWPDB_DEPLOY_PRODUCTION_UCSD': 'https://dna1.rcsb.org/service/messaging/forward_msg',
-                                      'WWPDB_DEPLOY_LEGACY_RU': 'https://da-legacy-1-ann.rcsb.rutgers.edu/service/messaging/forward_msg',
+                                      'WWPDB_DEPLOY_LEGACY_RU': 'https://da-legacy-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg',
                                       'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://onedep-ann-1.pdbj.org/service/messaging/forward_msg',
                                       'WWPDB_DEPLOY_ALPHA_RU': 'https://da-ann-alpha-0.rcsb.rutgers.edu/service/messaging/forward_msg',
                                       'WWPDB_DEPLOY_BETA_RU': 'https://onedep-beta-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg',
@@ -510,15 +510,14 @@ class ConfigInfoData(object):
                                       }
     """Dictionary of well known project message forwarding service end points"""
 
-    _projectContentWSiteServiceD = {
-        'WWPDB_DEPLOY_PRODUCTION_RU': 'https://onedep-contentws-rcsb.wwpdb.org',
-                                      'WWPDB_DEPLOY_TEST_RU': 'https://da-test-1-dep.rcsb.rutgers.edu',
-                                      'PDBE_DEV': 'https://dev.pdbe.org',
-                                      'PDBE_STG': 'https://dev.pdbe.org',
-                                      'PDBE_PROD': 'https://deposit-pdbe.wwpdb.org',
-                                      'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://onedep-contentws-pdbj.wwpdb.org',
-                                      'WWPDB_DEPLOY_ALPHA_RU': 'https://da-ws-alpha-0.rcsb.rutgers.edu',
-                                      #'PDBE_LEGACY': 'https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg',
+    _projectContentWSiteServiceD = {'WWPDB_DEPLOY_PRODUCTION_RU': 'https://onedep-contentws-rcsb.wwpdb.org',
+                                    'WWPDB_DEPLOY_TEST_RU': 'https://da-test-1-dep.rcsb.rutgers.edu',
+                                    'PDBE_DEV': 'https://dev.pdbe.org',
+                                    'PDBE_STG': 'https://dev.pdbe.org',
+                                    'PDBE_PROD': 'https://deposit-pdbe.wwpdb.org',
+                                    'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://onedep-contentws-pdbj.wwpdb.org',
+                                    'WWPDB_DEPLOY_ALPHA_RU': 'https://da-ws-alpha-0.rcsb.rutgers.edu',
+                                    #'PDBE_LEGACY': 'https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg',
     }
     """Dictionary of well known contentws forwarding service urls"""
 
