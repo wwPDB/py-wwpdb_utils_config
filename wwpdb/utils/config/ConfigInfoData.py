@@ -465,6 +465,7 @@ class ConfigInfoData(object):
     #
     _projectDepositSiteServiceD = {'WWPDB_DEPLOY_PRODUCTION_RU': 'https://deposit.wwpdb.org/deposition',
                                    'WWPDB_DEPLOY_NEXT_RU': 'https://deposit.wwpdb.org/deposition',
+                                   'WWPDB_DEPLOY_LEGACY_RU': 'https://da-legacy-dep-1.rcsb.rutgers.edu',
                                    'WWPDB_DEPLOY_PRODUCTION_UCSD': 'https://deposit-rcsb-west.wwpdb.org/deposition',
                                    'WWPDB_DEPLOY_BETA_RU': 'https://onedep-beta-dep-1.rcsb.rutgers.edu',
                                    'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://deposit-pdbj.wwpdb.org/deposition',
@@ -512,6 +513,7 @@ class ConfigInfoData(object):
     """Dictionary of well known project message forwarding service end points"""
 
     _projectContentWSiteServiceD = {'WWPDB_DEPLOY_PRODUCTION_RU': 'https://onedep-contentws-rcsb.wwpdb.org',
+                                    'WWPDB_DEPLOY_LEGACY_RU': 'https://onedep-contentws-rcsb.wwpdb.org',
                                     'WWPDB_DEPLOY_TEST_RU': 'https://da-test-1-dep.rcsb.rutgers.edu',
                                     'PDBE_DEV': 'https://dev.pdbe.org',
                                     'PDBE_STG': 'https://dev.pdbe.org',
