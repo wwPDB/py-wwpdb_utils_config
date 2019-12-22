@@ -24,14 +24,18 @@ __version__ = "V0.001"
 
 import sys
 import os
-import traceback
 import imp
 import ast
+import logging
 try:
     import ConfigParser
-except:  # noqa: E722
+except ImportError:
     import configparser as ConfigParser
-from optparse import OptionParser
+from optparse import OptionParser  # pylint: disable=deprecated-module
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]-%(module)s.%(funcName)s: %(message)s")
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 class ConfigInfoShellExec(object):
@@ -86,7 +90,7 @@ class ConfigInfoShellExec(object):
         siteId = None
         #
         if topConfigPath is None:
-            self.__lfh.write("%s.%s FAILING - missing configuration file path\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+            self.__lfh.write("FAILING - missing configuration file path\n")
         elif inpSiteLoc is not None and inpSiteId is not None:
             #
             # load site configuration data cache -
@@ -103,10 +107,10 @@ class ConfigInfoShellExec(object):
                     siteLoc = tL[0]
                     siteId = tL[1]
         else:
-            self.__lfh.write("%s.%s FAILING configuration could not be resolved\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+            self.__lfh.write("FAILING configuration could not be resolved\n")
         #
         if self.__debug:
-            self.__lfh.write("%s.%s returns siteLoc %r siteId %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
+            logger.debug("returns siteLoc %r siteId %r", siteLoc, siteId)
         return siteLoc, siteId
 
     def __getPrivateSectionNames(self):
@@ -124,12 +128,12 @@ class ConfigInfoShellExec(object):
         try:
             fp = self.__getSitePythonCachePath(topConfigPath, siteLoc, siteId)
             oD = imp.load_source("ConfigInfoFileCache", fp)
-            cD = oD.ConfigInfoFileCache._configD
+            cD = oD.ConfigInfoFileCache._configD  # pylint: disable=protected-access
             tD = cD[siteId]
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+        except Exception as e:
+            self.__lfh.write("failing %s\n" % str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.traceback("failing")
         return tD
 
     def __testConfigPath(self, topConfigPath, accessType='read'):
@@ -138,16 +142,15 @@ class ConfigInfoShellExec(object):
         try:
             if topConfigPath is None:
                 ok = False
-                self.__lfh.write("%s.%s WARNING - TOP_WWPDB_SITE_CONFIG_DIR is not set in the environment.\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+                self.__lfh.write("WARNING - TOP_WWPDB_SITE_CONFIG_DIR is not set in the environment.\n")
             elif accessType == 'write' and not os.access(topConfigPath, os.W_OK):
                 ok = False
-                self.__lfh.write("%s.%s WARNING - %s lacks write access.\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, topConfigPath))
+                self.__lfh.write("WARNING - %s lacks write access\n" % topConfigPath)
             elif accessType == 'read' and not os.access(topConfigPath, os.R_OK):
                 ok = False
-                self.__lfh.write("%s.%s WARNING - %s lacks read access.\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, topConfigPath))
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
-            traceback.print_exc(file=self.__lfh)
+                self.__lfh.write("WARNING - %s lacks read access\n" % topConfigPath)
+        except Exception as e:
+            logger.exception("failing %r", str(e))
             ok = False
 
         return ok
@@ -192,10 +195,10 @@ class ConfigInfoShellExec(object):
                 for (k, v) in kvTupL:
                     d[k.upper()] = v
                 retD[sKyU] = d
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s FAILED reading %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, configFilePath))
+        except Exception as e:
+            self.__lfh.write("FAILED reading %s - %s\n", configFilePath, str(e))
             if (self.__debug):
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("FAILED reading %s", configFilePath)
 
         return retD
 
@@ -272,7 +275,7 @@ class ConfigInfoShellExec(object):
             extraCommonSectionNameList = self.__getExtraCommonSectionNames()
             pathSectList = self.__getConfigPathSectionList(topConfigPath, siteLoc, siteId, extraCommonSectionNameList, privateSectionNameList)
             if self.__debug:
-                self.__lfh.write("%s.%s location %r site %r path list %r \n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId, pathSectList))
+                logger.debug("location %r site %r path list %r", siteLoc, siteId, pathSectList)
             cD = self.__readConfigFileList(configPathSectionList=pathSectList)
             if deserialize:
                 #
@@ -281,9 +284,9 @@ class ConfigInfoShellExec(object):
                     sU = sectionName.upper()
                     if sU in cD:
                         cD[sU] = self.__deserializeConfig(cD[sU], optionD=cD[sU])
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            self.__lfh.write("failing for location %r site %r - %s\n" % (siteLoc, siteId, str(e)))
+            logger.exception("failing for location %r site %r", siteLoc, siteId)
         return cD
 
     def __readConfigFileList(self, configPathSectionList=None):
@@ -313,8 +316,7 @@ class ConfigInfoShellExec(object):
                         # for k, v in kvTupL:
                         #    defaultD[k] = v
                         if self.__debug:
-                            self.__lfh.write("+%s.%s fetching section %s length %d\n" %
-                                             (self.__class__.__name__, sys._getframe().f_code.co_name, sectionName, len(kvTupL)))
+                            logger.debug("fetching section %s length %d", sectionName, len(kvTupL))
                         if context in ['common']:
                             for (k, v) in kvTupL:
                                 # Respect existing values in the order of config files -
@@ -322,7 +324,7 @@ class ConfigInfoShellExec(object):
                                     try:
                                         saveD[k] = v % defaultD
                                     except BaseException as e:
-                                        self.__lfh.write("+%s.%s substitution failed for %r %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v, str(e)))
+                                        self.__lfh.write("substitution failed for %r %r %r\n" % (k, v, str(e)))
                                         continue
                                     # update substitution defaults ...
                                     defaultD[k] = saveD[k]
@@ -334,7 +336,7 @@ class ConfigInfoShellExec(object):
                                     try:
                                         pD[k] = v % defaultD
                                     except BaseException as e:
-                                        self.__lfh.write("+%s.%s substitution failed for %r %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v, str(e)))
+                                        self.__lfh.write("substitution failed for %r %r %r\n" % (k, v, str(e)))
                                         continue
                                     # update substitution defaults ...
                                     defaultD[k] = pD[k]
@@ -346,10 +348,10 @@ class ConfigInfoShellExec(object):
             # Copy the accumulated saved items for return with upper-cased keys --
             for k, v in saveD.items():
                 retD[k.upper()] = v
-        except:  # noqa: E722
-            self.__lfh.write("+%s.%s failed reading configuration file list %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, configPathSectionList))
+        except Exception as e:
+            self.__lfh.write("failed reading configuration file list %r %r\n" % (configPathSectionList, str(e)))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed reading configuration file list %r %r", configPathSectionList, str(e))
 
         return retD
 
@@ -419,18 +421,18 @@ class ConfigInfoShellExec(object):
                         retD[k] = [t.strip() for t in v.split(',')]
                     if k in iLstD:
                         retD[k] = [int(t.strip()) for t in v.split(',')]
-                except:  # noqa: E722
-                    self.__lfh.write("+%s.%s failed csv list filter %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
+                except Exception as e:
+                    self.__lfh.write("failed csv list filter %r %r %r\n" % (k, v, str(e)))
                 #
                 try:
                     if k in objD:
                         retD[k] = ast.literal_eval(v)
-                except:  # noqa: E722
-                    self.__lfh.write("+%s.%s failed eval filter %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
-        except:  # noqa: E722
-            self.__lfh.write("+%s.%s failed configuration filter\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+                except Exception as e:
+                    self.__lfh.write("failed eval filter %r %r %r\n" % (k, v, str(e)))
+        except Exception as e:
+            self.__lfh.write("failed configuration filter %r\n" % str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.traceback("failed configuration filter")
 
         return retD
 
@@ -441,7 +443,7 @@ class ConfigInfoShellExec(object):
         """ Print the configuration options for the input location and site.
         """
         try:
-            self.__lfh.write("%s.%s read %d options for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, len(cD), siteLoc, siteId))
+            self.__lfh.write("read %d options for location %r site %r\n" % (len(cD), siteLoc, siteId))
             for k in sorted(cD.keys()):
                 v = cD[k]
                 if type(v) in [dict]:
@@ -450,10 +452,10 @@ class ConfigInfoShellExec(object):
                         self.__lfh.write(" ---  --- +++ %-45s  %r\n" % (k1, v[k1]))
                 else:
                     self.__lfh.write(" +++ %-45s  %r\n" % (k, v))
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
+        except Exception as e:
+            self.__lfh.write("failing for location %r site %r %r\n" % (siteLoc, siteId, str(e)))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failing for location %r site %r %r", siteLoc, siteId, str(e))
 
     def shellConfig(self, shellType='bash'):
         return self.__exportConfig(self.__siteLoc, self.__siteId, self.__cD, expKey='OS_ENVIRONMENT', shellType=shellType)
@@ -482,10 +484,10 @@ class ConfigInfoShellExec(object):
                         self.__lfh.write('export %s="%s"\n' % (k, v))
                     elif shellType in ['csh', 'tcsh']:
                         self.__lfh.write('setenv %s "%s"\n' % (k, v))
-        except:  # noqa: E722
+        except Exception as e:
             if self.__debug:
-                self.__lfh.write("+%s.%s failing for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
-                traceback.print_exc(file=self.__lfh)
+                logger.error("failing for location %r site %r %r", siteLoc, siteId, str(e))
+                logger.exception("Export failing")
 
 
 def main():
@@ -525,7 +527,7 @@ def main():
     parser.add_option("-v", "--verbose", default=True, action="store_true", dest="verbose")
     parser.add_option("--nocache", default=False, action="store_true", dest="nocacheFlag")
 
-    (options, args) = parser.parse_args()
+    (options, args) = parser.parse_args()  # pylint: disable=unused-variable
 
     if options.topConfigPath is None:
         print("Configuration path must be specified (--configpath)")

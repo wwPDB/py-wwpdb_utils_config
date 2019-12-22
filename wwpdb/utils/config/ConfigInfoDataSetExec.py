@@ -18,10 +18,14 @@ __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.001"
 
 import sys
-import traceback
-from optparse import OptionParser
+from optparse import OptionParser  # pylint: disable=deprecated-module
+import logging
 
 from wwpdb.utils.config.ConfigInfoDataSet import ConfigInfoDataSet
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]-%(module)s.%(funcName)s: %(message)s")
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 class ConfigInfoDataSetExec(object):
@@ -51,9 +55,8 @@ class ConfigInfoDataSetExec(object):
             #
             for ky in sD:
                 self.__lfh.write("  Site %-40r   count %8d\n" % (ky, sD[ky]))
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("failing %s", str(e))
 
     def printConfig(self, siteId):
         """ Print the configuration options for the input site.
@@ -68,9 +71,8 @@ class ConfigInfoDataSetExec(object):
             for ii, dataSetId in enumerate(sorted(dataSetIdL)):
                 self.__lfh.write("    %-8d - %12s\n" % (ii, dataSetId))
             self.__lfh.write("  Total alternate data set locations = %d" % nDataSets)
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing for site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("failing for site %r = %s", siteId, str(e))
 
     def setLocations(self, siteId, dataSetIdList):
         """ Set the site location for the input data list.
@@ -78,17 +80,15 @@ class ConfigInfoDataSetExec(object):
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             return cfds.writeLocationList(siteId, dataSetIdList)
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing for site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("failing for site %r error %s", siteId, str(e))
 
     def removeDataSets(self, dataSetIdList):
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             return cfds.removeDataSets(dataSetIdList)
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("failing %s", str(e))
 
 
 def main():
@@ -129,7 +129,7 @@ def main():
     parser.add_option("--dataset_file", dest="dataSetIdFile", default=None, help="File containing a list of data sets one per line")
     parser.add_option("-v", "--verbose", default=True, action="store_true", dest="verbose")
 
-    (options, args) = parser.parse_args()
+    (options, args) = parser.parse_args()  # pylint: disable=unused-variable
 
     #
     # Fetch any input data set list  ---
@@ -140,8 +140,8 @@ def main():
             with open(options.dataSetIdFile, 'r') as ifh:
                 for line in ifh:
                     dsL.append(str(line[:-1]).strip())
-        except:  # noqa: E722
-            sys.stderr.write("%s.%s read failed for %r\n" % (__name__, sys._getframe().f_code.co_name, options.dataSetIdFile))
+        except Exception as e:
+            logger.error("read failed for %r - %s", options.dataSetIdFile, str(e))
     elif options.dataSetId:
         dsL = [options.dataSetId]
 

@@ -28,14 +28,16 @@ import sys
 import datetime
 import shutil
 
-import traceback
 import ast
 import json
 from fnmatch import fnmatchcase
+import logging
 try:
     import ConfigParser
-except:  # noqa: E722
+except ImportError:
     import configparser as ConfigParser
+
+logger = logging.getLogger(__name__)
 
 
 class ConfigInfoFile(object):
@@ -84,10 +86,10 @@ class ConfigInfoFile(object):
                 for (k, v) in kvTupL:
                     d[k.upper()] = v
                 retD[sKyU] = d
-        except:  # noqa: E722
-            self.__lfh.write("+%s.%s failed reading %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, configFilePath))
+        except Exception as e:
+            logger.error("failed reading %s", configFilePath)
             if (self.__debug):
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed reading %s - %s", configFilePath, str(e))
 
         return retD
 
@@ -121,8 +123,7 @@ class ConfigInfoFile(object):
                             # for k, v in kvTupL:
                             #    defaultD[k] = v
                             if self.__debug:
-                                self.__lfh.write("+%s.%s fetching section %s length %d\n" %
-                                                 (self.__class__.__name__, sys._getframe().f_code.co_name, tsn, len(kvTupL)))
+                                logger.debug("fetching section %s length %d", tsn, len(kvTupL))
                             if context in ['common']:
                                 for (k, v) in kvTupL:
                                     # Respect existing values in the order of config files -
@@ -130,7 +131,7 @@ class ConfigInfoFile(object):
                                         try:
                                             saveD[k] = v % defaultD
                                         except BaseException as e:
-                                            self.__lfh.write("+%s.%s substitution failed for %r %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v, str(e)))
+                                            logger.error("substitution failed for %r %r %r", k, v, str(e))
                                             continue
                                         # update substitution defaults ...
                                         defaultD[k] = saveD[k]
@@ -142,7 +143,7 @@ class ConfigInfoFile(object):
                                         try:
                                             pD[k] = v % defaultD
                                         except BaseException as e:
-                                            self.__lfh.write("+%s.%s substitution failed for %r %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v, str(e)))
+                                            logger.error("substitution failed for %r %r %r", k, v, str(e))
                                             continue
                                         # update substitution defaults ...
                                         defaultD[k] = pD[k]
@@ -154,10 +155,10 @@ class ConfigInfoFile(object):
             # Copy the accumulated saved items for return with upper-cased keys --
             for k, v in saveD.items():
                 retD[k.upper()] = v
-        except:  # noqa: E722
-            self.__lfh.write("+%s.%s failed reading configuration file list %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, configPathSectionList))
+        except Exception as e:  # noqa: E722
+            logger.error("failed reading configuration file list %r", configPathSectionList)
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed reading file - error %s", str(e))
 
         return retD
 
@@ -190,15 +191,15 @@ class ConfigInfoFile(object):
                 #
             ok = self.__copyWithTimeStamp(configFilePath)
             if not ok and requireBackup:
-                self.__lfh.write("+%s.%s failed writing backup config file for %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, configFilePath))
+                logger.error("failed writing backup config file for %s", configFilePath)
                 return False
             with open(configFilePath, 'wb') as configfile:
                 config.write(configfile)
             return True
-        except:  # noqa: E722
-            self.__lfh.write("+%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+        except Exception as e:
+            logger.info("failing")
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failing %s", str(e))
         return False
 
     def deserializeConfig(self, configD, optionD=None):
@@ -267,18 +268,18 @@ class ConfigInfoFile(object):
                         retD[k] = [t.strip() for t in v.split(',')]
                     if k in iLstD:
                         retD[k] = [int(t.strip()) for t in v.split(',')]
-                except:  # noqa: E722
-                    self.__lfh.write("+%s.%s failed csv list filter %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
+                except Exception as e:
+                    logger.error("failed csv filter %r %r - %s", k, v, str(e))
                 #
                 try:
                     if k in objD:
                         retD[k] = ast.literal_eval(v)
-                except:  # noqa: E722
-                    self.__lfh.write("+%s.%s failed eval filter %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
-        except:  # noqa: E722
-            self.__lfh.write("+%s.%s failed configuration filter\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+                except Exception as e:
+                    logger.error("failed eval filter %r %r - %s", k, v, str(e))
+        except Exception as e:
+            logger.info("failed configuration filter")
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed configuration filter %s", str(e))
 
         return retD
 
@@ -329,18 +330,18 @@ class ConfigInfoFile(object):
                     if k in lstD or k in iLstD:
                         if (isinstance(v, list)):
                             retD[k] = ','.join(str(x) for x in v)
-                except:  # noqa: E722
-                    self.__lfh.write("+%s.%s failed list join %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
+                except Exception as e:
+                    logger.error("failed list join %r %r - %s", k, v, str(e))
                 #
                 try:
                     if k in objD:
                         retD[k] = "%r" % v
-                except:  # noqa: E722
-                    self.__lfh.write("+%s.%s failed __repr__ %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
-        except:  # noqa: E722
-            self.__lfh.write("+%s.%s failed configuration filter\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+                except Exception as e:
+                    logger.error("failed __repr__ %r %r - %s", k, v, str(e))
+        except Exception as e:
+            logger.info("failed configuration filter\n")
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed configuration filter %s", str(e))
 
         return retD
 
@@ -349,8 +350,9 @@ class ConfigInfoFile(object):
             bckupPath = filePath + datetime.datetime.now().strftime('-%Y-%m-%d-%H-%M-%S')
             shutil.copyfile(filePath, bckupPath)
             return True
-        except:  # noqa: E722
-            pass
+        except Exception as e:
+            logger.debug("Could not write backup file %s - %s", bckupPath, str(e))
+
         return False
 
     def writePythonConfigCache(self, cacheD, cacheFilePath, withBackup=True):
@@ -360,9 +362,9 @@ class ConfigInfoFile(object):
         """
         template = '''
 import os
-# import sys
+import sys
 import json
-# import traceback
+import traceback
 
 
 class ConfigInfoFileCache(object):
@@ -414,7 +416,7 @@ class ConfigInfoFileCache(object):
                 if withBackup:
                     ok = self.__copyWithTimeStamp(cacheFilePath)
                     if not ok:
-                        self.__lfh.write("+%s.%s failed writing backup cache file for %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, cacheFilePath))
+                        logger.error("failed writing backup cache file for %s", cacheFilePath)
                         return False
             with open(cacheFilePath, 'wb') as cacheFile:
                 if sys.version_info[0] > 2:
@@ -422,10 +424,10 @@ class ConfigInfoFileCache(object):
                 else:
                     cacheFile.write(template % cacheD)
             return True
-        except:  # noqa: E722
-            self.__lfh.write("+%s.%s failed writing %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, cacheFilePath))
+        except Exception as e:  # noqa: E722
+            logger.info("failed writing %s - %s", cacheFilePath, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed writing %s", cacheFilePath)
         return False
 
     def writeJsonConfigCache(self, cacheD, cacheFilePath, withBackup=True):
@@ -436,15 +438,15 @@ class ConfigInfoFileCache(object):
                 if withBackup:
                     ok = self.__copyWithTimeStamp(cacheFilePath)
                     if not ok:
-                        self.__lfh.write("+%s.%s failed writing backup cache file for %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, cacheFilePath))
+                        logger.error("failed writing backup cache file for %s", cacheFilePath)
                         return False
             with open(cacheFilePath, "w") as outfile:
                 json.dump(cacheD, outfile, indent=4)
             return True
-        except:  # noqa: E722
-            self.__lfh.write("+%s.%s failed writing %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, cacheFilePath))
+        except Exception as e:
+            logger.info("failed writing %s - %s", cacheFilePath, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed writing %s - %s", cacheFilePath, str(e))
         return False
 
     def readJsonConfigCache(self, cacheFilePath):
@@ -453,8 +455,8 @@ class ConfigInfoFileCache(object):
         try:
             with open(cacheFilePath, "r") as infile:
                 return json.load(infile)
-        except:  # noqa: E722
-            self.__lfh.write("+%s.%s failed reading %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, cacheFilePath))
+        except Exception as e:
+            logger.info("failed reading %s - %s", cacheFilePath, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed reading file %s", cacheFilePath)
         return {}

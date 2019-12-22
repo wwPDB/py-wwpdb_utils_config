@@ -20,9 +20,9 @@ __version__ = "V0.01"
 import os
 import sys
 import unittest
-import traceback
 import time
 import platform
+import logging
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
@@ -37,6 +37,10 @@ SiteConfigSetup().setupEnvironment(TESTOUTPUT, mockTopPath)
 
 from wwpdb.utils.config.ConfigInfoSiteAccess import ConfigInfoSiteAccess  # noqa: E402
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]-%(module)s.%(funcName)s: %(message)s")
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 
 class ConfigInfoSiteAccessTests(unittest.TestCase):
     """
@@ -44,6 +48,9 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
     """
 
     def setUp(self):
+        self.__startTime = time.time()
+        logger.info("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
+
         self.__lfh = sys.stdout
         self.__verbose = False
         #
@@ -56,14 +63,12 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
                              'SILLYSITE']
 
     def tearDown(self):
-        pass
+        endTime = time.time()
+        logger.info("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
 
     def testSiteAvailable(self):
         """Test case -  return site access status.
         """
-        startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
             for siteId in self.__siteIdList:
@@ -73,38 +78,23 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
                 else:
                     should = True
 
-                self.__lfh.write(" siteId %-30s status %r\n" % (siteId, status))
+                logger.info(" siteId %-30s status %r", siteId, status)
                 self.assertEqual(status, should, "Status mismatch for %s" % siteId)
-        except:   # noqa: E722
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("Determining if site is available %s", str(e))
             self.fail()
-
-        endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%.2f seconds)\n" % (self.__class__.__name__,
-                                                                       sys._getframe().f_code.co_name,
-                                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                       endTime - startTime))
 
     def testSiteReachable(self):
         """Test case -  return if the site is reachable.
         """
-        startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
             for siteId in self.__siteIdList:
                 status = cfsa.isServiceReachable(siteId, timeout=5)
-                self.__lfh.write(" siteId %-30s reachable %r\n" % (siteId, status))
-        except:  # noqa: E722
-            traceback.print_exc(file=self.__lfh)
+                logger.info(" siteId %-30s reachable %r", siteId, status)
+        except Exception as e:
+            logger.exception("Determining if site is reachable %s", str(e))
             self.fail()
-
-        endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%.2f seconds)\n" % (self.__class__.__name__,
-                                                                       sys._getframe().f_code.co_name,
-                                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                       endTime - startTime))
 
 
 def suiteTestSiteAccess():
@@ -115,6 +105,5 @@ def suiteTestSiteAccess():
 
 
 if __name__ == '__main__':
-    if (True):
-        mySuite = suiteTestSiteAccess()
-        unittest.TextTestRunner(verbosity=2).run(mySuite)
+    mySuite = suiteTestSiteAccess()
+    unittest.TextTestRunner(verbosity=2).run(mySuite)

@@ -24,10 +24,12 @@ __version__ = "V0.01"
 import sys
 import json
 import datetime
-import traceback
+import logging
 from oslo_concurrency import lockutils
 
 from wwpdb.utils.config.ConfigInfo import ConfigInfo
+
+logger = logging.getLogger(__name__)
 
 
 class ConfigInfoDataSet(object):
@@ -64,7 +66,7 @@ class ConfigInfoDataSet(object):
             # is mySiteId a backup for siteId?
             if siteId in self.__siteBackupD and mySiteId in self.__siteBackupD[siteId]:
                 if self.__debug:
-                    self.__lfh.write("%s.%s using backup %s for %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, mySiteId, siteId))
+                    logger.debug("using backup %s for %s", mySiteId, siteId)
                 siteId = mySiteId
 
         return siteId
@@ -74,10 +76,10 @@ class ConfigInfoDataSet(object):
         try:
             d = self.__readLocationDictionary()
             return d
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failed reading data set location dictionary.\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+        except Exception as e:
+            logger.error("failed reading data set location dictionary: %s", str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed reading data set location dictionary")
         return d
 
     def getDataSetLocations(self, siteId):
@@ -88,10 +90,10 @@ class ConfigInfoDataSet(object):
                 if d[ky] == siteId:
                     dsL.append(ky)
             return dsL
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failed reading data set locations for site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
+        except Exception as e:
+            logger.info("failed reading data set locations for site %r - %s", siteId, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed reading data set locations for site %r - %s", siteId, str(e))
         return []
 
     def removeDataSets(self, dataSetIdList):
@@ -101,10 +103,10 @@ class ConfigInfoDataSet(object):
                 if dsId in d:
                     del d[dsId]
             return self.__writeLocationDictionary(d)
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failed\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+        except Exception as e:
+            logger.error("failed %s", str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed")
         return False
 
     def writeLocationList(self, siteId, dataSetIdList):
@@ -113,10 +115,10 @@ class ConfigInfoDataSet(object):
             for dsId in dataSetIdList:
                 d[dsId] = siteId
             return self.__writeLocationDictionary(d)
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failed data set locations for site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
+        except Exception as e:
+            logger.error("failed data set locations for site %r - %s", siteId, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed data set locations for site %rs", siteId)
         return False
 
     def __readLocationDictionary(self):
@@ -128,10 +130,10 @@ class ConfigInfoDataSet(object):
         try:
             with open(fp, "r") as infile:
                 return json.load(infile)
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failed reading json resource file %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, fp))
+        except Exception as e:
+            logger.error("failed reading json resource file %s - %s", fp, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.traceback("failed reading json resource file %s", fp)
         return {}
 
     @lockutils.synchronized('configdataset.exceptionfile-lock', external=True)
@@ -152,10 +154,10 @@ class ConfigInfoDataSet(object):
             with open(fp, "w") as outfile:
                 json.dump(dsLocD, outfile, indent=4)
             return True
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failed writing json resource file %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, fp))
+        except Exception as e:
+            logger.error("failed writing json resource file %s - %s", fp, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed writing json resource file %s", fp)
         return False
 
     def getDefaultIdRange(self, siteId):
@@ -211,11 +213,9 @@ class ConfigInfoDataSet(object):
                 tId = 'D_' + str("%010d" % int(depSetId))
                 if tId in self.__dsLocD:
                     return self.__dsLocD[tId]
-        except:  # noqa: E722
+        except Exception as e:
             if self.__debug:
-                self.__lfh.write("%s.%s failed checking for exception dictionary for %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, depSetId))
-                traceback.print_exc(file=self.__lfh)
-            pass
+                logger.exception("failed checking for exception dictionary for %r - %s", depSetId, str(e))
         #
         # check default range assignment --
         try:
@@ -227,9 +227,7 @@ class ConfigInfoDataSet(object):
                 idMin, idMax = self.__depIdAssignments[ky]
                 if ((idVal >= idMin) and (idVal <= idMax)):
                     return ky
-        except:  # noqa: E722
+        except Exception as e:
             if self.__debug:
-                self.__lfh.write("%s.%s failed checking deposition range for %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, depSetId))
-                traceback.print_exc(file=self.__lfh)
-            pass
+                logger.exception("failed checking deposition range for %r - %s", depSetId, str(e))
         return None

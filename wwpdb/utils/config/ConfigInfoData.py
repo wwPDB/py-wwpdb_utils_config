@@ -205,7 +205,7 @@ import traceback
 #  Try to import externally cached configuration options.  Gracefully ignore any errors.
 try:
     from ConfigInfoFileCache import ConfigInfoFileCache
-except:  # noqa: E722
+except:  # noqa: E722 pylint: disable=bare-except
     pass
 
 
@@ -573,7 +573,7 @@ class ConfigInfoData(object):
                 if len(cacheD) > 0:
                     readCache = True
                     self.__D = cacheD
-            except:  # noqa: E722
+            except:  # noqa: E722 pylint: disable=bare-except
                 if self.__debug:
                     self.__lfh.write("%s.%s failed importing cache for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
                     traceback.print_exc(file=self.__lfh)

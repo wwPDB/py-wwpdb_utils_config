@@ -20,9 +20,9 @@ __version__ = "V0.01"
 import os
 import sys
 import unittest
-import traceback
 import time
 import platform
+import logging
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
@@ -37,6 +37,10 @@ SiteConfigSetup().setupEnvironment(TESTOUTPUT, mockTopPath)
 
 from wwpdb.utils.config.ConfigInfoDataSet import ConfigInfoDataSet  # noqa: E402
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]-%(module)s.%(funcName)s: %(message)s")
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 
 class ConfigInfoDataSetTests(unittest.TestCase):
     """
@@ -44,6 +48,9 @@ class ConfigInfoDataSetTests(unittest.TestCase):
     """
 
     def setUp(self):
+        self.__startTime = time.time()
+        logger.debug("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
+
         self.__lfh = sys.stdout
         self.__verbose = True
         #
@@ -84,79 +91,53 @@ class ConfigInfoDataSetTests(unittest.TestCase):
                                    }
 
     def tearDown(self):
-        pass
+        endTime = time.time()
+        logger.debug("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
 
     def testGetSiteIdRange(self):
         """Test case -  return default id ranges selected sites.
         """
-        startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             for siteId in self.__siteIdList:
                 (lId, uId) = cfds.getDefaultIdRange(siteId=siteId)
-                self.__lfh.write(" siteId %-30s lower %-12d upper %-12d \n" % (siteId, lId, uId))
+                logger.info(" siteId %-30s lower %-12d upper %-12d", siteId, lId, uId)
                 (refLid, refUid) = self.__siteIdRanges[siteId]
                 if siteId in self.__siteIdRanges:
                     self.assertEqual(lId, refLid)
                     self.assertEqual(uId, refUid)
-        except:  # noqa: E722
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("Failure in getting id range %s", str(e))
             self.fail()
-
-        endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%.2f seconds)\n" % (self.__class__.__name__,
-                                                                       sys._getframe().f_code.co_name,
-                                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                       endTime - startTime))
 
     def testGetSiteId(self):
         """Test case -  translate data set id to site id.
         """
-        startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             for testId in self.__testIdList:
                 siteId = cfds.getSiteId(depSetId=testId)
-                self.__lfh.write(" testId %-12s siteId %20s\n" % (testId, siteId))
+                logger.info(" testId %-12s siteId %20s", testId, siteId)
                 self.assertEqual(siteId, self.__testIdLoc[testId])
-        except:  # noqa: E722
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("Update to get site id for dataset %s", str(e))
             self.fail()
-
-        endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%.2f seconds)\n" % (self.__class__.__name__,
-                                                                       sys._getframe().f_code.co_name,
-                                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                       endTime - startTime))
 
     def testGetSiteIdTestRange(self):
         """Test case -  return default id ranges selected sites.
         """
-        startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             for siteId in self.__siteIdTestRanges:
                 (lId, uId) = cfds.getTestIdRange(siteId=siteId)
-                self.__lfh.write(" siteId %-30s lower %-12d upper %-12d \n" % (siteId, lId, uId))
+                logger.info(" siteId %-30s lower %-12d upper %-12d", siteId, lId, uId)
                 (refLid, refUid) = self.__siteIdTestRanges[siteId]
                 if siteId in self.__siteIdTestRanges:
                     self.assertEqual(lId, refLid)
                     self.assertEqual(uId, refUid)
-        except:  # noqa: E722
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("Failre to get SiteIdTestRange %s", str(e))
             self.fail()
-
-        endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%.2f seconds)\n" % (self.__class__.__name__,
-                                                                       sys._getframe().f_code.co_name,
-                                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                       endTime - startTime))
 
 
 def suiteGetSiteId():
@@ -179,16 +160,13 @@ def suiteGetIdRange():
 
 if __name__ == '__main__':
     #
-    if (True):
-        mySuite = suiteGetSiteId()
-        siteRes = unittest.TextTestRunner(verbosity=2).run(mySuite).wasSuccessful()
+    mySuite = suiteGetSiteId()
+    siteRes = unittest.TextTestRunner(verbosity=2).run(mySuite).wasSuccessful()
 
-        mySuite = suiteGetIdRange()
-        idRes = unittest.TextTestRunner(verbosity=2).run(mySuite).wasSuccessful()
+    mySuite = suiteGetIdRange()
+    idRes = unittest.TextTestRunner(verbosity=2).run(mySuite).wasSuccessful()
 
-        mySuite = suiteGetIdTestRange()
-        testidRes = unittest.TextTestRunner(verbosity=2).run(mySuite).wasSuccessful()
+    mySuite = suiteGetIdTestRange()
+    testidRes = unittest.TextTestRunner(verbosity=2).run(mySuite).wasSuccessful()
 
-        sys.exit(not siteRes or not idRes or not testidRes)
-    #
-    #
+    sys.exit(not siteRes or not idRes or not testidRes)

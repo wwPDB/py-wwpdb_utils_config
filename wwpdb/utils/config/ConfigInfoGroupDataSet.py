@@ -16,9 +16,11 @@ __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
 import sys
-import traceback
+import logging
 
 from wwpdb.utils.config.ConfigInfo import ConfigInfo
+
+logger = logging.getLogger(__name__)
 
 
 class ConfigInfoGroupDataSet(object):
@@ -74,9 +76,8 @@ class ConfigInfoGroupDataSet(object):
                 idMin, idMax = self.__groupIdAssignments[ky]
                 if ((idVal >= idMin) and (idVal <= idMax)):
                     return ky
-        except:  # noqa: E722
+        except Exception as e:
             if self.__debug:
-                self.__lfh.write("%s.%s failed checking group range for %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, groupId))
-                traceback.print_exc(file=self.__lfh)
-            pass
+                logger.exception("failed checking group range for %r with %s", groupId, str(e))
+
         return None

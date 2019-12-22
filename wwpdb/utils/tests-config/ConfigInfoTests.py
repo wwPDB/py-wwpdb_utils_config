@@ -53,6 +53,6 @@ class ConfigInfoFileTests(unittest.TestCase):
         self.assertEqual(cI.get('TESTVAR2'), '2')
 
     def testMock(self):
-        mockTopPath = os.path.join(TOPDIR, 'wwpdb', 'mock-data')
+        expMockTopPath = os.path.join(TOPDIR, 'wwpdb', 'mock-data')
         cI = ConfigInfo()
-        self.assertEqual(cI.get('DEPLOY_PATH'), os.path.join(mockTopPath, 'da_top'))
+        self.assertEqual(cI.get('DEPLOY_PATH'), os.path.join(expMockTopPath, 'da_top'))

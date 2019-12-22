@@ -32,10 +32,15 @@ __version__ = "V0.001"
 import sys
 import os
 import traceback
-from optparse import OptionParser, SUPPRESS_HELP
+import logging
+from optparse import OptionParser, SUPPRESS_HELP  # pylint: disable=deprecated-module
 
 from wwpdb.utils.config.ConfigInfoFile import ConfigInfoFile
 from wwpdb.utils.config.ConfigInfoFallBack import ConfigInfoFallBack
+
+logging.basicConfig(level=logging.INFO, format="[%(levelname)s]-%(module)s.%(funcName)s: %(message)s")
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 class ConfigInfoFileExec(object):
@@ -80,15 +85,15 @@ class ConfigInfoFileExec(object):
         try:
             if self.__topConfigPath is None:
                 ok = False
-                self.__lfh.write("%s.%s WARNING - TOP_WWPDB_SITE_CONFIG_DIR is not set in the environment.\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+                self.__lfh.write("WARNING - TOP_WWPDB_SITE_CONFIG_DIR is not set in the environment.\n")
             elif accessType == 'write' and not os.access(self.__topConfigPath, os.W_OK):
                 ok = False
-                self.__lfh.write("%s.%s WARNING - %s lacks write access.\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__topConfigPath))
+                self.__lfh.write("WARNING - %s lacks write access.\n" % self.__topConfigPath)
             elif accessType == 'read' and not os.access(self.__topConfigPath, os.R_OK):
                 ok = False
-                self.__lfh.write("%s.%s WARNING - %s lacks read access.\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__topConfigPath))
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+                self.__lfh.write("WARNING - %s lacks read access.\n" % self.__topConfigPath)
+        except Exception as e:
+            logger.exception("failing %r", str(e))
             traceback.print_exc(file=self.__lfh)
             ok = False
 
@@ -125,14 +130,13 @@ class ConfigInfoFileExec(object):
         """
         cD = {}
         try:
-            cfPath, sectionName, context = self.__getCommonConfigPath(sectionName='common', context='common')
+            cfPath, sectionName, context = self.__getCommonConfigPath(sectionName='common', context='common')  # pylint: disable=unused-variable
             cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
             tD = cf.readConfig(configFilePath=cfPath)
             if sectionName in tD:
                 cD = cf.deserializeConfig(tD[sectionName.upper()], optionD=tD[sectionName.upper()])
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("failing %r", str(e))
 
         return cD
 
@@ -190,16 +194,16 @@ class ConfigInfoFileExec(object):
             extraCommonSectionNameList = self.__getExtraCommonSectionNames()
             pathSectList = self.__getConfigPathSectionList(siteLoc, siteId, extraCommonSectionNameList, privateSectionNameList)
             if self.__debug:
-                self.__lfh.write("%s.%s Path list for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
+                logger.debug("Path list for location %r site %r", siteLoc, siteId)
                 for pTup in pathSectList:
-                    self.__lfh.write("%s.%s %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, pTup))
+                    logger.debug("%r", pTup)
             cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
             cD = cf.readConfigFileList(configPathSectionList=pathSectList)
             if deserialize:
                 #
                 cD = cf.deserializeConfig(cD, optionD=cD)
                 # Deserialize any subsections -  avoid checking for private section name with wildcards.
-                if True:
+                if True:  # pylint: disable=using-constant-test
                     #
                     for k, v in cD.items():
                         if isinstance(v, dict):
@@ -209,9 +213,8 @@ class ConfigInfoFileExec(object):
                         sU = sectionName.upper()
                         if sU in cD:
                             cD[sU] = cf.deserializeConfig(cD[sU], optionD=cD[sU])
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("failing for location %r site %r %r", siteLoc, siteId, str(e))
         return cD
 
     def checkConfig(self, siteLoc, siteId, deserialize=True):
@@ -219,31 +222,30 @@ class ConfigInfoFileExec(object):
         """
         try:
             cD = self.__getSiteConfig(siteLoc, siteId, deserialize=deserialize)
-            self.__lfh.write("%s.%s read %d options for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, len(cD), siteLoc, siteId))
+            self.__lfh.write("read %d options for location %r site %r\n" % (len(cD), siteLoc, siteId))
             #
             #  - path check -
             deployPath = cD['SITE_DEPLOY_PATH']
             for k in sorted(cD.keys()):
                 v = cD[k]
                 if v is None:
-                    self.__lfh.write("%s.%s location %s siteId %s option %s is None\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId, k))
+                    self.__lfh.write("location %s siteId %s option %s is None\n" % (siteLoc, siteId, k))
                 elif not isinstance(v, str):
-                    self.__lfh.write("%s.%s location %s siteId %s option %s is %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId, k, type(v)))
+                    self.__lfh.write("location %s siteId %s option %s is %s\n" % (siteLoc, siteId, k, type(v)))
                 elif len(v) < 1:
-                    self.__lfh.write("%s.%s location %s siteId %s option %s is blank\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId, k))
+                    self.__lfh.write("location %s siteId %s option %s is blank\n" % (siteLoc, siteId, k))
                 elif v.startswith(deployPath) and not os.access(v, os.R_OK):
-                    self.__lfh.write("%s.%s location %s siteId %s path access error %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId, v))
+                    self.__lfh.write("location %s siteId %s path access error %s\n" % (siteLoc, siteId, v))
 
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.traceback("failing for location %r site %r %r ", siteLoc, siteId, str(e))
 
     def printConfig(self, siteLoc, siteId, deserialize=True):
         """ Print the configuration options for the input location and site.
         """
         try:
             cD = self.__getSiteConfig(siteLoc, siteId, deserialize=deserialize)
-            self.__lfh.write("%s.%s read %d options for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, len(cD), siteLoc, siteId))
+            self.__lfh.write("read %d options for location %r site %r\n" % (len(cD), siteLoc, siteId))
             for k in sorted(cD.keys()):
                 v = cD[k]
                 if type(v) in [dict]:
@@ -252,20 +254,18 @@ class ConfigInfoFileExec(object):
                         self.__lfh.write(" ---  --- +++ %-45s  %r\n" % (k1, v[k1]))
                 else:
                     self.__lfh.write(" +++ %-45s  %r\n" % (k, v))
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("failing for location %r site %r - %r", siteLoc, siteId, str(e))
 
     def writeConfigCache(self, siteLoc, siteId, skipEmpty=True):
         """  Write Python and JSON format cache files using the configuration options for input location and site.
         """
-        self.__lfh.write("\nStarting %s %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+        self.__lfh.write("Starting\n")
         try:
             cD = self.__getSiteConfig(siteLoc, siteId, deserialize=True)
             #
             if ((cD is None) or (len(cD) < 1)) and skipEmpty:
-                self.__lfh.write("%s.%s SKIPPING update of empty cache files for location %r site %r\n" %
-                                 (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
+                self.__lfh.write("SKIPPING update of empty cache files for location %r site %r\n" % (siteLoc, siteId))
                 return False
             cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
             cfCachePath = self.__getSitePythonCachePath(siteLoc, siteId)
@@ -273,11 +273,10 @@ class ConfigInfoFileExec(object):
             #
             cfCachePath = self.__getSiteJsonCachePath(siteLoc, siteId)
             cf.writeJsonConfigCache(cacheD={siteId.upper(): cD}, cacheFilePath=cfCachePath)
-            self.__lfh.write("%s.%s updating cache files with %d options for location %r site %r\n" %
-                             (self.__class__.__name__, sys._getframe().f_code.co_name, len(cD), siteLoc, siteId))
+            self.__lfh.write("updating cache files with %d options for location %r site %r\n" % (len(cD), siteLoc, siteId))
             return True
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
+        except Exception as e:
+            logger.error("failing for location %r site %r - %r", siteLoc, siteId, str(e))
             traceback.print_exc(file=self.__lfh)
 
         return False
@@ -285,7 +284,7 @@ class ConfigInfoFileExec(object):
     def writeLocationConfigCache(self, siteLoc, skipEmpty=True):
         """  Write Python and JSON format cache files using the configuration options for input location and site.
         """
-        self.__lfh.write("\nStarting %s %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+        self.__lfh.write("Starting\n")
         try:
             siteD = self.__getLocSiteD()
             siteIdList = []
@@ -296,8 +295,8 @@ class ConfigInfoFileExec(object):
                 cD = self.__getSiteConfig(siteLoc, siteId, deserialize=True)
                 #
                 if ((cD is None) or (len(cD) < 1)) and skipEmpty:
-                    self.__lfh.write("%s.%s SKIPPING update of empty cache files for location %r site %r\n" %
-                                     (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
+                    self.__lfh.write("SKIPPING update of empty cache files for location %r site %r\n" %
+                                     (siteLoc, siteId))
                     continue
                 cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
                 cfCachePath = self.__getSitePythonCachePath(siteLoc, siteId)
@@ -305,12 +304,11 @@ class ConfigInfoFileExec(object):
                 #
                 cfCachePath = self.__getSiteJsonCachePath(siteLoc, siteId)
                 cf.writeJsonConfigCache(cacheD={siteId.upper(): cD}, cacheFilePath=cfCachePath)
-                self.__lfh.write("%s.%s updating cache files with %d options for location %r site %r\n" %
-                                 (self.__class__.__name__, sys._getframe().f_code.co_name, len(cD), siteLoc, siteId))
+                self.__lfh.write("updating cache files with %d options for location %r site %r\n" %
+                                 (len(cD), siteLoc, siteId))
             return True
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("failing for location %r site %r - %r", siteLoc, siteId, str(e))
 
         return False
 
@@ -319,7 +317,7 @@ class ConfigInfoFileExec(object):
         comD = self.__getCommonConfig()
         siteD = {}
         if 'SITE_LOCATION_SITE_DICT' in comD:
-            siteD = self.__comD['SITE_LOCATION_SITE_DICT']
+            siteD = comD['SITE_LOCATION_SITE_DICT']
         else:
             # fallback resources --
             siteD = {'RCSB-WEST': ['WWPDB_DEPLOY_PRODUCTION_UCSD'],
@@ -363,7 +361,7 @@ class ConfigInfoFileExec(object):
 
 
         """
-        self.__lfh.write("\nStarting %s %s with location %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc))
+        self.__lfh.write("Starting with location %r\n", siteLoc)
 
         try:
             siteD = self.__getLocSiteD()
@@ -378,10 +376,10 @@ class ConfigInfoFileExec(object):
                 siteCmD = {}
                 for siteId in siteIdList:
                     siteSpD = {}
-                    cfPath, sectName, context = self.__getSiteConfigPath(siteLoc=siteLoc, siteId=siteId, sectionName=siteId.lower())
-                    dP, fN = os.path.split(cfPath)
+                    cfPath, sectName, context = self.__getSiteConfigPath(siteLoc=siteLoc, siteId=siteId, sectionName=siteId.lower())  # pylint: disable=unused-variable
+                    dP, fN = os.path.split(cfPath)  # pylint: disable=unused-variable
                     self.__mkdir(dP)
-                    spD, cmD, subList, pD, rD, cD = cfb.getFallBackConfig(siteId=siteId)
+                    spD, cmD, subList, pD, rD, cD = cfb.getFallBackConfig(siteId=siteId)  # pylint: disable=unused-variable
                     if self.__debug:
                         self.__lfh.write("Location %s site %s length spD %d length cmD %d length siteKL %d\n" % (siteLoc, siteId, len(spD), len(cmD), len(siteKyL)))
                     # fill in the values for the common options dictionary --
@@ -409,9 +407,8 @@ class ConfigInfoFileExec(object):
 
                 cf.writeConfig(configFilePath=cfPath, sectionL=['site_common'], sectionD={'site_common': siteCmD}, requireBackup=False)
                 return True
-        except:  # noqa: E722
-            self.__lfh.write("%s.%s failing for %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc))
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.traceback("failing for %r %r", siteLoc, str(e))
 
         return False
 
@@ -467,7 +464,7 @@ def main():
     # source dir - specifies a read only source tree to use for finding configuration files
     parser.add_option("--sourcedir", default=None, help=SUPPRESS_HELP)
 
-    (options, args) = parser.parse_args()
+    (options, args) = parser.parse_args()  # pylint: disable=unused-variable
 
     cI = ConfigInfoFileExec(mockTopPath=options.mockdir, sourceDirPath=options.sourcedir, verbose=options.verbose, log=sys.stderr)
     #
