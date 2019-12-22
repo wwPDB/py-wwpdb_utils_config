@@ -26,13 +26,14 @@ import logging
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
-TESTOUTPUT = os.path.join(HERE, 'test-output', platform.python_version())
+TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
 if not os.path.exists(TESTOUTPUT):
     os.makedirs(TESTOUTPUT)
-mockTopPath = os.path.join(TOPDIR, 'wwpdb', 'mock-data')
+mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 
 # Must create config file before importing ConfigInfo
 from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
+
 SiteConfigSetup().setupEnvironment(TESTOUTPUT, mockTopPath)
 
 from wwpdb.utils.config.ConfigInfoDataSet import ConfigInfoDataSet  # noqa: E402
@@ -54,41 +55,44 @@ class ConfigInfoDataSetTests(unittest.TestCase):
         self.__lfh = sys.stdout
         self.__verbose = True
         #
-        self.__testIdList = ['D_1', 'D_1000200000', 'D_1000200001', '1001200000', 1000200000, 8000200001, 8000200002, 8000200003, 100, 10002000000]
-        self.__testIdLoc = {'D_1': None,
-                            'D_1000200000': 'WWPDB_DEPLOY_PRODUCTION_RU',
-                            'D_1000200001': 'WWPDB_DEPLOY_PRODUCTION_RU',
-                            '1001200000': 'WWPDB_DEPLOY_PRODUCTION_RU',
-                            1000200000: 'WWPDB_DEPLOY_PRODUCTION_RU',
-                            8000200001: None,
-                            8000200002: None,
-                            8000200003: None,
-                            100: None,
-                            10002000000: None}
-        self.__siteIdList = ['WWPDB_DEPLOY_PRODUCTION_RU',
-                             'WWPDB_DEPLOY_NEXT_RU',
-                             'WWPDB_DEPLOY_PRODUCTION_UCSD',
-                             'WWPDB_DEPLOY_BETA_RU',
-                             'PDBE_PROD',
-                             'WWPDB_DEPLOY_PRODUCTION_PDBJ',
-                             'BMRB',
-                             'WWPDB_DEPLOY_TEST_RU',
-                             'UNASSIGNED',
-                             'SILLYSITE']
-        self.__siteIdRanges = {'WWPDB_DEPLOY_PRODUCTION_RU': (1000200000, 1001200000),
-                               'WWPDB_DEPLOY_NEXT_RU': (800000, 999999),
-                               'WWPDB_DEPLOY_PRODUCTION_UCSD': (1001200001, 1001300000),
-                               'WWPDB_DEPLOY_BETA_RU': (8000240000, 8000250000),
-                               'PDBE_PROD': (1200000001, 1300000000),
-                               'WWPDB_DEPLOY_PRODUCTION_PDBJ': (1300000001, 1400000000),
-                               'BMRB': (800000, 999999),
-                               'WWPDB_DEPLOY_TEST_RU': (8000210000, 8000215000),
-                               'UNASSIGNED': (800000, 999999),
-                               'SILLYSITE': (800000, 999999)}
-        self.__siteIdTestRanges = {'WWPDB_DEPLOY_LCLTEST_RU': (8000231000, 8000232000),
-                                   'SILLYSITE': (-1, -1),
-                                   'WWPDB_DEPLOY_PRODUCTION_RU': (-1, -1)
-                                   }
+        self.__testIdList = ["D_1", "D_1000200000", "D_1000200001", "1001200000", 1000200000, 8000200001, 8000200002, 8000200003, 100, 10002000000]
+        self.__testIdLoc = {
+            "D_1": None,
+            "D_1000200000": "WWPDB_DEPLOY_PRODUCTION_RU",
+            "D_1000200001": "WWPDB_DEPLOY_PRODUCTION_RU",
+            "1001200000": "WWPDB_DEPLOY_PRODUCTION_RU",
+            1000200000: "WWPDB_DEPLOY_PRODUCTION_RU",
+            8000200001: None,
+            8000200002: None,
+            8000200003: None,
+            100: None,
+            10002000000: None,
+        }
+        self.__siteIdList = [
+            "WWPDB_DEPLOY_PRODUCTION_RU",
+            "WWPDB_DEPLOY_NEXT_RU",
+            "WWPDB_DEPLOY_PRODUCTION_UCSD",
+            "WWPDB_DEPLOY_BETA_RU",
+            "PDBE_PROD",
+            "WWPDB_DEPLOY_PRODUCTION_PDBJ",
+            "BMRB",
+            "WWPDB_DEPLOY_TEST_RU",
+            "UNASSIGNED",
+            "SILLYSITE",
+        ]
+        self.__siteIdRanges = {
+            "WWPDB_DEPLOY_PRODUCTION_RU": (1000200000, 1001200000),
+            "WWPDB_DEPLOY_NEXT_RU": (800000, 999999),
+            "WWPDB_DEPLOY_PRODUCTION_UCSD": (1001200001, 1001300000),
+            "WWPDB_DEPLOY_BETA_RU": (8000240000, 8000250000),
+            "PDBE_PROD": (1200000001, 1300000000),
+            "WWPDB_DEPLOY_PRODUCTION_PDBJ": (1300000001, 1400000000),
+            "BMRB": (800000, 999999),
+            "WWPDB_DEPLOY_TEST_RU": (8000210000, 8000215000),
+            "UNASSIGNED": (800000, 999999),
+            "SILLYSITE": (800000, 999999),
+        }
+        self.__siteIdTestRanges = {"WWPDB_DEPLOY_LCLTEST_RU": (8000231000, 8000232000), "SILLYSITE": (-1, -1), "WWPDB_DEPLOY_PRODUCTION_RU": (-1, -1)}
 
     def tearDown(self):
         endTime = time.time()
@@ -158,7 +162,7 @@ def suiteGetIdRange():
     return suiteSelect
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     #
     mySuite = suiteGetSiteId()
     siteRes = unittest.TextTestRunner(verbosity=2).run(mySuite).wasSuccessful()

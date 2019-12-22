@@ -21,13 +21,14 @@ import unittest
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
-TESTOUTPUT = os.path.join(HERE, 'test-output', platform.python_version())
+TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
 if not os.path.exists(TESTOUTPUT):
     os.makedirs(TESTOUTPUT)
-mockTopPath = os.path.join(TOPDIR, 'wwpdb', 'mock-data')
+mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 
 # Must create config file before importing ConfigInfo
 from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
+
 SiteConfigSetup().setupEnvironment(TESTOUTPUT, mockTopPath)
 
 from wwpdb.utils.config.ConfigInfo import ConfigInfo, getSiteId  # noqa: E402
@@ -44,15 +45,15 @@ class ConfigInfoFileTests(unittest.TestCase):
         pass
 
     def testGetSiteId(self):
-        self.assertEqual(getSiteId(), 'WWPDB_DEPLOY_TEST')
+        self.assertEqual(getSiteId(), "WWPDB_DEPLOY_TEST")
 
     def testCache(self):
         cI = ConfigInfo()
-        self.assertEqual(cI.get('VARTEST'), 'Hello')
-        self.assertEqual(cI.get('TESTVAR1'), '1')
-        self.assertEqual(cI.get('TESTVAR2'), '2')
+        self.assertEqual(cI.get("VARTEST"), "Hello")
+        self.assertEqual(cI.get("TESTVAR1"), "1")
+        self.assertEqual(cI.get("TESTVAR2"), "2")
 
     def testMock(self):
-        expMockTopPath = os.path.join(TOPDIR, 'wwpdb', 'mock-data')
+        expMockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
         cI = ConfigInfo()
-        self.assertEqual(cI.get('DEPLOY_PATH'), os.path.join(expMockTopPath, 'da_top'))
+        self.assertEqual(cI.get("DEPLOY_PATH"), os.path.join(expMockTopPath, "da_top"))

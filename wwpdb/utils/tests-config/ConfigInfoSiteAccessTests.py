@@ -26,13 +26,14 @@ import logging
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
-TESTOUTPUT = os.path.join(HERE, 'test-output', platform.python_version())
+TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
 if not os.path.exists(TESTOUTPUT):
     os.makedirs(TESTOUTPUT)
-mockTopPath = os.path.join(TOPDIR, 'wwpdb', 'mock-data')
+mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 
 # Must create config file before importing ConfigInfo
 from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
+
 SiteConfigSetup().setupEnvironment(TESTOUTPUT, mockTopPath)
 
 from wwpdb.utils.config.ConfigInfoSiteAccess import ConfigInfoSiteAccess  # noqa: E402
@@ -54,13 +55,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
         self.__lfh = sys.stdout
         self.__verbose = False
         #
-        self.__siteIdList = ['WWPDB_DEPLOY_PRODUCTION_RU',
-                             'WWPDB_DEPLOY_PRODUCTION_UCSD',
-                             'PDBE_PROD',
-                             'WWPDB_DEPLOY_PRODUCTION_PDBJ',
-                             'BMRB',
-                             'WWPDB_DEPLOY_TEST_RU',
-                             'SILLYSITE']
+        self.__siteIdList = ["WWPDB_DEPLOY_PRODUCTION_RU", "WWPDB_DEPLOY_PRODUCTION_UCSD", "PDBE_PROD", "WWPDB_DEPLOY_PRODUCTION_PDBJ", "BMRB", "WWPDB_DEPLOY_TEST_RU", "SILLYSITE"]
 
     def tearDown(self):
         endTime = time.time()
@@ -73,7 +68,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
             cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
             for siteId in self.__siteIdList:
                 status = cfsa.isSiteAvailable(siteId)
-                if siteId in ['WWPDB_DEPLOY_PRODUCTION_UCSD']:
+                if siteId in ["WWPDB_DEPLOY_PRODUCTION_UCSD"]:
                     should = False
                 else:
                     should = True
@@ -104,6 +99,6 @@ def suiteTestSiteAccess():
     return suiteSelect
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     mySuite = suiteTestSiteAccess()
     unittest.TextTestRunner(verbosity=2).run(mySuite)

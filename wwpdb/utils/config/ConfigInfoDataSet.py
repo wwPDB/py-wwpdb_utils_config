@@ -45,13 +45,13 @@ class ConfigInfoDataSet(object):
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
         # Default data set id range assignments
-        self.__depIdAssignments = self.__cI.get('SITE_DATASET_ID_ASSIGNMENT_DICTIONARY')
-        self.__depTestIdAssignments = self.__cI.get('SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY')
-        self.__groupIdAssignments = self.__cI.get('SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY')
-        self.__siteBackupD = self.__cI.get('SITE_BACKUP_DICT', default={})
+        self.__depIdAssignments = self.__cI.get("SITE_DATASET_ID_ASSIGNMENT_DICTIONARY")
+        self.__depTestIdAssignments = self.__cI.get("SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY")
+        self.__groupIdAssignments = self.__cI.get("SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY")
+        self.__siteBackupD = self.__cI.get("SITE_BACKUP_DICT", default={})
         self.__dsLocD = None
         #
-        self.__lockDirPath = self.__cI.get("SITE_SERVICE_REGISTRATION_LOCKDIR_PATH", '/tmp')
+        self.__lockDirPath = self.__cI.get("SITE_SERVICE_REGISTRATION_LOCKDIR_PATH", "/tmp")
         lockutils.set_defaults(self.__lockDirPath)
 
     def getSiteId(self, depSetId):
@@ -126,27 +126,27 @@ class ConfigInfoDataSet(object):
 
              Returns: d[<data_set_id>] = <site_id> or a empty dictionary.
         """
-        fp = self.__cI.get('SITE_DATASET_SITELOC_FILE_PATH')
+        fp = self.__cI.get("SITE_DATASET_SITELOC_FILE_PATH")
         try:
             with open(fp, "r") as infile:
                 return json.load(infile)
         except Exception as e:
             logger.error("failed reading json resource file %s - %s", fp, str(e))
             if self.__debug:
-                logger.traceback("failed reading json resource file %s", fp)
+                logger.exception("failed reading json resource file %s", fp)
         return {}
 
-    @lockutils.synchronized('configdataset.exceptionfile-lock', external=True)
+    @lockutils.synchronized("configdataset.exceptionfile-lock", external=True)
     def __writeLocationDictionary(self, dsLocD, backup=True):
         """  Write the input dictionary cotaining exceptional data set to site correspondences,
 
              Returns: True for success or False otherwise
         """
-        fp = self.__cI.get('SITE_DATASET_SITELOC_FILE_PATH')
+        fp = self.__cI.get("SITE_DATASET_SITELOC_FILE_PATH")
 
         try:
             if backup:
-                bp = fp + datetime.datetime.now().strftime('-%Y-%m-%d-%H-%M-%S')
+                bp = fp + datetime.datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
                 d = self.__readLocationDictionary()
                 with open(bp, "w") as outfile:
                     json.dump(d, outfile, indent=4)
@@ -170,8 +170,8 @@ class ConfigInfoDataSet(object):
         """
         if siteId in self.__depIdAssignments:
             DEPID_START, DEPID_STOP = self.__depIdAssignments[siteId]
-        elif 'UNASSIGNED' in self.__depIdAssignments:
-            DEPID_START, DEPID_STOP = self.__depIdAssignments['UNASSIGNED']
+        elif "UNASSIGNED" in self.__depIdAssignments:
+            DEPID_START, DEPID_STOP = self.__depIdAssignments["UNASSIGNED"]
         else:
             DEPID_START, DEPID_STOP = (-1, -1)
         return (DEPID_START, DEPID_STOP)
@@ -206,11 +206,11 @@ class ConfigInfoDataSet(object):
         try:
             if self.__dsLocD is None:
                 self.__dsLocD = self.__readLocationDictionary()
-            if str(depSetId)[:2] == 'D_':
+            if str(depSetId)[:2] == "D_":
                 if depSetId in self.__dsLocD:
                     return self.__dsLocD[depSetId]
             else:
-                tId = 'D_' + str("%010d" % int(depSetId))
+                tId = "D_" + str("%010d" % int(depSetId))
                 if tId in self.__dsLocD:
                     return self.__dsLocD[tId]
         except Exception as e:
@@ -219,13 +219,13 @@ class ConfigInfoDataSet(object):
         #
         # check default range assignment --
         try:
-            if str(depSetId).startswith('D_'):
+            if str(depSetId).startswith("D_"):
                 idVal = int(str(depSetId)[2:])
             else:
                 idVal = int(str(depSetId))
             for ky in self.__depIdAssignments.keys():
                 idMin, idMax = self.__depIdAssignments[ky]
-                if ((idVal >= idMin) and (idVal <= idMax)):
+                if (idVal >= idMin) and (idVal <= idMax):
                     return ky
         except Exception as e:
             if self.__debug:

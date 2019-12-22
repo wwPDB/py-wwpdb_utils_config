@@ -34,7 +34,7 @@ def getSiteId(defaultSiteId=None):
     """
     siteId = str(os.getenv("WWPDB_SITE_ID", defaultSiteId))
     if siteId is None:
-        siteId = 'WWPDB_DEPLOY'
+        siteId = "WWPDB_DEPLOY"
     return siteId
 
 
@@ -55,7 +55,7 @@ class ConfigInfo(object):
         self.__verbose = verbose
         self.__lfh = log
 
-        if (self.__siteId is None):
+        if self.__siteId is None:
             self.__siteId = str(os.getenv("WWPDB_SITE_ID", None)).upper()
             """The site identification is obtained from the environmental variable `WWPDB_SITE_ID`
             """

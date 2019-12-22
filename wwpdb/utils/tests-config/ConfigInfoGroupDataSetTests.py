@@ -26,13 +26,14 @@ import logging
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
-TESTOUTPUT = os.path.join(HERE, 'test-output', platform.python_version())
+TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
 if not os.path.exists(TESTOUTPUT):
     os.makedirs(TESTOUTPUT)
-mockTopPath = os.path.join(TOPDIR, 'wwpdb', 'mock-data')
+mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 
 # Must create config file before importing ConfigInfo
 from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
+
 SiteConfigSetup().setupEnvironment(TESTOUTPUT, mockTopPath)
 
 from wwpdb.utils.config.ConfigInfoGroupDataSet import ConfigInfoGroupDataSet  # noqa: E402
@@ -56,9 +57,8 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
         self.__lfh = sys.stdout
         self.__verbose = True
         #
-        self.__groupIdList = ['G_1', 'G_1002001', 'G_1002003', 'G_1002005', 'G_1002007', 'G_1002009', 'G_1002011', 'G_1002013']
-        self.__siteIdList = ['WWPDB_DEPLOY_DEPGRP1_RU', 'WWPDB_DEPLOY_DEPGRP1_RU', 'WWPDB_DEPLOY_TEST_RU',
-                             'UNASSIGNED', 'SILLYSITE']
+        self.__groupIdList = ["G_1", "G_1002001", "G_1002003", "G_1002005", "G_1002007", "G_1002009", "G_1002011", "G_1002013"]
+        self.__siteIdList = ["WWPDB_DEPLOY_DEPGRP1_RU", "WWPDB_DEPLOY_DEPGRP1_RU", "WWPDB_DEPLOY_TEST_RU", "UNASSIGNED", "SILLYSITE"]
 
     def tearDown(self):
         endTime = time.time()
@@ -121,7 +121,7 @@ def suiteGetGroupIdRange():
     return suiteSelect
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     mySuite = suiteGetSiteId()
     unittest.TextTestRunner(verbosity=2).run(mySuite)
 

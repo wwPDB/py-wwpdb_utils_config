@@ -32,6 +32,7 @@ import ast
 import json
 from fnmatch import fnmatchcase
 import logging
+
 try:
     import ConfigParser
 except ImportError:
@@ -50,7 +51,7 @@ class ConfigInfoFile(object):
         self.__lfh = log
         self.__debug = True
         if mockTopPath:
-            self.__mockdefaults = {'test_mockpath_env': mockTopPath}
+            self.__mockdefaults = {"test_mockpath_env": mockTopPath}
         else:
             self.__mockdefaults = {}
         #
@@ -88,7 +89,7 @@ class ConfigInfoFile(object):
                 retD[sKyU] = d
         except Exception as e:
             logger.error("failed reading %s", configFilePath)
-            if (self.__debug):
+            if self.__debug:
                 logger.exception("failed reading %s - %s", configFilePath, str(e))
 
         return retD
@@ -124,7 +125,7 @@ class ConfigInfoFile(object):
                             #    defaultD[k] = v
                             if self.__debug:
                                 logger.debug("fetching section %s length %d", tsn, len(kvTupL))
-                            if context in ['common']:
+                            if context in ["common"]:
                                 for (k, v) in kvTupL:
                                     # Respect existing values in the order of config files -
                                     if k not in saveD:
@@ -135,7 +136,7 @@ class ConfigInfoFile(object):
                                             continue
                                         # update substitution defaults ...
                                         defaultD[k] = saveD[k]
-                            elif context in ['private']:
+                            elif context in ["private"]:
                                 pD = {}
                                 pDU = {}
                                 for (k, v) in kvTupL:
@@ -193,7 +194,7 @@ class ConfigInfoFile(object):
             if not ok and requireBackup:
                 logger.error("failed writing backup config file for %s", configFilePath)
                 return False
-            with open(configFilePath, 'wb') as configfile:
+            with open(configFilePath, "wb") as configfile:
                 config.write(configfile)
             return True
         except Exception as e:
@@ -238,23 +239,23 @@ class ConfigInfoFile(object):
         try:
             if optionD is not None:
                 optD = dict((k.lower(), v) for k, v in optionD.items())
-                if 'config_as_object' in optD:
-                    objD = dict.fromkeys([t.strip().upper() for t in optD['config_as_object'].split(',') if len(t.strip()) > 0])
-                if 'config_csv_as_list' in optD:
-                    lstD = dict.fromkeys([t.strip().upper() for t in optD['config_csv_as_list'].split(',') if len(t.strip()) > 0])
-                if 'config_as_int' in optD:
-                    intD = dict.fromkeys([t.strip().upper() for t in optD['config_as_int'].split(',') if len(t.strip()) > 0])
-                if 'config_as_float' in optD:
-                    fltD = dict.fromkeys([t.strip().upper() for t in optD['config_as_float'].split(',') if len(t.strip()) > 0])
-                if 'config_csv_as_int_list' in optD:
-                    iLstD = dict.fromkeys([t.strip().upper() for t in optD['config_csv_as_int_list'].split(',') if len(t.strip()) > 0])
+                if "config_as_object" in optD:
+                    objD = dict.fromkeys([t.strip().upper() for t in optD["config_as_object"].split(",") if len(t.strip()) > 0])
+                if "config_csv_as_list" in optD:
+                    lstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_list"].split(",") if len(t.strip()) > 0])
+                if "config_as_int" in optD:
+                    intD = dict.fromkeys([t.strip().upper() for t in optD["config_as_int"].split(",") if len(t.strip()) > 0])
+                if "config_as_float" in optD:
+                    fltD = dict.fromkeys([t.strip().upper() for t in optD["config_as_float"].split(",") if len(t.strip()) > 0])
+                if "config_csv_as_int_list" in optD:
+                    iLstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_int_list"].split(",") if len(t.strip()) > 0])
             #
             # if self.__debug:
             #   print "Filter as object", objD
             #
             for (k, v) in configD.items():
                 retD[k] = v
-                if v == 'None':
+                if v == "None":
                     retD[k] = None
 
                 if k in intD:
@@ -265,9 +266,9 @@ class ConfigInfoFile(object):
 
                 try:
                     if k in lstD:
-                        retD[k] = [t.strip() for t in v.split(',')]
+                        retD[k] = [t.strip() for t in v.split(",")]
                     if k in iLstD:
-                        retD[k] = [int(t.strip()) for t in v.split(',')]
+                        retD[k] = [int(t.strip()) for t in v.split(",")]
                 except Exception as e:
                     logger.error("failed csv filter %r %r - %s", k, v, str(e))
                 #
@@ -315,21 +316,21 @@ class ConfigInfoFile(object):
         try:
             if optionD is not None:
                 optD = dict((k.lower(), v) for k, v in optionD.items())
-                if 'config_as_object' in optD:
-                    objD = dict.fromkeys([t.strip().upper() for t in optD['config_as_object'].split(',')])
-                if 'config_csv_as_list' in optD:
-                    lstD = dict.fromkeys([t.strip().upper() for t in optD['config_csv_as_list'].split(',')])
-                if 'config_csv_as_int_list' in optD:
-                    iLstD = dict.fromkeys([t.strip().upper() for t in optD['config_csv_as_int_list'].split(',')])
+                if "config_as_object" in optD:
+                    objD = dict.fromkeys([t.strip().upper() for t in optD["config_as_object"].split(",")])
+                if "config_csv_as_list" in optD:
+                    lstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_list"].split(",")])
+                if "config_csv_as_int_list" in optD:
+                    iLstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_int_list"].split(",")])
             #
             for (k, v) in configD.items():
                 retD[k] = v
                 if v is None:
-                    retD[k] = 'None'
+                    retD[k] = "None"
                 try:
                     if k in lstD or k in iLstD:
-                        if (isinstance(v, list)):
-                            retD[k] = ','.join(str(x) for x in v)
+                        if isinstance(v, list):
+                            retD[k] = ",".join(str(x) for x in v)
                 except Exception as e:
                     logger.error("failed list join %r %r - %s", k, v, str(e))
                 #
@@ -347,7 +348,7 @@ class ConfigInfoFile(object):
 
     def __copyWithTimeStamp(self, filePath):
         try:
-            bckupPath = filePath + datetime.datetime.now().strftime('-%Y-%m-%d-%H-%M-%S')
+            bckupPath = filePath + datetime.datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
             shutil.copyfile(filePath, bckupPath)
             return True
         except Exception as e:
@@ -360,7 +361,7 @@ class ConfigInfoFile(object):
         This cache file wraps the configuration dictionary with a class in a module that can be imported.
 
         """
-        template = '''
+        template = """
 import os
 import sys
 import json
@@ -410,7 +411,7 @@ class ConfigInfoFileCache(object):
 
         return {}
 
-        '''
+        """
         try:
             if os.access(cacheFilePath, os.R_OK):
                 if withBackup:
@@ -418,7 +419,7 @@ class ConfigInfoFileCache(object):
                     if not ok:
                         logger.error("failed writing backup cache file for %s", cacheFilePath)
                         return False
-            with open(cacheFilePath, 'wb') as cacheFile:
+            with open(cacheFilePath, "wb") as cacheFile:
                 if sys.version_info[0] > 2:
                     cacheFile.write((template % cacheD).encode())
                 else:

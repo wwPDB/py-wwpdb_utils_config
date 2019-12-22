@@ -92,7 +92,7 @@ class ConfigInfoDataSetExec(object):
 
 
 def main():
-    usage = '''usage: %prog [options]
+    usage = """usage: %prog [options]
 
     Examples:
 
@@ -115,15 +115,15 @@ def main():
        python %prog --remove --siteid=WWPDB_DEPLOY_TEST_RU --dataset_file  <datsetid_file>
 
 
-    '''
+    """
     parser = OptionParser(usage)
 
-    parser.add_option("--check", dest="checkConfig", action='store_true', default=False, help="Check data set configuration file")
-    parser.add_option("--print", dest="printConfig", action='store_true', default=False, help="Print the data set configuration for a site (--siteid)")
+    parser.add_option("--check", dest="checkConfig", action="store_true", default=False, help="Check data set configuration file")
+    parser.add_option("--print", dest="printConfig", action="store_true", default=False, help="Print the data set configuration for a site (--siteid)")
     parser.add_option("--siteid", dest="siteId", default=None, help="wwPDB site ID (e.g. WWPDB_DEPLOY_TEST_RU)")
 
-    parser.add_option("--set", dest="setOp", action='store_true', default=False, help="Set alternative data set location")
-    parser.add_option("--remove", dest="removeOp", action='store_true', default=False, help="Remove data set alternative location")
+    parser.add_option("--set", dest="setOp", action="store_true", default=False, help="Set alternative data set location")
+    parser.add_option("--remove", dest="removeOp", action="store_true", default=False, help="Remove data set alternative location")
 
     parser.add_option("--dataset", dest="dataSetId", default=None, help="Data set identifier (e.g. D_0000000000)")
     parser.add_option("--dataset_file", dest="dataSetIdFile", default=None, help="File containing a list of data sets one per line")
@@ -137,7 +137,7 @@ def main():
     dsL = []
     if options.dataSetIdFile:
         try:
-            with open(options.dataSetIdFile, 'r') as ifh:
+            with open(options.dataSetIdFile, "r") as ifh:
                 for line in ifh:
                     dsL.append(str(line[:-1]).strip())
         except Exception as e:
@@ -160,5 +160,5 @@ def main():
             ciEx.removeDataSets(dsL)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

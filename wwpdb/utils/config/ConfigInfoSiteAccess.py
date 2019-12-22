@@ -54,7 +54,7 @@ class ConfigInfoSiteAccess(object):
         self.__lfh = log
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
-        self.__serviceD = self.__cI.get('PROJECT_DEPOSIT_SERVICE_DICTIONARY')
+        self.__serviceD = self.__cI.get("PROJECT_DEPOSIT_SERVICE_DICTIONARY")
         self.__siteAccessD = None
 
     def getCorrespondenceService(self, siteId):
@@ -63,7 +63,7 @@ class ConfigInfoSiteAccess(object):
              Return the service URL or None
 
         """
-        serviceD = self.__cI.get('PROJECT_CORRESPOND_SERVICE_DICTIONARY')
+        serviceD = self.__cI.get("PROJECT_CORRESPOND_SERVICE_DICTIONARY")
         if serviceD is None:
             return None
 
@@ -78,7 +78,7 @@ class ConfigInfoSiteAccess(object):
              Return the service URL or None
 
         """
-        serviceD = self.__cI.get('PROJECT_FORWARDING_SERVICE_DICTIONARY')
+        serviceD = self.__cI.get("PROJECT_FORWARDING_SERVICE_DICTIONARY")
         if serviceD is None:
             return None
 
@@ -95,7 +95,7 @@ class ConfigInfoSiteAccess(object):
              Returns: d[<site_id>] = ("%Y-%m-%d %H:%M", "%Y-%m-%d %H:%M")
                                            UTC begin        UTC end
         """
-        fp = self.__cI.get('SITE_ACCESS_INFO_FILE_PATH')
+        fp = self.__cI.get("SITE_ACCESS_INFO_FILE_PATH")
         try:
             with open(fp, "r") as infile:
                 return json.load(infile)
@@ -152,9 +152,9 @@ class ConfigInfoSiteAccess(object):
             dtEnd = self.__getDateTimeUTC(tEnd)
             dtNow = datetime.datetime.utcnow().replace(tzinfo=tz.tzutc())
             if self.__debug:
-                logger.debug("site %s time begin %s  seconds %r", siteId, tBegin, dtBegin.strftime('%s'))
-                logger.debug("site %s time end   %s  seconds %r", siteId, tBegin, dtBegin.strftime('%s'))
-                logger.debug("current time   seconds %r\n", dtNow.strftime('%s'))
+                logger.debug("site %s time begin %s  seconds %r", siteId, tBegin, dtBegin.strftime("%s"))
+                logger.debug("site %s time end   %s  seconds %r", siteId, tBegin, dtBegin.strftime("%s"))
+                logger.debug("current time   seconds %r\n", dtNow.strftime("%s"))
             if dtNow > dtBegin and dtNow < dtEnd:
                 return False
         return True

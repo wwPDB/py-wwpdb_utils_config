@@ -80,8 +80,7 @@ class ConfigInfoFallBack(object):
             #
             # Include reasonable substitutions patterns in the configuration values --
             #
-            tokenList = ['PACKAGE_PATH', 'TOOLS_PATH', 'DATA_PATH', 'TOP_SOURCE_PATH', 'REFERENCE_PATH', 'RESOURCE_PATH',
-                         'DEPLOY_PATH', 'SESSION_DIR_NAME', 'SITE_PREFIX']
+            tokenList = ["PACKAGE_PATH", "TOOLS_PATH", "DATA_PATH", "TOP_SOURCE_PATH", "REFERENCE_PATH", "RESOURCE_PATH", "DEPLOY_PATH", "SESSION_DIR_NAME", "SITE_PREFIX"]
             for token in tokenList:
                 if token in pD:
                     subSt = pD[token]
@@ -123,12 +122,14 @@ class ConfigInfoFallBack(object):
         """
         # These class-level configuration options remain in the ConfigInfoData() class and are not
         #                        migrated to configuration files --
-        specialList = ['FILE_FORMAT_EXTENSION_DICTIONARY',
-                       'CONTENT_TYPE_DICTIONARY',
-                       'CONTENT_MILESTONE_LIST',
-                       'CONTENT_TYPE_BASE_DICTIONARY',
-                       'SITE_DATASET_ID_ASSIGNMENT_DICTIONARY',
-                       'PROJECT_DEPOSIT_SERVICE_DICTIONARY']
+        specialList = [
+            "FILE_FORMAT_EXTENSION_DICTIONARY",
+            "CONTENT_TYPE_DICTIONARY",
+            "CONTENT_MILESTONE_LIST",
+            "CONTENT_TYPE_BASE_DICTIONARY",
+            "SITE_DATASET_ID_ASSIGNMENT_DICTIONARY",
+            "PROJECT_DEPOSIT_SERVICE_DICTIONARY",
+        ]
         siteLocCmD = {}
         try:
             allSpD = {}
