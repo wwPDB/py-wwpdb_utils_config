@@ -32,11 +32,11 @@ if not os.path.exists(TESTOUTPUT):
 mockTopPath = os.path.join(TOPDIR, 'wwpdb', 'mock-data')
 
 # Must create config file before importing ConfigInfo
-from wwpdb.utils.testing.SiteConfigSetup  import SiteConfigSetup
+from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 SiteConfigSetup().setupEnvironment(TESTOUTPUT, mockTopPath)
 
-from wwpdb.utils.config.ConfigInfoGroupDataSet import ConfigInfoGroupDataSet
-from wwpdb.utils.config.ConfigInfo import ConfigInfo
+from wwpdb.utils.config.ConfigInfoGroupDataSet import ConfigInfoGroupDataSet  # noqa: E402
+from wwpdb.utils.config.ConfigInfo import ConfigInfo  # noqa: E402
 
 
 class ConfigInfoGroupDataSetTests(unittest.TestCase):
@@ -67,7 +67,7 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
                 siteName = ci.get("SITE_NAME", default=None)
                 siteLoc = ci.get("WWPDB_SITE_LOC", default=None)
                 self.__lfh.write(" siteId %-30s siteName %s siteLoc %s\n" % (siteId, siteName, siteLoc))
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -88,7 +88,7 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
             for siteId in self.__siteIdList:
                 (lId, uId) = cfds.getDefaultGroupIdRange(siteId=siteId)
                 self.__lfh.write(" siteId %-30s lower %-12d upper %-12d \n" % (siteId, lId, uId))
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -110,7 +110,7 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
                 siteId = cfds.getDefaultSiteId(groupId=testId)
                 self.__lfh.write(" testId %-12s siteId %20s\n" % (testId, siteId))
 
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 

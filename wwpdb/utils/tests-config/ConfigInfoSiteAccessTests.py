@@ -32,10 +32,10 @@ if not os.path.exists(TESTOUTPUT):
 mockTopPath = os.path.join(TOPDIR, 'wwpdb', 'mock-data')
 
 # Must create config file before importing ConfigInfo
-from wwpdb.utils.testing.SiteConfigSetup  import SiteConfigSetup
+from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 SiteConfigSetup().setupEnvironment(TESTOUTPUT, mockTopPath)
 
-from wwpdb.utils.config.ConfigInfoSiteAccess import ConfigInfoSiteAccess
+from wwpdb.utils.config.ConfigInfoSiteAccess import ConfigInfoSiteAccess  # noqa: E402
 
 
 class ConfigInfoSiteAccessTests(unittest.TestCase):
@@ -72,10 +72,10 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
                     should = False
                 else:
                     should = True
-                    
+
                 self.__lfh.write(" siteId %-30s status %r\n" % (siteId, status))
                 self.assertEqual(status, should, "Status mismatch for %s" % siteId)
-        except:
+        except:   # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -96,7 +96,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
             for siteId in self.__siteIdList:
                 status = cfsa.isServiceReachable(siteId, timeout=5)
                 self.__lfh.write(" siteId %-30s reachable %r\n" % (siteId, status))
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -115,10 +115,6 @@ def suiteTestSiteAccess():
 
 
 if __name__ == '__main__':
-    #
     if (True):
         mySuite = suiteTestSiteAccess()
         unittest.TextTestRunner(verbosity=2).run(mySuite)
-
-    #
-    #

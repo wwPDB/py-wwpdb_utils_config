@@ -44,7 +44,7 @@ class ConfigInfoFileExec(object):
 
     """
 
-    def __init__(self, mockTopPath = None, sourceDirPath = None, verbose=True, log=sys.stderr):
+    def __init__(self, mockTopPath=None, sourceDirPath=None, verbose=True, log=sys.stderr):
         self.__lfh = log
         self.__verbose = verbose
         self.__debug = False
@@ -87,7 +87,7 @@ class ConfigInfoFileExec(object):
             elif accessType == 'read' and not os.access(self.__topConfigPath, os.R_OK):
                 ok = False
                 self.__lfh.write("%s.%s WARNING - %s lacks read access.\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__topConfigPath))
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
             traceback.print_exc(file=self.__lfh)
             ok = False
@@ -126,11 +126,11 @@ class ConfigInfoFileExec(object):
         cD = {}
         try:
             cfPath, sectionName, context = self.__getCommonConfigPath(sectionName='common', context='common')
-            cf = ConfigInfoFile(mockTopPath = self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
+            cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
             tD = cf.readConfig(configFilePath=cfPath)
             if sectionName in tD:
                 cD = cf.deserializeConfig(tD[sectionName.upper()], optionD=tD[sectionName.upper()])
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
             traceback.print_exc(file=self.__lfh)
 
@@ -193,7 +193,7 @@ class ConfigInfoFileExec(object):
                 self.__lfh.write("%s.%s Path list for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
                 for pTup in pathSectList:
                     self.__lfh.write("%s.%s %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, pTup))
-            cf = ConfigInfoFile(mockTopPath = self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
+            cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
             cD = cf.readConfigFileList(configPathSectionList=pathSectList)
             if deserialize:
                 #
@@ -209,7 +209,7 @@ class ConfigInfoFileExec(object):
                         sU = sectionName.upper()
                         if sU in cD:
                             cD[sU] = cf.deserializeConfig(cD[sU], optionD=cD[sU])
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failing for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
             traceback.print_exc(file=self.__lfh)
         return cD
@@ -234,7 +234,7 @@ class ConfigInfoFileExec(object):
                 elif v.startswith(deployPath) and not os.access(v, os.R_OK):
                     self.__lfh.write("%s.%s location %s siteId %s path access error %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId, v))
 
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failing for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
             traceback.print_exc(file=self.__lfh)
 
@@ -252,7 +252,7 @@ class ConfigInfoFileExec(object):
                         self.__lfh.write(" ---  --- +++ %-45s  %r\n" % (k1, v[k1]))
                 else:
                     self.__lfh.write(" +++ %-45s  %r\n" % (k, v))
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failing for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
             traceback.print_exc(file=self.__lfh)
 
@@ -267,7 +267,7 @@ class ConfigInfoFileExec(object):
                 self.__lfh.write("%s.%s SKIPPING update of empty cache files for location %r site %r\n" %
                                  (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
                 return False
-            cf = ConfigInfoFile(mockTopPath = self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
+            cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
             cfCachePath = self.__getSitePythonCachePath(siteLoc, siteId)
             cf.writePythonConfigCache(cacheD={siteId.upper(): cD}, cacheFilePath=cfCachePath)
             #
@@ -276,7 +276,7 @@ class ConfigInfoFileExec(object):
             self.__lfh.write("%s.%s updating cache files with %d options for location %r site %r\n" %
                              (self.__class__.__name__, sys._getframe().f_code.co_name, len(cD), siteLoc, siteId))
             return True
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failing for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
             traceback.print_exc(file=self.__lfh)
 
@@ -299,7 +299,7 @@ class ConfigInfoFileExec(object):
                     self.__lfh.write("%s.%s SKIPPING update of empty cache files for location %r site %r\n" %
                                      (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
                     continue
-                cf = ConfigInfoFile(mockTopPath = self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
+                cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
                 cfCachePath = self.__getSitePythonCachePath(siteLoc, siteId)
                 cf.writePythonConfigCache(cacheD={siteId.upper(): cD}, cacheFilePath=cfCachePath)
                 #
@@ -308,7 +308,7 @@ class ConfigInfoFileExec(object):
                 self.__lfh.write("%s.%s updating cache files with %d options for location %r site %r\n" %
                                  (self.__class__.__name__, sys._getframe().f_code.co_name, len(cD), siteLoc, siteId))
             return True
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failing for location %r site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc, siteId))
             traceback.print_exc(file=self.__lfh)
 
@@ -367,7 +367,7 @@ class ConfigInfoFileExec(object):
 
         try:
             siteD = self.__getLocSiteD()
-            cf = ConfigInfoFile(mockTopPath = self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
+            cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
             cfb = ConfigInfoFallBack(verbose=self.__verbose, log=self.__lfh)
             locCmD = cfb.getCommonOptions(siteD=siteD)
             #
@@ -409,7 +409,7 @@ class ConfigInfoFileExec(object):
 
                 cf.writeConfig(configFilePath=cfPath, sectionL=['site_common'], sectionD={'site_common': siteCmD}, requireBackup=False)
                 return True
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failing for %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteLoc))
             traceback.print_exc(file=self.__lfh)
 
@@ -466,15 +466,16 @@ def main():
     parser.add_option("--mockdir", default=None, help=SUPPRESS_HELP)
     # source dir - specifies a read only source tree to use for finding configuration files
     parser.add_option("--sourcedir", default=None, help=SUPPRESS_HELP)
-    
+
     (options, args) = parser.parse_args()
 
-    cI = ConfigInfoFileExec(mockTopPath = options.mockdir, sourceDirPath = options.sourcedir, verbose=options.verbose, log=sys.stderr)
+    cI = ConfigInfoFileExec(mockTopPath=options.mockdir, sourceDirPath=options.sourcedir, verbose=options.verbose, log=sys.stderr)
     #
     if options.privateSectionNames is not None:
         privateSectionNameList = [str(x).strip() for x in options.privateSectionNames.split(',')]
     else:
-        privateSectionNameList = ['os_environment', 'httpd_services', 'install_environment', 'database_services', 'validation_services', 'host_site_defaults', 'test_setup_*', 'backup_server_*']
+        privateSectionNameList = ['os_environment', 'httpd_services', 'install_environment', 'database_services', 'validation_services',
+                                  'host_site_defaults', 'test_setup_*', 'backup_server_*']
     cI.setPrivateSectionNames(sectionNameList=privateSectionNameList)
 
     if options.commonSectionNames is not None:

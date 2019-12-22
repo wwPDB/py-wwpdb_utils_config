@@ -74,7 +74,7 @@ class ConfigInfoGroupDataSet(object):
                 idMin, idMax = self.__groupIdAssignments[ky]
                 if ((idVal >= idMin) and (idVal <= idMax)):
                     return ky
-        except:
+        except:  # noqa: E722
             if self.__debug:
                 self.__lfh.write("%s.%s failed checking group range for %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, groupId))
                 traceback.print_exc(file=self.__lfh)

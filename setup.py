@@ -43,7 +43,7 @@ setup(
     entry_points={
         'console_scripts': ['ConfigInfoFileExec=wwpdb.utils.config.ConfigInfoFileExec:main',
                             'ConfigInfoDataSetExec=wwpdb.utils.config.ConfigInfoDataSetExec:main',
-        ]
+                            ]
     },
     #
     install_requires=['python-dateutil', 'oslo.concurrency'],

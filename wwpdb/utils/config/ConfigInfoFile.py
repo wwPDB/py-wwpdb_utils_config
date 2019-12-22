@@ -34,7 +34,7 @@ import json
 from fnmatch import fnmatchcase
 try:
     import ConfigParser
-except:
+except:  # noqa: E722
     import configparser as ConfigParser
 
 
@@ -74,7 +74,7 @@ class ConfigInfoFile(object):
         """
         retD = {}
         try:
-            config = ConfigParser.SafeConfigParser(defaults = self.__mockdefaults)
+            config = ConfigParser.SafeConfigParser(defaults=self.__mockdefaults)
             config.read(configFilePath)
             sectionL = config.sections()
             for section in sectionL:
@@ -84,7 +84,7 @@ class ConfigInfoFile(object):
                 for (k, v) in kvTupL:
                     d[k.upper()] = v
                 retD[sKyU] = d
-        except:
+        except:  # noqa: E722
             self.__lfh.write("+%s.%s failed reading %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, configFilePath))
             if (self.__debug):
                 traceback.print_exc(file=self.__lfh)
@@ -112,7 +112,7 @@ class ConfigInfoFile(object):
             # Template substitution performed explicitly here using any preceding content in the 'common' namespace --
             if configPathSectionList is not None:
                 for configFilePath, sectionName, context in configPathSectionList:
-                    config = ConfigParser.RawConfigParser(defaults = self.__mockdefaults, allow_no_value=True)
+                    config = ConfigParser.RawConfigParser(defaults=self.__mockdefaults, allow_no_value=True)
                     config.read(configFilePath)
                     sectionL = config.sections()
                     for tsn in sectionL:
@@ -154,7 +154,7 @@ class ConfigInfoFile(object):
             # Copy the accumulated saved items for return with upper-cased keys --
             for k, v in saveD.items():
                 retD[k.upper()] = v
-        except:
+        except:  # noqa: E722
             self.__lfh.write("+%s.%s failed reading configuration file list %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, configPathSectionList))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -171,7 +171,7 @@ class ConfigInfoFile(object):
              sectionD [sectionName] stores a dictionary of options, opD  where opD[k] = v
         """
         try:
-            config = ConfigParser.RawConfigParser(defaults = self.__mockdefaults)
+            config = ConfigParser.RawConfigParser(defaults=self.__mockdefaults)
             for sectionKey in sectionL:
                 opD = sectionD[sectionKey]
                 sectionName = str(sectionKey).lower()
@@ -195,7 +195,7 @@ class ConfigInfoFile(object):
             with open(configFilePath, 'wb') as configfile:
                 config.write(configfile)
             return True
-        except:
+        except:  # noqa: E722
             self.__lfh.write("+%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -267,15 +267,15 @@ class ConfigInfoFile(object):
                         retD[k] = [t.strip() for t in v.split(',')]
                     if k in iLstD:
                         retD[k] = [int(t.strip()) for t in v.split(',')]
-                except:
+                except:  # noqa: E722
                     self.__lfh.write("+%s.%s failed csv list filter %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
                 #
                 try:
                     if k in objD:
                         retD[k] = ast.literal_eval(v)
-                except:
+                except:  # noqa: E722
                     self.__lfh.write("+%s.%s failed eval filter %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
-        except:
+        except:  # noqa: E722
             self.__lfh.write("+%s.%s failed configuration filter\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -329,15 +329,15 @@ class ConfigInfoFile(object):
                     if k in lstD or k in iLstD:
                         if (isinstance(v, list)):
                             retD[k] = ','.join(str(x) for x in v)
-                except:
+                except:  # noqa: E722
                     self.__lfh.write("+%s.%s failed list join %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
                 #
                 try:
                     if k in objD:
                         retD[k] = "%r" % v
-                except:
+                except:  # noqa: E722
                     self.__lfh.write("+%s.%s failed __repr__ %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
-        except:
+        except:  # noqa: E722
             self.__lfh.write("+%s.%s failed configuration filter\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -349,7 +349,7 @@ class ConfigInfoFile(object):
             bckupPath = filePath + datetime.datetime.now().strftime('-%Y-%m-%d-%H-%M-%S')
             shutil.copyfile(filePath, bckupPath)
             return True
-        except:
+        except:  # noqa: E722
             pass
         return False
 
@@ -360,9 +360,10 @@ class ConfigInfoFile(object):
         """
         template = '''
 import os
-import sys
+# import sys
 import json
-import traceback
+# import traceback
+
 
 class ConfigInfoFileCache(object):
     _configD=%r
@@ -421,7 +422,7 @@ class ConfigInfoFileCache(object):
                 else:
                     cacheFile.write(template % cacheD)
             return True
-        except:
+        except:  # noqa: E722
             self.__lfh.write("+%s.%s failed writing %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, cacheFilePath))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -440,7 +441,7 @@ class ConfigInfoFileCache(object):
             with open(cacheFilePath, "w") as outfile:
                 json.dump(cacheD, outfile, indent=4)
             return True
-        except:
+        except:  # noqa: E722
             self.__lfh.write("+%s.%s failed writing %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, cacheFilePath))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -452,7 +453,7 @@ class ConfigInfoFileCache(object):
         try:
             with open(cacheFilePath, "r") as infile:
                 return json.load(infile)
-        except:
+        except:  # noqa: E722
             self.__lfh.write("+%s.%s failed reading %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, cacheFilePath))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)

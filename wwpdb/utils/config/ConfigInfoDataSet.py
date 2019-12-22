@@ -74,7 +74,7 @@ class ConfigInfoDataSet(object):
         try:
             d = self.__readLocationDictionary()
             return d
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failed reading data set location dictionary.\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -88,7 +88,7 @@ class ConfigInfoDataSet(object):
                 if d[ky] == siteId:
                     dsL.append(ky)
             return dsL
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failed reading data set locations for site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -101,7 +101,7 @@ class ConfigInfoDataSet(object):
                 if dsId in d:
                     del d[dsId]
             return self.__writeLocationDictionary(d)
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failed\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -113,7 +113,7 @@ class ConfigInfoDataSet(object):
             for dsId in dataSetIdList:
                 d[dsId] = siteId
             return self.__writeLocationDictionary(d)
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failed data set locations for site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -128,7 +128,7 @@ class ConfigInfoDataSet(object):
         try:
             with open(fp, "r") as infile:
                 return json.load(infile)
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failed reading json resource file %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, fp))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -152,7 +152,7 @@ class ConfigInfoDataSet(object):
             with open(fp, "w") as outfile:
                 json.dump(dsLocD, outfile, indent=4)
             return True
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failed writing json resource file %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, fp))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -188,7 +188,6 @@ class ConfigInfoDataSet(object):
             DEPID_START, DEPID_STOP = (-1, -1)
         return (DEPID_START, DEPID_STOP)
 
-
     def getDefaultSiteId(self, depSetId):
         """  Get the default site assignment for the input data set id.
         """
@@ -212,7 +211,7 @@ class ConfigInfoDataSet(object):
                 tId = 'D_' + str("%010d" % int(depSetId))
                 if tId in self.__dsLocD:
                     return self.__dsLocD[tId]
-        except:
+        except:  # noqa: E722
             if self.__debug:
                 self.__lfh.write("%s.%s failed checking for exception dictionary for %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, depSetId))
                 traceback.print_exc(file=self.__lfh)
@@ -228,7 +227,7 @@ class ConfigInfoDataSet(object):
                 idMin, idMax = self.__depIdAssignments[ky]
                 if ((idVal >= idMin) and (idVal <= idMax)):
                     return ky
-        except:
+        except:  # noqa: E722
             if self.__debug:
                 self.__lfh.write("%s.%s failed checking deposition range for %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, depSetId))
                 traceback.print_exc(file=self.__lfh)

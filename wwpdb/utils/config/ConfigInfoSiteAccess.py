@@ -24,9 +24,9 @@ from dateutil import tz
 
 try:
     from urllib.request import urlopen
-    from urllib.error import HTTPError
+    from urllib.error import HTTPError, URLError
 except ImportError:
-    from urllib2 import urlopen, HTTPError
+    from urllib2 import urlopen, HTTPError, URLError
 import ssl
 import traceback
 from wwpdb.utils.config.ConfigInfo import ConfigInfo
@@ -96,7 +96,7 @@ class ConfigInfoSiteAccess(object):
         try:
             with open(fp, "r") as infile:
                 return json.load(infile)
-        except:
+        except:  # noqa: E722
             if self.__verbose:
                 self.__lfh.write("%s.%s failed reading json resource file %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, fp))
             if self.__debug:
@@ -125,7 +125,7 @@ class ConfigInfoSiteAccess(object):
         except URLError as e:
             if self.__verbose:
                 self.__lfh.write("%s.%s site %s url %s error %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId, url, str(e.reason)))
-        except:
+        except:  # noqa: E722
             if self.__verbose:
                 self.__lfh.write("%s.%s site %s scode %r url %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId, scode, url))
             if self.__debug:

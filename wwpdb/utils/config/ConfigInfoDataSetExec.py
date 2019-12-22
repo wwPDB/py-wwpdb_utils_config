@@ -18,7 +18,6 @@ __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.001"
 
 import sys
-import os
 import traceback
 from optparse import OptionParser
 
@@ -52,7 +51,7 @@ class ConfigInfoDataSetExec(object):
             #
             for ky in sD:
                 self.__lfh.write("  Site %-40r   count %8d\n" % (ky, sD[ky]))
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
             traceback.print_exc(file=self.__lfh)
 
@@ -69,7 +68,7 @@ class ConfigInfoDataSetExec(object):
             for ii, dataSetId in enumerate(sorted(dataSetIdL)):
                 self.__lfh.write("    %-8d - %12s\n" % (ii, dataSetId))
             self.__lfh.write("  Total alternate data set locations = %d" % nDataSets)
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failing for site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
             traceback.print_exc(file=self.__lfh)
 
@@ -79,7 +78,7 @@ class ConfigInfoDataSetExec(object):
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             return cfds.writeLocationList(siteId, dataSetIdList)
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failing for site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
             traceback.print_exc(file=self.__lfh)
 
@@ -87,7 +86,7 @@ class ConfigInfoDataSetExec(object):
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             return cfds.removeDataSets(dataSetIdList)
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
             traceback.print_exc(file=self.__lfh)
 
@@ -141,7 +140,7 @@ def main():
             with open(options.dataSetIdFile, 'r') as ifh:
                 for line in ifh:
                     dsL.append(str(line[:-1]).strip())
-        except:
+        except:  # noqa: E722
             sys.stderr.write("%s.%s read failed for %r\n" % (__name__, sys._getframe().f_code.co_name, options.dataSetIdFile))
     elif options.dataSetId:
         dsL = [options.dataSetId]

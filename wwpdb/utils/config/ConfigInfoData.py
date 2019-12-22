@@ -205,7 +205,7 @@ import traceback
 #  Try to import externally cached configuration options.  Gracefully ignore any errors.
 try:
     from ConfigInfoFileCache import ConfigInfoFileCache
-except:
+except:  # noqa: E722
     pass
 
 
@@ -245,7 +245,7 @@ class ConfigInfoData(object):
                              'nmr-bmrb-entry': (['nmr-star', 'pdbx'], 'nmr-bmrb-entry'),
                              'nmr-harvest-file': (['tgz'], 'nmr-harvest-file'),
                              'nmr-peaks': (['any'], 'nmr-peaks'),
-                             'nmr-nef': (['nmr-star', 'pdbx'], 'nmr-nef'), # nmr-nef will be deprecated.
+                             'nmr-nef': (['nmr-star', 'pdbx'], 'nmr-nef'),  # nmr-nef will be deprecated.
                              'nmr-cs-check-report': (['html'], 'nmr-cs-check-report'),
                              'nmr-cs-xyz-check-report': (['html'], 'nmr-cs-xyz-check-report'),
                              'nmr-cs-path-list': (['txt'], 'nmr-cs-path-list'),
@@ -423,21 +423,21 @@ class ConfigInfoData(object):
     _siteDataSetIdAssignmentD = {
         'WWPDB_DEPLOY_LEGACY_RU': (1000000001, 1000199999),
         'WWPDB_DEPLOY_PRODUCTION_RU': (1000200000, 1001200000),
-        #'WWPDB_DEPLOY_NEXT_RU': (1000200000, 1001200000),
+        # 'WWPDB_DEPLOY_NEXT_RU': (1000200000, 1001200000),
         'WWPDB_DEPLOY_PRODUCTION_UCSD': (1001200001, 1001300000),
         'WWPDB_DEPLOY_PRODUCTION_BACKUP_RU': (1001310081, 1001350000),
         'WWPDB_DEPLOY_DEPGRP1_RU': (1001400001, 1001500000),
         'WWPDB_DEPLOY_DEPGRP2_RU': (1001400001, 1001500000),
-        #'PDBE_LEGACY': (1290000001, 1300000000), #PDBE legacy are incorporated into PDBE_PROD
-        #'PDBE_PROD': (1200000001, 1290000000),
+        # 'PDBE_LEGACY': (1290000001, 1300000000), #PDBE legacy are incorporated into PDBE_PROD
+        # 'PDBE_PROD': (1200000001, 1290000000),
         'PDBE_PROD': (1200000001, 1300000000),
         'PDBE_STG': (8211000001, 8212000000),
         'PDBE_DEV': (8233000001, 8234000000),
         'PDBE_EMDB': (8212000001, 8213000000),
         'PDBE_VAL': (900000000, 909999999),
         'WWPDB_DEPLOY_PRODUCTION_PDBJ': (1300000001, 1400000000),
-        #'BMRB': (1400000001, 1500000000),
-        #'WWPDB_DEPLOY_TEST_RU': (8000200000, 8100000000),
+        # 'BMRB': (1400000001, 1500000000),
+        # 'WWPDB_DEPLOY_TEST_RU': (8000200000, 8100000000),
         'WWPDB_DEPLOY_TEST_RU': (8000210000, 8000215000),
         'WWPDB_DEPLOY_ALPHA_RU': (8000220000, 8000230000),
         'WWPDB_DEPLOY_LCLTEST_RU': (8000230000, 8000231000),
@@ -474,7 +474,7 @@ class ConfigInfoData(object):
                                    'PDBE_STG': 'https://wwwdev.ebi.ac.uk/pdbe-da-staging/deposition',
                                    'PDBE_DEV': 'https://wwwdev.ebi.ac.uk/pdbe-da/deposition',
                                    'PDBE_VAL': 'https://validate-pdbe.wwpdb.org/validservice',
-                                   #'PDBE_DEV': 'https://dev.pdbe.org/deposition',
+                                   # 'PDBE_DEV': 'https://dev.pdbe.org/deposition',
                                    'WWPDB_DEPLOY_ALPHA_RU': 'https://da-dep-alpha-0.rcsb.rutgers.edu/deposition',
                                    'WWPDB_DEPLOY_TEST_RU': 'https://wwpdb-deploy-test-1.wwpdb.org/deposition',
                                    'WWPDB_DEPLOY_VALSRV2_RU': 'https://validate-rcsb-east.wwpdb.org/validservice',
@@ -520,8 +520,8 @@ class ConfigInfoData(object):
                                     'PDBE_PROD': 'https://deposit-pdbe.wwpdb.org',
                                     'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://onedep-contentws-pdbj.wwpdb.org',
                                     'WWPDB_DEPLOY_ALPHA_RU': 'https://da-ws-alpha-0.rcsb.rutgers.edu',
-                                    #'PDBE_LEGACY': 'https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg',
-    }
+                                    # 'PDBE_LEGACY': 'https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg',
+                                    }
     """Dictionary of well known contentws forwarding service urls"""
 
     #
@@ -573,7 +573,7 @@ class ConfigInfoData(object):
                 if len(cacheD) > 0:
                     readCache = True
                     self.__D = cacheD
-            except:
+            except:  # noqa: E722
                 if self.__debug:
                     self.__lfh.write("%s.%s failed importing cache for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
                     traceback.print_exc(file=self.__lfh)
@@ -635,4 +635,3 @@ class ConfigInfoData(object):
                 kM = k + '-' + ms
                 acM = v[1] + '-' + ms
                 ConfigInfoData._contentTypeInfoD[kM] = (v[0], acM)
-

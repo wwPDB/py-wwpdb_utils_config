@@ -108,7 +108,7 @@ class ConfigInfoFallBack(object):
                 if k in rD or k in pD:
                     continue
                 cmD[k] = v
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failed assembling configuration data for %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
             traceback.print_exc(file=self.__lfh)
 
@@ -183,7 +183,7 @@ class ConfigInfoFallBack(object):
                     self.__lfh.write("\n-------------------------------------------------------------------------\n")
                     self.__lfh.write("Location %s common option list length %d\n" % (siteLoc1, len(cL)))
                 siteLocCmD[siteLoc1] = (cL, keyL)
-        except:
+        except:  # noqa: E722
             self.__lfh.write("%s.%s failing siteD %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteD))
             traceback.print_exc(file=self.__lfh)
 
