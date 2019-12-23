@@ -91,11 +91,44 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
             logger.exception("Determining if site is reachable %s", str(e))
             self.fail()
 
+        # Coverage case - site not existand
+        cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
+        status = cfsa.isServiceReachable("UNKNOWN SITE", timeout=5)
+        self.assertFalse(status, "Received info on nonexistant site")
+
+    def testSiteGetCorrespondence(self):
+        """Test case -  return if site correspondence returned
+        """
+        cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
+        status = cfsa.getCorrespondenceService("WWPDB_DEPLOY_PRODUCTION_RU")
+        self.assertIsNotNone(status, "Failed to get correspondece endpoint")
+        status = cfsa.getCorrespondenceService("SITE_NO_EXIST")
+        self.assertIsNone(status, "Found unexpected correspondece endpoint")
+
+    def testSiteGetForwarding(self):
+        """Test case -  return for site forwarding endpoint
+        """
+        cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
+        status = cfsa.getForwardingService("WWPDB_DEPLOY_PRODUCTION_RU")
+        self.assertIsNotNone(status, "Failed to get forwarding endpoint")
+        status = cfsa.getForwardingService("SITE_NO_EXIST")
+        self.assertIsNone(status, "Found unexpected forwarding endpoint")
+
+    def testSiteGetDownTimeRange(self):
+        """Test case -  return for site forwarding endpoint
+        """
+        cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
+        status = cfsa.getSiteDownTimeRange("WWPDB_DEPLOY_PRODUCTION_RU")
+        self.assertEqual(status, (None, None), "Failed to get downtime")
+        status = cfsa.getSiteDownTimeRange("PDBE_PROD")
+        self.assertEqual(status, ("2016-08-26 06:00:00", "2016-09-02 06:00:00"), "Failed to get downtime")
+
 
 def suiteTestSiteAccess():
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoSiteAccessTests("testSiteAvailable"))
     suiteSelect.addTest(ConfigInfoSiteAccessTests("testSiteReachable"))
+    suiteSelect.addTest(ConfigInfoSiteAccessTests("testSiteGetCorrespondence"))
     return suiteSelect
 
 
