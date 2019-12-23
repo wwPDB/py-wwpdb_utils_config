@@ -238,7 +238,7 @@ class ConfigInfoFileExec(object):
                     self.__lfh.write("location %s siteId %s path access error %s\n" % (siteLoc, siteId, v))
 
         except Exception as e:
-            logger.traceback("failing for location %r site %r %r ", siteLoc, siteId, str(e))
+            logger.exception("failing for location %r site %r %r ", siteLoc, siteId, str(e))
 
     def printConfig(self, siteLoc, siteId, deserialize=True):
         """ Print the configuration options for the input location and site.
@@ -373,7 +373,7 @@ class ConfigInfoFileExec(object):
 
 
         """
-        self.__lfh.write("Starting with location %r\n", siteLoc)
+        self.__lfh.write("Starting with location %r\n" % siteLoc)
 
         try:
             siteD = self.__getLocSiteD()
@@ -420,7 +420,7 @@ class ConfigInfoFileExec(object):
                 cf.writeConfig(configFilePath=cfPath, sectionL=["site_common"], sectionD={"site_common": siteCmD}, requireBackup=False)
                 return True
         except Exception as e:
-            logger.traceback("failing for %r %r", siteLoc, str(e))
+            logger.exception("failing for %r %r", siteLoc, str(e))
 
         return False
 

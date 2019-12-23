@@ -134,7 +134,7 @@ class ConfigInfoShellExec(object):
         except Exception as e:
             self.__lfh.write("failing %s\n" % str(e))
             if self.__debug:
-                logger.traceback("failing")
+                logger.exception("failing")
         return tD
 
     def __testConfigPath(self, topConfigPath, accessType="read"):
@@ -197,7 +197,7 @@ class ConfigInfoShellExec(object):
                     d[k.upper()] = v
                 retD[sKyU] = d
         except Exception as e:
-            self.__lfh.write("FAILED reading %s - %s\n", configFilePath, str(e))
+            self.__lfh.write("FAILED reading %s - %s\n" % (configFilePath, str(e)))
             if self.__debug:
                 logger.exception("FAILED reading %s", configFilePath)
 
@@ -433,7 +433,7 @@ class ConfigInfoShellExec(object):
         except Exception as e:
             self.__lfh.write("failed configuration filter %r\n" % str(e))
             if self.__debug:
-                logger.traceback("failed configuration filter")
+                logger.exception("failed configuration filter")
 
         return retD
 
