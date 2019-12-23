@@ -194,7 +194,7 @@ class ConfigInfoFile(object):
             if not ok and requireBackup:
                 logger.error("failed writing backup config file for %s", configFilePath)
                 return False
-            with open(configFilePath, "wb") as configfile:
+            with open(configFilePath, "w") as configfile:
                 config.write(configfile)
             return True
         except Exception as e:
