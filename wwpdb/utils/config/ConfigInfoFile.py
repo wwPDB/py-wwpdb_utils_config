@@ -77,7 +77,11 @@ class ConfigInfoFile(object):
         """
         retD = {}
         try:
-            config = ConfigParser.SafeConfigParser(defaults=self.__mockdefaults)
+            if sys.version_info[0] > 2:
+                # Python 3.2 deprecated
+                config = ConfigParser.ConfigParser(defaults=self.__mockdefaults)
+            else:
+                config = ConfigParser.SafeConfigParser(defaults=self.__mockdefaults)
             config.read(configFilePath)
             sectionL = config.sections()
             for section in sectionL:

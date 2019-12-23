@@ -260,7 +260,7 @@ class ConfigInfoFileExec(object):
     def writeConfigCache(self, siteLoc, siteId, skipEmpty=True):
         """  Write Python and JSON format cache files using the configuration options for input location and site.
         """
-        self.__lfh.write("Starting\n")
+        self.__lfh.write("Starting writeConfigCache\n")
         try:
             cD = self.__getSiteConfig(siteLoc, siteId, deserialize=True)
             #
@@ -284,7 +284,7 @@ class ConfigInfoFileExec(object):
     def writeLocationConfigCache(self, siteLoc, skipEmpty=True):
         """  Write Python and JSON format cache files using the configuration options for input location and site.
         """
-        self.__lfh.write("Starting\n")
+        self.__lfh.write("Starting writeLocationConfigCache\n")
         try:
             siteD = self.__getLocSiteD()
             siteIdList = []
