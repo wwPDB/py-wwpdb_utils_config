@@ -16,9 +16,11 @@ __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
 import sys
-import traceback
+import logging
 
 from wwpdb.utils.config.ConfigInfo import ConfigInfo
+
+logger = logging.getLogger(__name__)
 
 
 class ConfigInfoGroupDataSet(object):
@@ -33,7 +35,7 @@ class ConfigInfoGroupDataSet(object):
         self.__lfh = log
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
-        self.__groupIdAssignments = self.__cI.get('SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY')
+        self.__groupIdAssignments = self.__cI.get("SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY")
 
     def getDefaultGroupIdRange(self, siteId):
         """ Return the default upper and lower group deposition data set identifier codes
@@ -65,18 +67,17 @@ class ConfigInfoGroupDataSet(object):
         """
         # check default group range assignment --
         try:
-            if str(groupId).startswith('G_'):
+            if str(groupId).startswith("G_"):
                 idVal = int(str(groupId)[2:])
             else:
                 idVal = int(str(groupId))
             #
             for ky in self.__groupIdAssignments.keys():
                 idMin, idMax = self.__groupIdAssignments[ky]
-                if ((idVal >= idMin) and (idVal <= idMax)):
+                if (idVal >= idMin) and (idVal <= idMax):
                     return ky
-        except:
+        except Exception as e:
             if self.__debug:
-                self.__lfh.write("%s.%s failed checking group range for %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, groupId))
-                traceback.print_exc(file=self.__lfh)
-            pass
+                logger.exception("failed checking group range for %r with %s", groupId, str(e))
+
         return None

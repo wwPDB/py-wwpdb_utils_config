@@ -18,11 +18,15 @@ __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.001"
 
 import sys
-import os
 import traceback
-from optparse import OptionParser
+from optparse import OptionParser  # pylint: disable=deprecated-module
+import logging
 
 from wwpdb.utils.config.ConfigInfoDataSet import ConfigInfoDataSet
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]-%(module)s.%(funcName)s: %(message)s")
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 class ConfigInfoDataSetExec(object):
@@ -52,8 +56,8 @@ class ConfigInfoDataSetExec(object):
             #
             for ky in sD:
                 self.__lfh.write("  Site %-40r   count %8d\n" % (ky, sD[ky]))
-        except:
-            self.__lfh.write("%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+        except Exception as e:
+            self.__lfh.write("checkConfig failing %r\n" % str(e))
             traceback.print_exc(file=self.__lfh)
 
     def printConfig(self, siteId):
@@ -69,8 +73,8 @@ class ConfigInfoDataSetExec(object):
             for ii, dataSetId in enumerate(sorted(dataSetIdL)):
                 self.__lfh.write("    %-8d - %12s\n" % (ii, dataSetId))
             self.__lfh.write("  Total alternate data set locations = %d" % nDataSets)
-        except:
-            self.__lfh.write("%s.%s failing for site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
+        except Exception as e:
+            self.__lfh.write("printConfig failing for site %r - %r\n" % (siteId, str(e)))
             traceback.print_exc(file=self.__lfh)
 
     def setLocations(self, siteId, dataSetIdList):
@@ -79,21 +83,21 @@ class ConfigInfoDataSetExec(object):
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             return cfds.writeLocationList(siteId, dataSetIdList)
-        except:
-            self.__lfh.write("%s.%s failing for site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
+        except Exception as e:
+            self.__lfh.write("setLocations failing for site %r - %r\n" % (siteId, str(e)))
             traceback.print_exc(file=self.__lfh)
 
     def removeDataSets(self, dataSetIdList):
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             return cfds.removeDataSets(dataSetIdList)
-        except:
-            self.__lfh.write("%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+        except Exception as e:
+            self.__lfh.write("removeDataSets failing\n" % str(e))
             traceback.print_exc(file=self.__lfh)
 
 
-def main():
-    usage = '''usage: %prog [options]
+def main():  # pragma: no cover
+    usage = """usage: %prog [options]
 
     Examples:
 
@@ -116,21 +120,21 @@ def main():
        python %prog --remove --siteid=WWPDB_DEPLOY_TEST_RU --dataset_file  <datsetid_file>
 
 
-    '''
+    """
     parser = OptionParser(usage)
 
-    parser.add_option("--check", dest="checkConfig", action='store_true', default=False, help="Check data set configuration file")
-    parser.add_option("--print", dest="printConfig", action='store_true', default=False, help="Print the data set configuration for a site (--siteid)")
+    parser.add_option("--check", dest="checkConfig", action="store_true", default=False, help="Check data set configuration file")
+    parser.add_option("--print", dest="printConfig", action="store_true", default=False, help="Print the data set configuration for a site (--siteid)")
     parser.add_option("--siteid", dest="siteId", default=None, help="wwPDB site ID (e.g. WWPDB_DEPLOY_TEST_RU)")
 
-    parser.add_option("--set", dest="setOp", action='store_true', default=False, help="Set alternative data set location")
-    parser.add_option("--remove", dest="removeOp", action='store_true', default=False, help="Remove data set alternative location")
+    parser.add_option("--set", dest="setOp", action="store_true", default=False, help="Set alternative data set location")
+    parser.add_option("--remove", dest="removeOp", action="store_true", default=False, help="Remove data set alternative location")
 
     parser.add_option("--dataset", dest="dataSetId", default=None, help="Data set identifier (e.g. D_0000000000)")
     parser.add_option("--dataset_file", dest="dataSetIdFile", default=None, help="File containing a list of data sets one per line")
     parser.add_option("-v", "--verbose", default=True, action="store_true", dest="verbose")
 
-    (options, args) = parser.parse_args()
+    (options, args) = parser.parse_args()  # pylint: disable=unused-variable
 
     #
     # Fetch any input data set list  ---
@@ -138,11 +142,11 @@ def main():
     dsL = []
     if options.dataSetIdFile:
         try:
-            with open(options.dataSetIdFile, 'r') as ifh:
+            with open(options.dataSetIdFile, "r") as ifh:
                 for line in ifh:
                     dsL.append(str(line[:-1]).strip())
-        except:
-            sys.stderr.write("%s.%s read failed for %r\n" % (__name__, sys._getframe().f_code.co_name, options.dataSetIdFile))
+        except Exception as e:
+            sys.stderr.write("main() read failed for %r %r\n" % (options.dataSetIdFile, str(e)))
     elif options.dataSetId:
         dsL = [options.dataSetId]
 
@@ -161,5 +165,5 @@ def main():
             ciEx.removeDataSets(dsL)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

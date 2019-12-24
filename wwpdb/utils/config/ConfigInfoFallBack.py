@@ -17,10 +17,11 @@ __version__ = "V0.01"
 
 
 import sys
-import string
-import traceback
+import logging
 
 from wwpdb.utils.config.ConfigInfoData import ConfigInfoData
+
+logger = logging.getLogger(__name__)
 
 
 class ConfigInfoFallBack(object):
@@ -79,19 +80,18 @@ class ConfigInfoFallBack(object):
             #
             # Include reasonable substitutions patterns in the configuration values --
             #
-            tokenList = ['PACKAGE_PATH', 'TOOLS_PATH', 'DATA_PATH', 'TOP_SOURCE_PATH', 'REFERENCE_PATH', 'RESOURCE_PATH',
-                         'DEPLOY_PATH', 'SESSION_DIR_NAME', 'SITE_PREFIX']
+            tokenList = ["PACKAGE_PATH", "TOOLS_PATH", "DATA_PATH", "TOP_SOURCE_PATH", "REFERENCE_PATH", "RESOURCE_PATH", "DEPLOY_PATH", "SESSION_DIR_NAME", "SITE_PREFIX"]
             for token in tokenList:
                 if token in pD:
                     subSt = pD[token]
                     for ky in cD:
                         if cD[ky] is not None and subSt in str(cD[ky]):
-                            tS = string.replace(str(cD[ky]), subSt, "%%(%s)s" % token.lower(), 1)
+                            tS = str.replace(str(cD[ky]), subSt, "%%(%s)s" % token.lower(), 1)
                             cD[ky] = tS
                             substList.append(ky)
                     for ky in rD:
                         if rD[ky] is not None and subSt in str(rD[ky]):
-                            tS = string.replace(str(rD[ky]), subSt, "%%(%s)s" % token.lower(), 1)
+                            tS = str.replace(str(rD[ky]), subSt, "%%(%s)s" % token.lower(), 1)
                             rD[ky] = tS
                             if ky not in substList:
                                 substList.append(ky)
@@ -108,9 +108,8 @@ class ConfigInfoFallBack(object):
                 if k in rD or k in pD:
                     continue
                 cmD[k] = v
-        except:
-            self.__lfh.write("%s.%s failed assembling configuration data for %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("failed assembling configuration data for %s - %s", siteId, str(e))
 
         return spD, cmD, substList, pD, rD, cD
 
@@ -123,12 +122,14 @@ class ConfigInfoFallBack(object):
         """
         # These class-level configuration options remain in the ConfigInfoData() class and are not
         #                        migrated to configuration files --
-        specialList = ['FILE_FORMAT_EXTENSION_DICTIONARY',
-                       'CONTENT_TYPE_DICTIONARY',
-                       'CONTENT_MILESTONE_LIST',
-                       'CONTENT_TYPE_BASE_DICTIONARY',
-                       'SITE_DATASET_ID_ASSIGNMENT_DICTIONARY',
-                       'PROJECT_DEPOSIT_SERVICE_DICTIONARY']
+        specialList = [
+            "FILE_FORMAT_EXTENSION_DICTIONARY",
+            "CONTENT_TYPE_DICTIONARY",
+            "CONTENT_MILESTONE_LIST",
+            "CONTENT_TYPE_BASE_DICTIONARY",
+            "SITE_DATASET_ID_ASSIGNMENT_DICTIONARY",
+            "PROJECT_DEPOSIT_SERVICE_DICTIONARY",
+        ]
         siteLocCmD = {}
         try:
             allSpD = {}
@@ -138,7 +139,7 @@ class ConfigInfoFallBack(object):
                 locSpD = {}
                 locCmD = {}
                 for siteId in siteIdList:
-                    spD, cmD, subList, pD, rD, cD = self.getFallBackConfig(siteId=siteId)
+                    spD, cmD, subList, pD, rD, cD = self.getFallBackConfig(siteId=siteId)  # pylint: disable=unused-variable
                     if self.__debug:
                         self.__lfh.write("Location %s site %s length spD %d length cmD %d\n" % (siteLoc, siteId, len(spD), len(cmD)))
                     locSpD[siteId] = spD
@@ -183,8 +184,7 @@ class ConfigInfoFallBack(object):
                     self.__lfh.write("\n-------------------------------------------------------------------------\n")
                     self.__lfh.write("Location %s common option list length %d\n" % (siteLoc1, len(cL)))
                 siteLocCmD[siteLoc1] = (cL, keyL)
-        except:
-            self.__lfh.write("%s.%s failing siteD %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteD))
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("failing siteD %r - %s", siteD, str(e))
 
         return siteLocCmD

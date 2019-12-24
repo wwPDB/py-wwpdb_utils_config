@@ -21,15 +21,18 @@ import sys
 import json
 import datetime
 from dateutil import tz
+import logging
 
 try:
     from urllib.request import urlopen
-    from urllib.error import HTTPError
+    from urllib.error import HTTPError, URLError
 except ImportError:
-    from urllib2 import urlopen, HTTPError
+    from urllib2 import urlopen, HTTPError, URLError
 import ssl
 import traceback
 from wwpdb.utils.config.ConfigInfo import ConfigInfo
+
+logger = logging.getLogger(__name__)
 
 
 class ConfigInfoSiteAccess(object):
@@ -51,7 +54,7 @@ class ConfigInfoSiteAccess(object):
         self.__lfh = log
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
-        self.__serviceD = self.__cI.get('PROJECT_DEPOSIT_SERVICE_DICTIONARY')
+        self.__serviceD = self.__cI.get("PROJECT_DEPOSIT_SERVICE_DICTIONARY")
         self.__siteAccessD = None
 
     def getCorrespondenceService(self, siteId):
@@ -60,7 +63,7 @@ class ConfigInfoSiteAccess(object):
              Return the service URL or None
 
         """
-        serviceD = self.__cI.get('PROJECT_CORRESPOND_SERVICE_DICTIONARY')
+        serviceD = self.__cI.get("PROJECT_CORRESPOND_SERVICE_DICTIONARY")
         if serviceD is None:
             return None
 
@@ -75,7 +78,7 @@ class ConfigInfoSiteAccess(object):
              Return the service URL or None
 
         """
-        serviceD = self.__cI.get('PROJECT_FORWARDING_SERVICE_DICTIONARY')
+        serviceD = self.__cI.get("PROJECT_FORWARDING_SERVICE_DICTIONARY")
         if serviceD is None:
             return None
 
@@ -92,26 +95,26 @@ class ConfigInfoSiteAccess(object):
              Returns: d[<site_id>] = ("%Y-%m-%d %H:%M", "%Y-%m-%d %H:%M")
                                            UTC begin        UTC end
         """
-        fp = self.__cI.get('SITE_ACCESS_INFO_FILE_PATH')
+        fp = self.__cI.get("SITE_ACCESS_INFO_FILE_PATH")
         try:
             with open(fp, "r") as infile:
                 return json.load(infile)
-        except:
+        except Exception as e:
             if self.__verbose:
-                self.__lfh.write("%s.%s failed reading json resource file %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, fp))
+                logger.error("failed reading json resource file %s %s", fp, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed in parsing file %s", fp)
         return {}
 
     def isServiceReachable(self, siteId, timeout=2):
         # This restores the same behavior as before.
-        context = ssl._create_unverified_context()
+        context = ssl._create_unverified_context()  # pylint: disable=protected-access
         url = None
         if siteId in self.__serviceD:
             url = self.__serviceD[siteId]
         else:
-            if (self.__verbose):
-                self.__lfh.write("%s.%s no service url defined for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
+            if self.__verbose:
+                logger.info("no service url defined for site %s", siteId)
             return False
         #
         scode = -1
@@ -124,11 +127,12 @@ class ConfigInfoSiteAccess(object):
                 return True
         except URLError as e:
             if self.__verbose:
-                self.__lfh.write("%s.%s site %s url %s error %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId, url, str(e.reason)))
-        except:
+                logger.info("site %s url %s error %s", siteId, url, str(e.reason))
+        except Exception as e:
             if self.__verbose:
-                self.__lfh.write("%s.%s site %s scode %r url %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId, scode, url))
+                logger.error("site %s scode %r url %s\n", siteId, scode, url)
             if self.__debug:
+                logger.exception("Detecting service available %s", str(e))
                 traceback.print_exc(file=self.__lfh)
 
         return False
@@ -148,12 +152,9 @@ class ConfigInfoSiteAccess(object):
             dtEnd = self.__getDateTimeUTC(tEnd)
             dtNow = datetime.datetime.utcnow().replace(tzinfo=tz.tzutc())
             if self.__debug:
-                self.__lfh.write("%s.%s site %s time begin %s  seconds %r\n" %
-                                 (self.__class__.__name__, sys._getframe().f_code.co_name, siteId, tBegin, dtBegin.strftime('%s')))
-                self.__lfh.write("%s.%s site %s time end   %s  seconds %r\n" %
-                                 (self.__class__.__name__, sys._getframe().f_code.co_name, siteId, tBegin, dtBegin.strftime('%s')))
-                self.__lfh.write("%s.%s current time   seconds %r\n" %
-                                 (self.__class__.__name__, sys._getframe().f_code.co_name, dtNow.strftime('%s')))
+                logger.debug("site %s time begin %s  seconds %r", siteId, tBegin, dtBegin.strftime("%s"))
+                logger.debug("site %s time end   %s  seconds %r", siteId, tBegin, dtBegin.strftime("%s"))
+                logger.debug("current time   seconds %r\n", dtNow.strftime("%s"))
             if dtNow > dtBegin and dtNow < dtEnd:
                 return False
         return True
@@ -170,8 +171,7 @@ class ConfigInfoSiteAccess(object):
         if siteId in self.__siteAccessD:
             tBegin, tEnd = self.__siteAccessD[siteId]
             if self.__debug:
-                self.__lfh.write("%s.%s site %s time begin %s  time end %s\n" %
-                                 (self.__class__.__name__, sys._getframe().f_code.co_name, siteId, tBegin, tEnd))
+                logger.debug("site %s time begin %s  time end %s\n", siteId, tBegin, tEnd)
             return (tBegin, tEnd)
         else:
             return (None, None)
