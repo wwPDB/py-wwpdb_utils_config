@@ -96,7 +96,7 @@ class ConfigInfoDataSetExec(object):
             traceback.print_exc(file=self.__lfh)
 
 
-def main():
+def main():  # pragma: no cover
     usage = """usage: %prog [options]
 
     Examples:

@@ -431,7 +431,7 @@ class ConfigInfoFileExec(object):
         return False
 
 
-def main():
+def main():  # pragma: no cover
     usage = """usage: %prog [options]
 
     Examples:
