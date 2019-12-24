@@ -236,33 +236,6 @@ class ConfigInfoShellExec(object):
 
         return cfPathSectionList
 
-    def __XgetConfigPathSectionList(self, topConfigPath, siteLoc, siteId, privateSectionNameList):
-        """ Returns the search path of sections and configuration file paths for the input location and site.
-        The site specific configuration file path is always included.   The site-common or project common
-        configuration files are included only if these exist.
-
-
-        Returns: [(configPath,sectionName,context), (configPath,sectionName),context), ...]
-        """
-        cfPathSectionList = []
-        if topConfigPath is not None and siteId is not None and siteLoc is not None:
-            cfPathSectionList = [self.__getSiteConfigPath(topConfigPath=topConfigPath, siteLoc=siteLoc, siteId=siteId, sectionName=siteId.lower())]
-            (p, s, c) = self.__getSiteCommonConfigPath(topConfigPath=topConfigPath, siteLoc=siteLoc, sectionName="site_common")
-            if p is not None and os.access(p, os.R_OK):
-                cfPathSectionList.append((p, s, c))
-            (p, s, c) = self.__getCommonConfigPath(topConfigPath=topConfigPath, sectionName="common")
-            if p is not None and os.access(p, os.R_OK):
-                cfPathSectionList.append((p, s, c))
-            #
-            # Additional context specific (private) configuration sections - stored in the site specific path
-            #
-            for sectionName in privateSectionNameList:
-                (p, s, c) = self.__getSiteConfigPath(topConfigPath=topConfigPath, siteLoc=siteLoc, siteId=siteId, sectionName=sectionName, context="private")
-                if p is not None and os.access(p, os.R_OK):
-                    cfPathSectionList.append((p, s, c))
-
-        return cfPathSectionList
-
     def __getSiteConfigRaw(self, topConfigPath, siteLoc, siteId, deserialize=True):
         """ Return the complete site of configuration options for the input location and site.
 
@@ -488,7 +461,7 @@ class ConfigInfoShellExec(object):
                 traceback.print_exc(file=self.__lfh)
 
 
-def main():
+def main():  # pragma: no cover
     usage = """
     %prog [options]
 
