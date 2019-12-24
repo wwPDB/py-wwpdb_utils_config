@@ -128,7 +128,7 @@ class ConfigInfoFile(object):
                             # for k, v in kvTupL:
                             #    defaultD[k] = v
                             if self.__debug:
-                                logger.debug("fetching section %s length %d", tsn, len(kvTupL))
+                                logger.info("fetching section %s length %d", tsn, len(kvTupL))
                             if context in ["common"]:
                                 for (k, v) in kvTupL:
                                     # Respect existing values in the order of config files -
@@ -356,7 +356,7 @@ class ConfigInfoFile(object):
             shutil.copyfile(filePath, bckupPath)
             return True
         except Exception as e:
-            logger.debug("Could not write backup file %s - %s", bckupPath, str(e))
+            logger.info("Could not write backup file %s - %s", bckupPath, str(e))
 
         return False
 
