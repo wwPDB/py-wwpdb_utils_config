@@ -24,19 +24,15 @@ __version__ = "V0.001"
 
 import sys
 import os
+import traceback
 import imp
 import ast
-import logging
 
 try:
     import ConfigParser
 except ImportError:
     import configparser as ConfigParser
 from optparse import OptionParser  # pylint: disable=deprecated-module
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]-%(module)s.%(funcName)s: %(message)s")
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
 
 
 class ConfigInfoShellExec(object):
@@ -111,7 +107,7 @@ class ConfigInfoShellExec(object):
             self.__lfh.write("FAILING configuration could not be resolved\n")
         #
         if self.__debug:
-            logger.debug("returns siteLoc %r siteId %r", siteLoc, siteId)
+            self.__lfh.write("_setup returns siteLoc %r siteId %r\n" % (siteLoc, siteId))
         return siteLoc, siteId
 
     def __getPrivateSectionNames(self):
@@ -134,7 +130,7 @@ class ConfigInfoShellExec(object):
         except Exception as e:
             self.__lfh.write("failing %s\n" % str(e))
             if self.__debug:
-                logger.exception("failing")
+                traceback.print_exc(file=self.__lfh)
         return tD
 
     def __testConfigPath(self, topConfigPath, accessType="read"):
@@ -151,7 +147,8 @@ class ConfigInfoShellExec(object):
                 ok = False
                 self.__lfh.write("WARNING - %s lacks read access\n" % topConfigPath)
         except Exception as e:
-            logger.exception("failing %r", str(e))
+            self.__lfh.write("__testConfigPath failing %r\n" % str(e))
+            traceback.print_exc(file=self.__lfh)
             ok = False
 
         return ok
@@ -199,7 +196,7 @@ class ConfigInfoShellExec(object):
         except Exception as e:
             self.__lfh.write("FAILED reading %s - %s\n" % (configFilePath, str(e)))
             if self.__debug:
-                logger.exception("FAILED reading %s", configFilePath)
+                traceback.print_exc(file=self.__lfh)
 
         return retD
 
@@ -276,7 +273,7 @@ class ConfigInfoShellExec(object):
             extraCommonSectionNameList = self.__getExtraCommonSectionNames()
             pathSectList = self.__getConfigPathSectionList(topConfigPath, siteLoc, siteId, extraCommonSectionNameList, privateSectionNameList)
             if self.__debug:
-                logger.debug("location %r site %r path list %r", siteLoc, siteId, pathSectList)
+                self.__lfh.write("__getSiteConfigRaw location %r site %r path list %r \n" % (siteLoc, siteId, pathSectList))
             cD = self.__readConfigFileList(configPathSectionList=pathSectList)
             if deserialize:
                 #
@@ -286,8 +283,8 @@ class ConfigInfoShellExec(object):
                     if sU in cD:
                         cD[sU] = self.__deserializeConfig(cD[sU], optionD=cD[sU])
         except Exception as e:
-            self.__lfh.write("failing for location %r site %r - %s\n" % (siteLoc, siteId, str(e)))
-            logger.exception("failing for location %r site %r", siteLoc, siteId)
+            self.__lfh.write("__getSiteConfigRaw failing for location %r site %r - %s\n" % (siteLoc, siteId, str(e)))
+            traceback.print_exc(file=self.__lfh)
         return cD
 
     def __readConfigFileList(self, configPathSectionList=None):
@@ -317,7 +314,7 @@ class ConfigInfoShellExec(object):
                         # for k, v in kvTupL:
                         #    defaultD[k] = v
                         if self.__debug:
-                            logger.debug("fetching section %s length %d", sectionName, len(kvTupL))
+                            self.__lfh.write("__readConfigFileList fetching section %s length %d\n" % (sectionName, len(kvTupL)))
                         if context in ["common"]:
                             for (k, v) in kvTupL:
                                 # Respect existing values in the order of config files -
@@ -352,7 +349,7 @@ class ConfigInfoShellExec(object):
         except Exception as e:
             self.__lfh.write("failed reading configuration file list %r %r\n" % (configPathSectionList, str(e)))
             if self.__debug:
-                logger.exception("failed reading configuration file list %r %r", configPathSectionList, str(e))
+                traceback.print_exc(file=self.__lfh)
 
         return retD
 
@@ -433,7 +430,7 @@ class ConfigInfoShellExec(object):
         except Exception as e:
             self.__lfh.write("failed configuration filter %r\n" % str(e))
             if self.__debug:
-                logger.exception("failed configuration filter")
+                traceback.print_exc(file=self.__lfh)
 
         return retD
 
@@ -456,7 +453,7 @@ class ConfigInfoShellExec(object):
         except Exception as e:
             self.__lfh.write("failing for location %r site %r %r\n" % (siteLoc, siteId, str(e)))
             if self.__debug:
-                logger.exception("failing for location %r site %r %r", siteLoc, siteId, str(e))
+                traceback.print_exc(file=self.__lfh)
 
     def shellConfig(self, shellType="bash"):
         return self.__exportConfig(self.__siteLoc, self.__siteId, self.__cD, expKey="OS_ENVIRONMENT", shellType=shellType)
@@ -487,8 +484,8 @@ class ConfigInfoShellExec(object):
                         self.__lfh.write('setenv %s "%s"\n' % (k, v))
         except Exception as e:
             if self.__debug:
-                logger.error("failing for location %r site %r %r", siteLoc, siteId, str(e))
-                logger.exception("Export failing")
+                self.__lfh.write("__exportConfig failing for location %r site %r - %r\n" % (siteLoc, siteId, str(e)))
+                traceback.print_exc(file=self.__lfh)
 
 
 def main():

@@ -18,6 +18,7 @@ __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.001"
 
 import sys
+import traceback
 from optparse import OptionParser  # pylint: disable=deprecated-module
 import logging
 
@@ -56,7 +57,8 @@ class ConfigInfoDataSetExec(object):
             for ky in sD:
                 self.__lfh.write("  Site %-40r   count %8d\n" % (ky, sD[ky]))
         except Exception as e:
-            logger.exception("failing %s", str(e))
+            self.__lfh.write("checkConfig failing %r\n" % str(e))
+            traceback.print_exc(file=self.__lfh)
 
     def printConfig(self, siteId):
         """ Print the configuration options for the input site.
@@ -72,7 +74,8 @@ class ConfigInfoDataSetExec(object):
                 self.__lfh.write("    %-8d - %12s\n" % (ii, dataSetId))
             self.__lfh.write("  Total alternate data set locations = %d" % nDataSets)
         except Exception as e:
-            logger.exception("failing for site %r = %s", siteId, str(e))
+            self.__lfh.write("printConfig failing for site %r - %r\n" % (siteId, str(e)))
+            traceback.print_exc(file=self.__lfh)
 
     def setLocations(self, siteId, dataSetIdList):
         """ Set the site location for the input data list.
@@ -81,14 +84,16 @@ class ConfigInfoDataSetExec(object):
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             return cfds.writeLocationList(siteId, dataSetIdList)
         except Exception as e:
-            logger.exception("failing for site %r error %s", siteId, str(e))
+            self.__lfh.write("setLocations failing for site %r - %r\n" % (siteId, str(e)))
+            traceback.print_exc(file=self.__lfh)
 
     def removeDataSets(self, dataSetIdList):
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             return cfds.removeDataSets(dataSetIdList)
         except Exception as e:
-            logger.exception("failing %s", str(e))
+            self.__lfh.write("removeDataSets failing\n" % str(e))
+            traceback.print_exc(file=self.__lfh)
 
 
 def main():
@@ -141,7 +146,7 @@ def main():
                 for line in ifh:
                     dsL.append(str(line[:-1]).strip())
         except Exception as e:
-            logger.error("read failed for %r - %s", options.dataSetIdFile, str(e))
+            sys.stderr.write("main() read failed for %r %r\n" % (options.dataSetIdFile, str(e)))
     elif options.dataSetId:
         dsL = [options.dataSetId]
 

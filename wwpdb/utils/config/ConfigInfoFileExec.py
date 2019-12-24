@@ -93,7 +93,7 @@ class ConfigInfoFileExec(object):
                 ok = False
                 self.__lfh.write("WARNING - %s lacks read access.\n" % self.__topConfigPath)
         except Exception as e:
-            logger.exception("failing %r", str(e))
+            self.__lfh.write("testConfigPath failing %r\n" % str(e))
             traceback.print_exc(file=self.__lfh)
             ok = False
 
@@ -136,7 +136,8 @@ class ConfigInfoFileExec(object):
             if sectionName in tD:
                 cD = cf.deserializeConfig(tD[sectionName.upper()], optionD=tD[sectionName.upper()])
         except Exception as e:
-            logger.exception("failing %r", str(e))
+            self.__lfh.write("__getCommonConfig failing %r\n" % str(e))
+            traceback.print_exc(file=self.__lfh)
 
         return cD
 
@@ -194,9 +195,9 @@ class ConfigInfoFileExec(object):
             extraCommonSectionNameList = self.__getExtraCommonSectionNames()
             pathSectList = self.__getConfigPathSectionList(siteLoc, siteId, extraCommonSectionNameList, privateSectionNameList)
             if self.__debug:
-                logger.debug("Path list for location %r site %r", siteLoc, siteId)
+                self.__lfh.write("__getSiteConfig Path list for location %r site %r\n" % (siteLoc, siteId))
                 for pTup in pathSectList:
-                    logger.debug("%r", pTup)
+                    self.__lfh.write("__getSiteConfig %r\n" % pTup)
             cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
             cD = cf.readConfigFileList(configPathSectionList=pathSectList)
             if deserialize:
@@ -214,7 +215,8 @@ class ConfigInfoFileExec(object):
                         if sU in cD:
                             cD[sU] = cf.deserializeConfig(cD[sU], optionD=cD[sU])
         except Exception as e:
-            logger.exception("failing for location %r site %r %r", siteLoc, siteId, str(e))
+            self.__lfh.write("__getSiteConfig failing for location %r site %r - %r\n" % (siteLoc, siteId, str(e)))
+            traceback.print_exc(file=self.__lfh)
         return cD
 
     def checkConfig(self, siteLoc, siteId, deserialize=True):
@@ -238,7 +240,8 @@ class ConfigInfoFileExec(object):
                     self.__lfh.write("location %s siteId %s path access error %s\n" % (siteLoc, siteId, v))
 
         except Exception as e:
-            logger.exception("failing for location %r site %r %r ", siteLoc, siteId, str(e))
+            self.__lfh.write("checkConfig for location %r site %r - %r\n" % (siteLoc, siteId, str(e)))
+            traceback.print_exc(file=self.__lfh)
 
     def printConfig(self, siteLoc, siteId, deserialize=True):
         """ Print the configuration options for the input location and site.
@@ -255,7 +258,8 @@ class ConfigInfoFileExec(object):
                 else:
                     self.__lfh.write(" +++ %-45s  %r\n" % (k, v))
         except Exception as e:
-            logger.exception("failing for location %r site %r - %r", siteLoc, siteId, str(e))
+            self.__lfh.write("printConfig failing for location %r site %r - %r\n" % (siteLoc, siteId, str(e)))
+            traceback.print_exc(file=self.__lfh)
 
     def writeConfigCache(self, siteLoc, siteId, skipEmpty=True):
         """  Write Python and JSON format cache files using the configuration options for input location and site.
@@ -276,7 +280,7 @@ class ConfigInfoFileExec(object):
             self.__lfh.write("updating cache files with %d options for location %r site %r\n" % (len(cD), siteLoc, siteId))
             return True
         except Exception as e:
-            logger.error("failing for location %r site %r - %r", siteLoc, siteId, str(e))
+            self.__lfh.write("writeConfigCache failing for location %r site %r - %r\n" % (siteLoc, siteId, str(e)))
             traceback.print_exc(file=self.__lfh)
 
         return False
@@ -306,7 +310,8 @@ class ConfigInfoFileExec(object):
                 self.__lfh.write("updating cache files with %d options for location %r site %r\n" % (len(cD), siteLoc, siteId))
             return True
         except Exception as e:
-            logger.exception("failing for location %r site %r - %r", siteLoc, siteId, str(e))
+            self.__lfh.write("writeLocationConfigCache failing for location %r site %r - %r\n" % (siteLoc, siteId, str(e)))
+            traceback.print_exc(file=self.__lfh)
 
         return False
 
@@ -420,7 +425,8 @@ class ConfigInfoFileExec(object):
                 cf.writeConfig(configFilePath=cfPath, sectionL=["site_common"], sectionD={"site_common": siteCmD}, requireBackup=False)
                 return True
         except Exception as e:
-            logger.exception("failing for %r %r", siteLoc, str(e))
+            self.__lfh.write("writeConfigFallBack for %r - %r\n" % (siteLoc, str(e)))
+            traceback.print_exc(file=self.__lfh)
 
         return False
 
