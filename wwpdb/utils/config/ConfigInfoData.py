@@ -201,11 +201,12 @@ __version__ = "V0.01"
 import os
 import sys
 import traceback
+
 # ----------------------------------------------------------------------------------------------
 #  Try to import externally cached configuration options.  Gracefully ignore any errors.
 try:
     from ConfigInfoFileCache import ConfigInfoFileCache
-except:
+except:  # noqa: E722 pylint: disable=bare-except
     pass
 
 
@@ -224,137 +225,138 @@ class ConfigInfoData(object):
 
     #
     _contentTypeInfoD = {}
-    _contentTypeInfoBaseD = {'model': (['pdbx', 'pdb', 'pdbml', 'cifeps'], 'model'),
-                             'model-emd': (['pdbx', 'xml'], 'model-emd'),
-                             'model-aux': (['pdbx'], 'model-aux'),
-                             'model-legacy-rcsb': (['pdbx', 'pdb'], 'model-legacy-rcsb'),
-                             'structure-factors': (['pdbx', 'mtz', 'txt'], 'sf'),
-                             'structure-factors-legacy-rcsb': (['pdbx', 'mtz'], 'sf-legacy-rcsb'),
-                             'nmr-unified-data-config': (['json'], 'nmr-unified-data-config'),
-                             'nmr-unified-data-nef': (['nmr-star'], 'nmr-unified-data-nef'),
-                             'nmr-unified-data-str': (['nmr-star'], 'nmr-unified-data-str'),
-                             'nmr-unified-data-nef-report': (['json'], 'nmr-unified-data-nef-report'),
-                             'nmr-unified-data-str-report': (['json'], 'nmr-unified-data-str-report'),
-                             'nmr-restraints': (['any', 'nmr-star', 'amber', 'amber-aux', 'cns', 'cyana', 'xplor', 'xplor-nih', 'pdb-mr', 'mr'], 'mr'),
-                             'nmr-chemical-shifts': (['nmr-star', 'pdbx', 'any'], 'cs'),
-                             'nmr-chemical-shifts-raw': (['nmr-star', 'pdbx'], 'cs-raw'),
-                             'nmr-chemical-shifts-auth': (['nmr-star', 'pdbx'], 'cs-auth'),
-                             'nmr-chemical-shifts-upload-report': (['pdbx'], 'nmr-chemical-shifts-upload-report'),
-                             'nmr-chemical-shifts-atom-name-report': (['pdbx'], 'nmr-chemical-shifts-atom-name-report'),
-                             'nmr-shift-error-report': (['json'], 'nmr-shift-error-report'),
-                             'nmr-bmrb-entry': (['nmr-star', 'pdbx'], 'nmr-bmrb-entry'),
-                             'nmr-harvest-file': (['tgz'], 'nmr-harvest-file'),
-                             'nmr-peaks': (['any'], 'nmr-peaks'),
-                             'nmr-nef': (['nmr-star', 'pdbx'], 'nmr-nef'), # nmr-nef will be deprecated.
-                             'nmr-cs-check-report': (['html'], 'nmr-cs-check-report'),
-                             'nmr-cs-xyz-check-report': (['html'], 'nmr-cs-xyz-check-report'),
-                             'nmr-cs-path-list': (['txt'], 'nmr-cs-path-list'),
-                             'nmr-cs-auth-file-name-list': (['txt'], 'nmr-cs-auth-file-name-list'),
-                             'component-image': (['jpg', 'png', 'gif', 'svg', 'tif', 'tiff'], 'ccimg'),
-                             'component-definition': (['pdbx', 'sdf'], 'ccdef'),
-                             'em-volume': (['map', 'ccp4', 'mrc2000'], 'em-volume'),
-                             'em-mask-volume': (['map', 'ccp4', 'mrc2000'], 'em-mask-volume'),
-                             'em-additional-volume': (['map', 'ccp4', 'mrc2000'], 'em-additional-volume'),
-                             'em-half-volume': (['map', 'ccp4', 'mrc2000'], 'em-half-volume'),
-                             'em-volume-wfcfg': (['json'], 'em-volume-wfcfg'),
-                             'em-mask-volume-wfcfg': (['json'], 'em-mask-volume-wfcfg'),
-                             'em-additional-volume-wfcfg': (['json'], 'em-additional-volume-wfcfg'),
-                             'em-half-volume-wfcfg': (['json'], 'em-half-volume-wfcfg'),
-                             'em-volume-report': (['json'], 'em-volume-report'),
-                             'em-volume-header': (['xml'], 'em-volume-header'),
-                             'em-model-emd': (['pdbx'], 'em-model-emd'),
-                             'em-structure-factors': (['pdbx', 'mtz'], 'em-sf'),
-                             'validation-report-depositor': (['pdf'], 'valdep'),
-                             'seqdb-match': (['pdbx', 'pic'], 'seqdb-match'),
-                             'blast-match': (['xml'], 'blast-match'),
-                             'seq-assign': (['pdbx'], 'seq-assign'),
-                             'partial-seq-annotate': (['txt'], 'partial-seq-annotate'),
-                             'seq-data-stats': (['pic'], 'seq-data-stats'),
-                             'seq-align-data': (['pic'], 'seq-align-data'),
-                             'pre-seq-align-data': (['pic'], 'pre-seq-align-data'),
-                             'seqmatch': (['pdbx'], 'seqmatch'),
-                             'mismatch-warning': (['pic'], 'mismatch-warning'),
-                             'polymer-linkage-distances': (['pdbx', 'json'], 'poly-link-dist'),
-                             'polymer-linkage-report': (['html'], 'poly-link-report'),
-                             'geometry-check-report': (['pdbx'], 'geometry-check-report'),
-                             'chem-comp-link': (['pdbx'], 'cc-link'),
-                             'chem-comp-assign': (['pdbx'], 'cc-assign'),
-                             'chem-comp-assign-final': (['pdbx'], 'cc-assign-final'),
-                             'chem-comp-assign-details': (['pic'], 'cc-assign-details'),
-                             'chem-comp-depositor-info': (['pdbx'], 'cc-dpstr-info'),
-                             'prd-search': (['pdbx'], 'prd-summary'),
-                             'assembly-report': (['txt', 'xml'], 'assembly-report'),
-                             'assembly-assign': (['pdbx', 'txt'], 'assembly-assign'),
-                             'assembly-depinfo-update': (['txt'], 'assembly-depinfo-update'),
-                             'interface-assign': (['xml'], 'interface-assign'),
-                             'assembly-model': (['pdb', 'pdbx'], 'assembly-model'),
-                             'assembly-model-xyz': (['pdb', 'pdbx'], 'assembly-model-xyz'),
-                             'site-assign': (['pdbx'], 'site-assign'),
-                             'dict-check-report': (['txt'], 'dict-check-report'),
-                             'dict-check-report-r4': (['txt'], 'dict-check-report-r4'),
-                             'dict-check-report-next': (['txt'], 'dict-check-report-next'),
-                             'format-check-report': (['txt'], 'format-check-report'),
-                             'misc-check-report': (['txt'], 'misc-check-report'),
-                             'special-position-report': (['txt'], 'special-position-report'),
-                             'merge-xyz-report': (['txt'], 'merge-xyz-report'),
-                             'model-issues-report': (['json'], 'model-issues-report'),
-                             'structure-factor-report': (['json'], 'structure-factor-report'),
-                             'validation-report': (['pdf'], 'val-report'),
-                             'validation-report-full': (['pdf'], 'val-report-full'),
-                             'validation-report-slider': (['png', 'svg'], 'val-report-slider'),
-                             'validation-data': (['xml'], 'val-data'),
-                             'validation-report-2fo-map-coef': (['pdbx'], 'val-report-wwpdb-2fo-fc-edmap-coef'),
-                             'validation-report-fo-map-coef': (['pdbx'], 'val-report-wwpdb-fo-fc-edmap-coef'),
-                             'map-2fofc': (['map'], 'map-2fofc'),
-                             'map-fofc': (['map'], 'map-fofc'),
-                             'map-omit-2fofc': (['map'], 'map-omit-2fofc'),
-                             'map-omit-fofc': (['map'], 'map-omit-fofc'),
-                             'sf-convert-report': (['pdbx', 'txt'], 'sf-convert-report'),
-                             'em-sf-convert-report': (['pdbx', 'txt'], 'em-sf-convert-report'),
-                             'dcc-report': (['pdbx', 'txt'], 'dcc-report'),
-                             'mapfix-header-report': (['json'], 'mapfix-header-report'),
-                             'mapfix-report': (['txt'], 'mapfix-report'),
-                             'secondary-structure-topology': (['txt'], 'ss-topology'),
-                             'sequence-fasta': (['fasta', 'fsa'], 'fasta'),
-                             'messages-from-depositor': (['pdbx'], 'messages-from-depositor'),
-                             'messages-to-depositor': (['pdbx'], 'messages-to-depositor'),
-                             'notes-from-annotator': (['pdbx'], 'notes-from-annotator'),
-                             'correspondence-to-depositor': (['txt'], 'correspondence-to-depositor'),
-                             'correspondence-legacy-rcsb': (['pdbx'], 'correspondence-legacy-rcsb'),
-                             'correspondence-info': (['pdbx'], 'correspondence-info'),
-                             'map-header-data': (['json', 'pic', 'txt'], 'map-header-data'),
-                             'deposit-volume-params': (['pic'], 'deposit-volume-params'),
-                             'fsc': (['xml'], 'fsc-xml'),
-                             'fsc-report': (['txt'], 'fsc-report'),
-                             'em2em-report': (['txt'], 'em2em-report'),
-                             'img-emdb': (['jpg', 'png', 'gif', 'svg', 'tif'], 'img-emdb'),
-                             'img-emdb-report': (['txt'], 'img-emdb-report'),
-                             'layer-lines': (['txt'], 'layer-lines'),
-                             'auxiliary-file': (['any'], 'aux-file'),
-                             'status-history': (['pdbx'], 'status-history'),
-                             'virus-matrix': (['any'], 'virus'),
-                             'parameter-file': (['any'], 'parm'),
-                             'structure-def-file': (['any'], 'struct'),
-                             'topology-file': (['any'], 'topo'),
-                             'cmd-line-args': (['txt'], 'cmd-line-args'),
-                             'sd-dat': (['any', 'sd-dat']),
-                             'sx-pr': (['any', 'sx-pr']),
-                             'sm-fit': (['any', 'sm-fit']),
-                             'deposition-info': (['pdbx', 'json'], 'deposition-info'),
-                             'deposition-store': (['tar'], 'deposition-store'),
-                             #
-                             'bundle-session-archive': (['tar', 'tgz'], 'bundle-session-archive'),
-                             'bundle-session-deposit': (['tar', 'tgz'], 'bundle-session-deposit'),
-                             'bundle-session-upload': (['tar', 'tgz'], 'bundle-session-upload'),
-                             'bundle-session-tempdep': (['tar', 'tgz'], 'bundle-session-tempdep'),
-                             'bundle-session-uitemp': (['tar', 'tgz'], 'bundle-session-uitemp'),
-                             'bundle-session-workflow': (['tar', 'tgz'], 'bundle-session-workflow'),
-                             'session-backup': (['tar', 'tgz'], 'bundle-session-workflow'),
-                             #
-                             'manifest-session': (['json'], 'manifest-session'),
-                             'manifest-session-bundle': (['json'], 'manifest-session-bundle'),
-                             'any': (['any'], 'any')
-                             }
+    _contentTypeInfoBaseD = {
+        "model": (["pdbx", "pdb", "pdbml", "cifeps"], "model"),
+        "model-emd": (["pdbx", "xml"], "model-emd"),
+        "model-aux": (["pdbx"], "model-aux"),
+        "model-legacy-rcsb": (["pdbx", "pdb"], "model-legacy-rcsb"),
+        "structure-factors": (["pdbx", "mtz", "txt"], "sf"),
+        "structure-factors-legacy-rcsb": (["pdbx", "mtz"], "sf-legacy-rcsb"),
+        "nmr-unified-data-config": (["json"], "nmr-unified-data-config"),
+        "nmr-unified-data-nef": (["nmr-star", "pdbx"], "nmr-unified-data-nef"),
+        "nmr-unified-data-str": (["nmr-star", "pdbx"], "nmr-unified-data-str"),
+        "nmr-unified-data-nef-report": (["json"], "nmr-unified-data-nef-report"),
+        "nmr-unified-data-str-report": (["json"], "nmr-unified-data-str-report"),
+        "nmr-restraints": (["any", "nmr-star", "amber", "amber-aux", "cns", "cyana", "xplor", "xplor-nih", "pdb-mr", "mr"], "mr"),
+        "nmr-chemical-shifts": (["nmr-star", "pdbx", "any"], "cs"),
+        "nmr-chemical-shifts-raw": (["nmr-star", "pdbx"], "cs-raw"),
+        "nmr-chemical-shifts-auth": (["nmr-star", "pdbx"], "cs-auth"),
+        "nmr-chemical-shifts-upload-report": (["pdbx"], "nmr-chemical-shifts-upload-report"),
+        "nmr-chemical-shifts-atom-name-report": (["pdbx"], "nmr-chemical-shifts-atom-name-report"),
+        "nmr-shift-error-report": (["json"], "nmr-shift-error-report"),
+        "nmr-bmrb-entry": (["nmr-star", "pdbx"], "nmr-bmrb-entry"),
+        "nmr-harvest-file": (["tgz"], "nmr-harvest-file"),
+        "nmr-peaks": (["any"], "nmr-peaks"),
+        "nmr-nef": (["nmr-star", "pdbx"], "nmr-nef"),  # nmr-nef will be deprecated.
+        "nmr-cs-check-report": (["html"], "nmr-cs-check-report"),
+        "nmr-cs-xyz-check-report": (["html"], "nmr-cs-xyz-check-report"),
+        "nmr-cs-path-list": (["txt"], "nmr-cs-path-list"),
+        "nmr-cs-auth-file-name-list": (["txt"], "nmr-cs-auth-file-name-list"),
+        "component-image": (["jpg", "png", "gif", "svg", "tif", "tiff"], "ccimg"),
+        "component-definition": (["pdbx", "sdf"], "ccdef"),
+        "em-volume": (["map", "ccp4", "mrc2000"], "em-volume"),
+        "em-mask-volume": (["map", "ccp4", "mrc2000"], "em-mask-volume"),
+        "em-additional-volume": (["map", "ccp4", "mrc2000"], "em-additional-volume"),
+        "em-half-volume": (["map", "ccp4", "mrc2000"], "em-half-volume"),
+        "em-volume-wfcfg": (["json"], "em-volume-wfcfg"),
+        "em-mask-volume-wfcfg": (["json"], "em-mask-volume-wfcfg"),
+        "em-additional-volume-wfcfg": (["json"], "em-additional-volume-wfcfg"),
+        "em-half-volume-wfcfg": (["json"], "em-half-volume-wfcfg"),
+        "em-volume-report": (["json"], "em-volume-report"),
+        "em-volume-header": (["xml"], "em-volume-header"),
+        "em-model-emd": (["pdbx"], "em-model-emd"),
+        "em-structure-factors": (["pdbx", "mtz"], "em-sf"),
+        "validation-report-depositor": (["pdf"], "valdep"),
+        "seqdb-match": (["pdbx", "pic"], "seqdb-match"),
+        "blast-match": (["xml"], "blast-match"),
+        "seq-assign": (["pdbx"], "seq-assign"),
+        "partial-seq-annotate": (["txt"], "partial-seq-annotate"),
+        "seq-data-stats": (["pic"], "seq-data-stats"),
+        "seq-align-data": (["pic"], "seq-align-data"),
+        "pre-seq-align-data": (["pic"], "pre-seq-align-data"),
+        "seqmatch": (["pdbx"], "seqmatch"),
+        "mismatch-warning": (["pic"], "mismatch-warning"),
+        "polymer-linkage-distances": (["pdbx", "json"], "poly-link-dist"),
+        "polymer-linkage-report": (["html"], "poly-link-report"),
+        "geometry-check-report": (["pdbx"], "geometry-check-report"),
+        "chem-comp-link": (["pdbx"], "cc-link"),
+        "chem-comp-assign": (["pdbx"], "cc-assign"),
+        "chem-comp-assign-final": (["pdbx"], "cc-assign-final"),
+        "chem-comp-assign-details": (["pic"], "cc-assign-details"),
+        "chem-comp-depositor-info": (["pdbx"], "cc-dpstr-info"),
+        "prd-search": (["pdbx"], "prd-summary"),
+        "assembly-report": (["txt", "xml"], "assembly-report"),
+        "assembly-assign": (["pdbx", "txt"], "assembly-assign"),
+        "assembly-depinfo-update": (["txt"], "assembly-depinfo-update"),
+        "interface-assign": (["xml"], "interface-assign"),
+        "assembly-model": (["pdb", "pdbx"], "assembly-model"),
+        "assembly-model-xyz": (["pdb", "pdbx"], "assembly-model-xyz"),
+        "site-assign": (["pdbx"], "site-assign"),
+        "dict-check-report": (["txt"], "dict-check-report"),
+        "dict-check-report-r4": (["txt"], "dict-check-report-r4"),
+        "dict-check-report-next": (["txt"], "dict-check-report-next"),
+        "format-check-report": (["txt"], "format-check-report"),
+        "misc-check-report": (["txt"], "misc-check-report"),
+        "special-position-report": (["txt"], "special-position-report"),
+        "merge-xyz-report": (["txt"], "merge-xyz-report"),
+        "model-issues-report": (["json"], "model-issues-report"),
+        "structure-factor-report": (["json"], "structure-factor-report"),
+        "validation-report": (["pdf"], "val-report"),
+        "validation-report-full": (["pdf"], "val-report-full"),
+        "validation-report-slider": (["png", "svg"], "val-report-slider"),
+        "validation-data": (["xml"], "val-data"),
+        "validation-report-2fo-map-coef": (["pdbx"], "val-report-wwpdb-2fo-fc-edmap-coef"),
+        "validation-report-fo-map-coef": (["pdbx"], "val-report-wwpdb-fo-fc-edmap-coef"),
+        "map-2fofc": (["map"], "map-2fofc"),
+        "map-fofc": (["map"], "map-fofc"),
+        "map-omit-2fofc": (["map"], "map-omit-2fofc"),
+        "map-omit-fofc": (["map"], "map-omit-fofc"),
+        "sf-convert-report": (["pdbx", "txt"], "sf-convert-report"),
+        "em-sf-convert-report": (["pdbx", "txt"], "em-sf-convert-report"),
+        "dcc-report": (["pdbx", "txt"], "dcc-report"),
+        "mapfix-header-report": (["json"], "mapfix-header-report"),
+        "mapfix-report": (["txt"], "mapfix-report"),
+        "secondary-structure-topology": (["txt"], "ss-topology"),
+        "sequence-fasta": (["fasta", "fsa"], "fasta"),
+        "messages-from-depositor": (["pdbx"], "messages-from-depositor"),
+        "messages-to-depositor": (["pdbx"], "messages-to-depositor"),
+        "notes-from-annotator": (["pdbx"], "notes-from-annotator"),
+        "correspondence-to-depositor": (["txt"], "correspondence-to-depositor"),
+        "correspondence-legacy-rcsb": (["pdbx"], "correspondence-legacy-rcsb"),
+        "correspondence-info": (["pdbx"], "correspondence-info"),
+        "map-header-data": (["json", "pic", "txt"], "map-header-data"),
+        "deposit-volume-params": (["pic"], "deposit-volume-params"),
+        "fsc": (["xml"], "fsc-xml"),
+        "fsc-report": (["txt"], "fsc-report"),
+        "em2em-report": (["txt"], "em2em-report"),
+        "img-emdb": (["jpg", "png", "gif", "svg", "tif"], "img-emdb"),
+        "img-emdb-report": (["txt"], "img-emdb-report"),
+        "layer-lines": (["txt"], "layer-lines"),
+        "auxiliary-file": (["any"], "aux-file"),
+        "status-history": (["pdbx"], "status-history"),
+        "virus-matrix": (["any"], "virus"),
+        "parameter-file": (["any"], "parm"),
+        "structure-def-file": (["any"], "struct"),
+        "topology-file": (["any"], "topo"),
+        "cmd-line-args": (["txt"], "cmd-line-args"),
+        "sd-dat": (["any", "sd-dat"]),
+        "sx-pr": (["any", "sx-pr"]),
+        "sm-fit": (["any", "sm-fit"]),
+        "deposition-info": (["pdbx", "json"], "deposition-info"),
+        "deposition-store": (["tar"], "deposition-store"),
+        #
+        "bundle-session-archive": (["tar", "tgz"], "bundle-session-archive"),
+        "bundle-session-deposit": (["tar", "tgz"], "bundle-session-deposit"),
+        "bundle-session-upload": (["tar", "tgz"], "bundle-session-upload"),
+        "bundle-session-tempdep": (["tar", "tgz"], "bundle-session-tempdep"),
+        "bundle-session-uitemp": (["tar", "tgz"], "bundle-session-uitemp"),
+        "bundle-session-workflow": (["tar", "tgz"], "bundle-session-workflow"),
+        "session-backup": (["tar", "tgz"], "bundle-session-workflow"),
+        #
+        "manifest-session": (["json"], "manifest-session"),
+        "manifest-session-bundle": (["json"], "manifest-session-bundle"),
+        "any": (["any"], "any"),
+    }
     """Base dictionary of supported file formats for each recognized content type.
        An acronym for each content type is included.  The acronym is used in the
        filename template.
@@ -376,151 +378,152 @@ class ConfigInfoData(object):
        model-annotate, model-review, and model-release).
     """
     #
-    _contentMilestoneL = ['upload', 'upload-convert', 'deposit', 'annotate', 'release', 'review']
+    _contentMilestoneL = ["upload", "upload-convert", "deposit", "annotate", "release", "review"]
     #
-    _fileFormatExtensionD = {'pdbx': 'cif',
-                             'pdb': 'pdb',
-                             'cifeps': 'cifeps',
-                             'pdbml': 'xml',
-                             'nmr-star': 'str',
-                             'gz': 'gz',
-                             'tgz': 'tgz',
-                             'mtz': 'mtz',
-                             'html': 'html',
-                             'jpg': 'jpg',
-                             'png': 'png',
-                             'svg': 'svg',
-                             'gif': 'gif',
-                             'tif': 'tif',
-                             'tiff': 'tiff',
-                             'sdf': 'sdf',
-                             'ccp4': 'ccp4',
-                             'mrc2000': 'mrc',
-                             'pic': 'pic',
-                             'txt': 'txt',
-                             'xml': 'xml',
-                             'pdf': 'pdf',
-                             'map': 'map',
-                             'amber': 'amber',
-                             'amber-aux': 'amber-aux',
-                             'cns': 'cns',
-                             'cyana': 'cyana',
-                             'xplor': 'xplor',
-                             'xplor-nih': 'xplor-nih',
-                             'pdb-mr': 'mr',
-                             'mr': 'mr',
-                             'json': 'json',
-                             'fsa': 'fsa',
-                             'fasta': 'fasta',
-                             'any': 'dat',
-                             'mdl': 'mdl',
-                             'tar': 'tar'
-                             }
+    _fileFormatExtensionD = {
+        "pdbx": "cif",
+        "pdb": "pdb",
+        "cifeps": "cifeps",
+        "pdbml": "xml",
+        "nmr-star": "str",
+        "gz": "gz",
+        "tgz": "tgz",
+        "mtz": "mtz",
+        "html": "html",
+        "jpg": "jpg",
+        "png": "png",
+        "svg": "svg",
+        "gif": "gif",
+        "tif": "tif",
+        "tiff": "tiff",
+        "sdf": "sdf",
+        "ccp4": "ccp4",
+        "mrc2000": "mrc",
+        "pic": "pic",
+        "txt": "txt",
+        "xml": "xml",
+        "pdf": "pdf",
+        "map": "map",
+        "amber": "amber",
+        "amber-aux": "amber-aux",
+        "cns": "cns",
+        "cyana": "cyana",
+        "xplor": "xplor",
+        "xplor-nih": "xplor-nih",
+        "pdb-mr": "mr",
+        "mr": "mr",
+        "json": "json",
+        "fsa": "fsa",
+        "fasta": "fasta",
+        "any": "dat",
+        "mdl": "mdl",
+        "tar": "tar",
+    }
     """Dictionary of recognized file formats and file name extensions"""
 
     #   WARNING -  changing the following assignments may have serious downstream consequences.
     #              Any modifications must agreed project-wide -
     _siteDataSetIdAssignmentD = {
-        'WWPDB_DEPLOY_LEGACY_RU': (1000000001, 1000199999),
-        'WWPDB_DEPLOY_PRODUCTION_RU': (1000200000, 1001200000),
-        #'WWPDB_DEPLOY_NEXT_RU': (1000200000, 1001200000),
-        'WWPDB_DEPLOY_PRODUCTION_UCSD': (1001200001, 1001300000),
-        'WWPDB_DEPLOY_PRODUCTION_BACKUP_RU': (1001310081, 1001350000),
-        'WWPDB_DEPLOY_DEPGRP1_RU': (1001400001, 1001500000),
-        'WWPDB_DEPLOY_DEPGRP2_RU': (1001400001, 1001500000),
-        #'PDBE_LEGACY': (1290000001, 1300000000), #PDBE legacy are incorporated into PDBE_PROD
-        #'PDBE_PROD': (1200000001, 1290000000),
-        'PDBE_PROD': (1200000001, 1300000000),
-        'PDBE_STG': (8211000001, 8212000000),
-        'PDBE_DEV': (8233000001, 8234000000),
-        'PDBE_EMDB': (8212000001, 8213000000),
-        'PDBE_VAL': (900000000, 909999999),
-        'WWPDB_DEPLOY_PRODUCTION_PDBJ': (1300000001, 1400000000),
-        #'BMRB': (1400000001, 1500000000),
-        #'WWPDB_DEPLOY_TEST_RU': (8000200000, 8100000000),
-        'WWPDB_DEPLOY_TEST_RU': (8000210000, 8000215000),
-        'WWPDB_DEPLOY_ALPHA_RU': (8000220000, 8000230000),
-        'WWPDB_DEPLOY_LCLTEST_RU': (8000230000, 8000231000),
-        'WWPDB_DEPLOY_BETA_RU': (8000240000, 8000250000),
-        'WWPDB_DEPLOY_VALSRV2_RU': (9100000000, 9101000000),
-        'WWPDB_DEPLOY_VALSRV2_UCSD': (9101000000, 9102000000),
-        'UNASSIGNED': (800000, 999999)
+        "WWPDB_DEPLOY_LEGACY_RU": (1000000001, 1000199999),
+        "WWPDB_DEPLOY_PRODUCTION_RU": (1000200000, 1001200000),
+        # 'WWPDB_DEPLOY_NEXT_RU': (1000200000, 1001200000),
+        "WWPDB_DEPLOY_PRODUCTION_UCSD": (1001200001, 1001300000),
+        "WWPDB_DEPLOY_PRODUCTION_BACKUP_RU": (1001310081, 1001350000),
+        "WWPDB_DEPLOY_DEPGRP1_RU": (1001400001, 1001500000),
+        "WWPDB_DEPLOY_DEPGRP2_RU": (1001400001, 1001500000),
+        # 'PDBE_LEGACY': (1290000001, 1300000000), #PDBE legacy are incorporated into PDBE_PROD
+        # 'PDBE_PROD': (1200000001, 1290000000),
+        "PDBE_PROD": (1200000001, 1300000000),
+        "PDBE_STG": (8211000001, 8212000000),
+        "PDBE_DEV": (8233000001, 8234000000),
+        "PDBE_EMDB": (8212000001, 8213000000),
+        "PDBE_VAL": (900000000, 909999999),
+        "WWPDB_DEPLOY_PRODUCTION_PDBJ": (1300000001, 1400000000),
+        # 'BMRB': (1400000001, 1500000000),
+        # 'WWPDB_DEPLOY_TEST_RU': (8000200000, 8100000000),
+        "WWPDB_DEPLOY_TEST_RU": (8000210000, 8000215000),
+        "WWPDB_DEPLOY_ALPHA_RU": (8000220000, 8000230000),
+        "WWPDB_DEPLOY_LCLTEST_RU": (8000230000, 8000231000),
+        "WWPDB_DEPLOY_BETA_RU": (8000240000, 8000250000),
+        "WWPDB_DEPLOY_VALSRV2_RU": (9100000000, 9101000000),
+        "WWPDB_DEPLOY_VALSRV2_UCSD": (9101000000, 9102000000),
+        "UNASSIGNED": (800000, 999999),
     }
     """Dictionary of site-level deposition data set identifier assignment ranges"""
     #
-    _siteGroupDataSetIdAssignmentD = {
-        'WWPDB_DEPLOY_DEPGRP1_RU': (1000000, 2000000),
-        'WWPDB_DEPLOY_DEPGRP2_RU': (1000000, 2000000),
-        'UNASSIGNED': (0000000, 1000000)
-    }
+    _siteGroupDataSetIdAssignmentD = {"WWPDB_DEPLOY_DEPGRP1_RU": (1000000, 2000000), "WWPDB_DEPLOY_DEPGRP2_RU": (1000000, 2000000), "UNASSIGNED": (0000000, 1000000)}
     """Dictionary of site-level group deposition data set identifier assignment ranges"""
 
     #
     _siteDataSetTestIdAssignmentD = {
-        'WWPDB_DEPLOY_LCLTEST_RU': (8000231000, 8000232000),
-        'WWPDB_DEPLOY_TEST_RU': (8000215000, 8000220000),
+        "WWPDB_DEPLOY_LCLTEST_RU": (8000231000, 8000232000),
+        "WWPDB_DEPLOY_TEST_RU": (8000215000, 8000220000),
     }
     """Dictionary of site-level IDs that can be used for creating test sessions. Do not add for production servers"""
 
     #
-    _projectDepositSiteServiceD = {'WWPDB_DEPLOY_PRODUCTION_RU': 'https://deposit.wwpdb.org/deposition',
-                                   'WWPDB_DEPLOY_NEXT_RU': 'https://deposit.wwpdb.org/deposition',
-                                   'WWPDB_DEPLOY_LEGACY_RU': 'https://da-legacy-dep-1.rcsb.rutgers.edu',
-                                   'WWPDB_DEPLOY_PRODUCTION_UCSD': 'https://deposit-rcsb-west.wwpdb.org/deposition',
-                                   'WWPDB_DEPLOY_BETA_RU': 'https://onedep-beta-dep-1.rcsb.rutgers.edu',
-                                   'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://deposit-pdbj.wwpdb.org/deposition',
-                                   'PDBE_PROD': 'https://deposit-pdbe.wwpdb.org/deposition',
-                                   'PDBE_LEGACY': 'https://deposit-pdbe.wwpdb.org/deposition',
-                                   'PDBE_STG': 'https://wwwdev.ebi.ac.uk/pdbe-da-staging/deposition',
-                                   'PDBE_DEV': 'https://wwwdev.ebi.ac.uk/pdbe-da/deposition',
-                                   'PDBE_VAL': 'https://validate-pdbe.wwpdb.org/validservice',
-                                   #'PDBE_DEV': 'https://dev.pdbe.org/deposition',
-                                   'WWPDB_DEPLOY_ALPHA_RU': 'https://da-dep-alpha-0.rcsb.rutgers.edu/deposition',
-                                   'WWPDB_DEPLOY_TEST_RU': 'https://wwpdb-deploy-test-1.wwpdb.org/deposition',
-                                   'WWPDB_DEPLOY_VALSRV2_RU': 'https://validate-rcsb-east.wwpdb.org/validservice',
-                                   'WWPDB_DEPLOY_VALSRV2_UCSD': 'https://validate-rcsb-west.wwpdb.org/validservice',
-                                   }
+    _projectDepositSiteServiceD = {
+        "WWPDB_DEPLOY_PRODUCTION_RU": "https://deposit.wwpdb.org/deposition",
+        "WWPDB_DEPLOY_NEXT_RU": "https://deposit.wwpdb.org/deposition",
+        "WWPDB_DEPLOY_LEGACY_RU": "https://deposit-legacy.wwpdb.org/deposition",
+        "WWPDB_DEPLOY_PRODUCTION_UCSD": "https://deposit-rcsb-west.wwpdb.org/deposition",
+        "WWPDB_DEPLOY_BETA_RU": "https://onedep-beta-dep-1.rcsb.rutgers.edu",
+        "WWPDB_DEPLOY_PRODUCTION_PDBJ": "https://deposit-pdbj.wwpdb.org/deposition",
+        "PDBE_PROD": "https://deposit-pdbe.wwpdb.org/deposition",
+        "PDBE_LEGACY": "https://deposit-pdbe.wwpdb.org/deposition",
+        "PDBE_STG": "https://wwwdev.ebi.ac.uk/pdbe-da-staging/deposition",
+        "PDBE_DEV": "https://wwwdev.ebi.ac.uk/pdbe-da/deposition",
+        "PDBE_VAL": "https://validate-pdbe.wwpdb.org/validservice",
+        # 'PDBE_DEV': 'https://dev.pdbe.org/deposition',
+        "WWPDB_DEPLOY_ALPHA_RU": "https://da-dep-alpha-0.rcsb.rutgers.edu/deposition",
+        "WWPDB_DEPLOY_TEST_RU": "https://wwpdb-deploy-test-1.wwpdb.org/deposition",
+        "WWPDB_DEPLOY_VALSRV2_RU": "https://validate-rcsb-east.wwpdb.org/validservice",
+        "WWPDB_DEPLOY_VALSRV2_UCSD": "https://validate-rcsb-west.wwpdb.org/validservice",
+    }
     """Dictionary of well known project deposition service entry points"""
 
-    _projectCorrespondSiteServiceD = {'WWPDB_DEPLOY_PRODUCTION_RU': 'https://da-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg',
-                                      'WWPDB_DEPLOY_PRODUCTION_UCSD': 'https://dna1.rcsb.org/service/messaging/archive_msg',
-                                      'WWPDB_DEPLOY_LEGACY_RU': 'https://da-legacy-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg',
-                                      'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://onedep-ann-1.pdbj.org/service/messaging/archive_msg',
-                                      'WWPDB_DEPLOY_ALPHA_RU': 'https://da-ann-alpha-0.rcsb.rutgers.edu/service/messaging/archive_msg',
-                                      'WWPDB_DEPLOY_BETA_RU': 'http://onedep-beta-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg',
-                                      'WWPDB_DEPLOY_DEPGRP1_RU': 'https://ann-group-2.rcsb.rutgers.edu/service/messaging/archive_msg',
-                                      'WWPDB_DEPLOY_DEPGRP2_RU': 'https://ann-group-2.rcsb.rutgers.edu/service/messaging/archive_msg',
-                                      'WWPDB_DEPLOY_TEST_RU': 'https://da-test-1-ann.rcsb.rutgers.edu/service/messaging/archive_msg',
-                                      'PDBE_PROD': 'https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg',
-                                      'PDBE_LEGACY': 'https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg',
-                                      'PDBE_DEV': 'https://wwwdev.ebi.ac.uk/pdbe-da/service/messaging/archive_msg',
-                                      }
+    _projectCorrespondSiteServiceD = {
+        "WWPDB_DEPLOY_PRODUCTION_RU": "https://da-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg",
+        "WWPDB_DEPLOY_PRODUCTION_UCSD": "https://dna1.rcsb.org/service/messaging/archive_msg",
+        "WWPDB_DEPLOY_LEGACY_RU": "https://da-legacy-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg",
+        "WWPDB_DEPLOY_PRODUCTION_PDBJ": "https://onedep-ann-1.pdbj.org/service/messaging/archive_msg",
+        "WWPDB_DEPLOY_ALPHA_RU": "https://da-ann-alpha-0.rcsb.rutgers.edu/service/messaging/archive_msg",
+        "WWPDB_DEPLOY_BETA_RU": "http://onedep-beta-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg",
+        "WWPDB_DEPLOY_DEPGRP1_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/archive_msg",
+        "WWPDB_DEPLOY_DEPGRP2_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/archive_msg",
+        "WWPDB_DEPLOY_TEST_RU": "https://da-test-1-ann.rcsb.rutgers.edu/service/messaging/archive_msg",
+        "PDBE_PROD": "https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg",
+        "PDBE_LEGACY": "https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg",
+        "PDBE_DEV": "https://wwwdev.ebi.ac.uk/pdbe-da/service/messaging/archive_msg",
+    }
     """Dictionary of well known project correspondence archive service end points"""
 
-    _projectForwardingSiteServiceD = {'WWPDB_DEPLOY_PRODUCTION_RU': 'https://da-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg',
-                                      'WWPDB_DEPLOY_PRODUCTION_UCSD': 'https://dna1.rcsb.org/service/messaging/forward_msg',
-                                      'WWPDB_DEPLOY_LEGACY_RU': 'https://da-legacy-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg',
-                                      'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://onedep-ann-1.pdbj.org/service/messaging/forward_msg',
-                                      'WWPDB_DEPLOY_ALPHA_RU': 'https://da-ann-alpha-0.rcsb.rutgers.edu/service/messaging/forward_msg',
-                                      'WWPDB_DEPLOY_BETA_RU': 'https://onedep-beta-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg',
-                                      'WWPDB_DEPLOY_DEPGRP1_RU': 'https://ann-group-2.rcsb.rutgers.edu/service/messaging/forward_msg',
-                                      'WWPDB_DEPLOY_DEPGRP2_RU': 'https://ann-group-2.rcsb.rutgers.edu/service/messaging/forward_msg',
-                                      'WWPDB_DEPLOY_TEST_RU': 'https://da-test-1-ann.rcsb.rutgers.edu/service/messaging/forward_msg',
-                                      'PDBE_PROD': 'https://deposit-pdbe.wwpdb.org/service/messaging/forward_msg',
-                                      'PDBE_LEGACY': 'https://deposit-pdbe.wwpdb.org/service/messaging/forward_msg',
-                                      'PDBE_DEV': 'https://wwwdev.ebi.ac.uk/pdbe-da/service/messaging/forward_msg',
-                                      }
+    _projectForwardingSiteServiceD = {
+        "WWPDB_DEPLOY_PRODUCTION_RU": "https://da-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg",
+        "WWPDB_DEPLOY_PRODUCTION_UCSD": "https://dna1.rcsb.org/service/messaging/forward_msg",
+        "WWPDB_DEPLOY_LEGACY_RU": "https://da-legacy-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg",
+        "WWPDB_DEPLOY_PRODUCTION_PDBJ": "https://onedep-ann-1.pdbj.org/service/messaging/forward_msg",
+        "WWPDB_DEPLOY_ALPHA_RU": "https://da-ann-alpha-0.rcsb.rutgers.edu/service/messaging/forward_msg",
+        "WWPDB_DEPLOY_BETA_RU": "https://onedep-beta-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg",
+        "WWPDB_DEPLOY_DEPGRP1_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/forward_msg",
+        "WWPDB_DEPLOY_DEPGRP2_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/forward_msg",
+        "WWPDB_DEPLOY_TEST_RU": "https://da-test-1-ann.rcsb.rutgers.edu/service/messaging/forward_msg",
+        "PDBE_PROD": "https://deposit-pdbe.wwpdb.org/service/messaging/forward_msg",
+        "PDBE_LEGACY": "https://deposit-pdbe.wwpdb.org/service/messaging/forward_msg",
+        "PDBE_DEV": "https://wwwdev.ebi.ac.uk/pdbe-da/service/messaging/forward_msg",
+    }
     """Dictionary of well known project message forwarding service end points"""
 
-    _projectContentWSiteServiceD = {'WWPDB_DEPLOY_PRODUCTION_RU': 'https://onedep-contentws-rcsb.wwpdb.org',
-                                    'WWPDB_DEPLOY_LEGACY_RU': 'https://onedep-contentws-rcsb.wwpdb.org',
-                                    'WWPDB_DEPLOY_TEST_RU': 'https://da-test-1-dep.rcsb.rutgers.edu',
-                                    'PDBE_DEV': 'https://dev.pdbe.org',
-                                    'PDBE_STG': 'https://dev.pdbe.org',
-                                    'PDBE_PROD': 'https://deposit-pdbe.wwpdb.org',
-                                    'WWPDB_DEPLOY_PRODUCTION_PDBJ': 'https://onedep-contentws-pdbj.wwpdb.org',
-                                    'WWPDB_DEPLOY_ALPHA_RU': 'https://da-ws-alpha-0.rcsb.rutgers.edu',
-                                    #'PDBE_LEGACY': 'https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg',
+    _projectContentWSiteServiceD = {
+        "WWPDB_DEPLOY_PRODUCTION_RU": "https://onedep-contentws-rcsb.wwpdb.org",
+        "WWPDB_DEPLOY_LEGACY_RU": "https://onedep-contentws-rcsb.wwpdb.org",
+        "WWPDB_DEPLOY_TEST_RU": "https://da-test-1-dep.rcsb.rutgers.edu",
+        "PDBE_DEV": "https://dev.pdbe.org",
+        "PDBE_STG": "https://dev.pdbe.org",
+        "PDBE_PROD": "https://deposit-pdbe.wwpdb.org",
+        "WWPDB_DEPLOY_PRODUCTION_PDBJ": "https://onedep-contentws-pdbj.wwpdb.org",
+        "WWPDB_DEPLOY_ALPHA_RU": "https://da-ws-alpha-0.rcsb.rutgers.edu",
+        # 'PDBE_LEGACY': 'https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg',
     }
     """Dictionary of well known contentws forwarding service urls"""
 
@@ -528,10 +531,10 @@ class ConfigInfoData(object):
     # ----------------------------------------------------------------------------------------------
     #   --- PLEASE remove the following unused class-level assignments ---
     #
-    _configSiteDeployPath = '/net/anypath'
-    _configSiteToolsDeployPath = os.path.join(_configSiteDeployPath, 'tools-centos-6')
-    _configSitePackagesDeployPath = os.path.join(_configSiteDeployPath, 'tools-centos-6', 'packages')
-    _configSiteMachineName = 'http://localhost:8000'
+    _configSiteDeployPath = "/net/anypath"
+    _configSiteToolsDeployPath = os.path.join(_configSiteDeployPath, "tools-centos-6")
+    _configSitePackagesDeployPath = os.path.join(_configSiteDeployPath, "tools-centos-6", "packages")
+    _configSiteMachineName = "http://localhost:8000"
 
     def __init__(self, siteId=None, verbose=True, log=sys.stderr, useCache=True):
         # """The list of configuration key names supported by all sites.
@@ -544,14 +547,15 @@ class ConfigInfoData(object):
         self.__debug = False
         self.__lfh = log
         #
-        if (self.__siteId is None):
+        if self.__siteId is None:
             self.__siteId = str(os.getenv("WWPDB_SITE_ID", None)).upper()
             """The site identification is obtained from the environmental variable `WWPDB_SITE_ID`
             """
 
         if self.__verbose and self.__siteId is None:
-            self.__lfh.write("%s.%s WARNING - no siteId assigned in constructor or found in the environemt (WWPDB_SITE_ID).\n" %
-                             (self.__class__.__name__, sys._getframe().f_code.co_name))
+            self.__lfh.write(
+                "%s.%s WARNING - no siteId assigned in constructor or found in the environemt (WWPDB_SITE_ID).\n" % (self.__class__.__name__, sys._getframe().f_code.co_name)
+            )
 
         #
         # -------------------------------------------------------------------------------------------------------
@@ -568,12 +572,14 @@ class ConfigInfoData(object):
                 cls = ConfigInfoFileCache()
                 cacheD = cls.getConfigDictionary(siteId=self.__siteId)
                 if self.__debug:
-                    self.__lfh.write("%s.%s Imported cached configuration dictionary length %d for site %s\n" %
-                                     (self.__class__.__name__, sys._getframe().f_code.co_name, len(cacheD), self.__siteId))
+                    self.__lfh.write(
+                        "%s.%s Imported cached configuration dictionary length %d for site %s\n"
+                        % (self.__class__.__name__, sys._getframe().f_code.co_name, len(cacheD), self.__siteId)
+                    )
                 if len(cacheD) > 0:
                     readCache = True
                     self.__D = cacheD
-            except:
+            except:  # noqa: E722 pylint: disable=bare-except
                 if self.__debug:
                     self.__lfh.write("%s.%s failed importing cache for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
                     traceback.print_exc(file=self.__lfh)
@@ -583,16 +589,14 @@ class ConfigInfoData(object):
             # Use fall back configuration options for now  -- to be deprecated in the future --
             #
             if not readCache and self.__siteId is not None:
-                self.__lfh.write("%s.%s No configuration for site %s\n" %
-                                 (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
+                self.__lfh.write("%s.%s No configuration for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
                 # self.__setup(self.__siteId)
                 # if self.__verbose:
                 #    self.__lfh.write("%s.%s Cache not used imported fallback configuration dictionary length %d for site %s\n" %
                 #                     (self.__class__.__name__, sys._getframe().f_code.co_name, len(self.__D), self.__siteId))
         else:
             if self.__siteId is not None:
-                self.__lfh.write("%s.%s No configuration for site %s\n" %
-                                 (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
+                self.__lfh.write("%s.%s No configuration for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
                 # self.__setup(self.__siteId)
                 # if self.__verbose:
                 #    self.__lfh.write("%s.%s Imported fallback configuration dictionary length %d for site %s\n" %
@@ -603,18 +607,18 @@ class ConfigInfoData(object):
         #  to project operation and should remain as static declarations in this class module.
         #
         self.__addMilestoneVariants()
-        self.__D['FILE_FORMAT_EXTENSION_DICTIONARY'] = ConfigInfoData._fileFormatExtensionD
-        self.__D['CONTENT_TYPE_DICTIONARY'] = ConfigInfoData._contentTypeInfoD
-        self.__D['CONTENT_MILESTONE_LIST'] = ConfigInfoData._contentMilestoneL
-        self.__D['CONTENT_MILESTONE_ARCHIVE_LIST'] = [t for t in ConfigInfoData._contentMilestoneL if t != 'upload-convert']
-        self.__D['CONTENT_TYPE_BASE_DICTIONARY'] = ConfigInfoData._contentTypeInfoBaseD
-        self.__D['SITE_DATASET_ID_ASSIGNMENT_DICTIONARY'] = ConfigInfoData._siteDataSetIdAssignmentD
-        self.__D['SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY'] = ConfigInfoData._siteDataSetTestIdAssignmentD
-        self.__D['SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY'] = ConfigInfoData._siteGroupDataSetIdAssignmentD
-        self.__D['PROJECT_DEPOSIT_SERVICE_DICTIONARY'] = ConfigInfoData._projectDepositSiteServiceD
-        self.__D['PROJECT_CORRESPOND_SERVICE_DICTIONARY'] = ConfigInfoData._projectCorrespondSiteServiceD
-        self.__D['PROJECT_FORWARDING_SERVICE_DICTIONARY'] = ConfigInfoData._projectForwardingSiteServiceD
-        self.__D['PROJECT_CONTENTWS_SERVICE_DICTIONARY'] = ConfigInfoData._projectContentWSiteServiceD
+        self.__D["FILE_FORMAT_EXTENSION_DICTIONARY"] = ConfigInfoData._fileFormatExtensionD
+        self.__D["CONTENT_TYPE_DICTIONARY"] = ConfigInfoData._contentTypeInfoD
+        self.__D["CONTENT_MILESTONE_LIST"] = ConfigInfoData._contentMilestoneL
+        self.__D["CONTENT_MILESTONE_ARCHIVE_LIST"] = [t for t in ConfigInfoData._contentMilestoneL if t != "upload-convert"]
+        self.__D["CONTENT_TYPE_BASE_DICTIONARY"] = ConfigInfoData._contentTypeInfoBaseD
+        self.__D["SITE_DATASET_ID_ASSIGNMENT_DICTIONARY"] = ConfigInfoData._siteDataSetIdAssignmentD
+        self.__D["SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY"] = ConfigInfoData._siteDataSetTestIdAssignmentD
+        self.__D["SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY"] = ConfigInfoData._siteGroupDataSetIdAssignmentD
+        self.__D["PROJECT_DEPOSIT_SERVICE_DICTIONARY"] = ConfigInfoData._projectDepositSiteServiceD
+        self.__D["PROJECT_CORRESPOND_SERVICE_DICTIONARY"] = ConfigInfoData._projectCorrespondSiteServiceD
+        self.__D["PROJECT_FORWARDING_SERVICE_DICTIONARY"] = ConfigInfoData._projectForwardingSiteServiceD
+        self.__D["PROJECT_CONTENTWS_SERVICE_DICTIONARY"] = ConfigInfoData._projectContentWSiteServiceD
 
     def getConfigDictionary(self):
         return self.__D
@@ -632,7 +636,6 @@ class ConfigInfoData(object):
         for k, v in ConfigInfoData._contentTypeInfoBaseD.items():
             ConfigInfoData._contentTypeInfoD[k] = v
             for ms in ConfigInfoData._contentMilestoneL:
-                kM = k + '-' + ms
-                acM = v[1] + '-' + ms
+                kM = k + "-" + ms
+                acM = v[1] + "-" + ms
                 ConfigInfoData._contentTypeInfoD[kM] = (v[0], acM)
-

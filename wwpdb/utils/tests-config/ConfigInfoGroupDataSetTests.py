@@ -19,24 +19,36 @@ __version__ = "V0.01"
 
 import sys
 import unittest
-import traceback
 import time
 import os
 import platform
+import logging
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
-TESTOUTPUT = os.path.join(HERE, 'test-output', platform.python_version())
+TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
 if not os.path.exists(TESTOUTPUT):
     os.makedirs(TESTOUTPUT)
-mockTopPath = os.path.join(TOPDIR, 'wwpdb', 'mock-data')
+mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
+rwMockTopPath = os.path.join(TESTOUTPUT)
 
 # Must create config file before importing ConfigInfo
-from wwpdb.utils.testing.SiteConfigSetup  import SiteConfigSetup
-SiteConfigSetup().setupEnvironment(TESTOUTPUT, mockTopPath)
+from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
+from wwpdb.utils.testing.CreateRWTree import CreateRWTree  # noqa: E402
 
-from wwpdb.utils.config.ConfigInfoGroupDataSet import ConfigInfoGroupDataSet
-from wwpdb.utils.config.ConfigInfo import ConfigInfo
+# Copy site-config and selected items
+crw = CreateRWTree(mockTopPath, TESTOUTPUT)
+crw.createtree(["site-config", "depuiresources"])
+# Use populate r/w site-config using top mock site-config
+SiteConfigSetup().setupEnvironment(rwMockTopPath, rwMockTopPath)
+
+from wwpdb.utils.config.ConfigInfoGroupDataSet import ConfigInfoGroupDataSet  # noqa: E402
+from wwpdb.utils.config.ConfigInfo import ConfigInfo  # noqa: E402
+
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]-%(module)s.%(funcName)s: %(message)s")
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 class ConfigInfoGroupDataSetTests(unittest.TestCase):
@@ -45,80 +57,56 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
     """
 
     def setUp(self):
+        self.__startTime = time.time()
+        logger.info("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
+
         self.__lfh = sys.stdout
         self.__verbose = True
         #
-        self.__groupIdList = ['G_1', 'G_1002001', 'G_1002003', 'G_1002005', 'G_1002007', 'G_1002009', 'G_1002011', 'G_1002013']
-        self.__siteIdList = ['WWPDB_DEPLOY_DEPGRP1_RU', 'WWPDB_DEPLOY_DEPGRP1_RU', 'WWPDB_DEPLOY_TEST_RU',
-                             'UNASSIGNED', 'SILLYSITE']
+        self.__groupIdList = ["G_1", "G_1002001", "G_1002003", "G_1002005", "G_1002007", "G_1002009", "G_1002011", "G_1002013"]
+        self.__siteIdList = ["WWPDB_DEPLOY_DEPGRP1_RU", "WWPDB_DEPLOY_DEPGRP1_RU", "WWPDB_DEPLOY_TEST_RU", "UNASSIGNED", "SILLYSITE"]
 
     def tearDown(self):
-        pass
+        endTime = time.time()
+        logger.info("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
 
     def testGetSiteLocation(self):
         """Test case -  return site location
         """
-        startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             for siteId in self.__siteIdList:
                 ci = ConfigInfo(siteId=siteId, verbose=self.__verbose, log=self.__lfh)
                 siteName = ci.get("SITE_NAME", default=None)
                 siteLoc = ci.get("WWPDB_SITE_LOC", default=None)
-                self.__lfh.write(" siteId %-30s siteName %s siteLoc %s\n" % (siteId, siteName, siteLoc))
-        except:
-            traceback.print_exc(file=self.__lfh)
+                logger.info(" siteId %-30s siteName %s siteLoc %s", siteId, siteName, siteLoc)
+        except Exception as e:
+            logger.exception("Unable to get group site location %s", str(e))
             self.fail()
-
-        endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%.2f seconds)\n" % (self.__class__.__name__,
-                                                                       sys._getframe().f_code.co_name,
-                                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                       endTime - startTime))
 
     def testGetSiteGroupIdRange(self):
         """Test case -  return default id ranges selected sites.
         """
-        startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             cfds = ConfigInfoGroupDataSet(self.__verbose, self.__lfh)
             for siteId in self.__siteIdList:
                 (lId, uId) = cfds.getDefaultGroupIdRange(siteId=siteId)
-                self.__lfh.write(" siteId %-30s lower %-12d upper %-12d \n" % (siteId, lId, uId))
-        except:
-            traceback.print_exc(file=self.__lfh)
+                logger.info(" siteId %-30s lower %-12d upper %-12d", siteId, lId, uId)
+        except Exception as e:
+            logger.exception("Unable to get group id range %s", str(e))
             self.fail()
-
-        endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%.2f seconds)\n" % (self.__class__.__name__,
-                                                                       sys._getframe().f_code.co_name,
-                                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                       endTime - startTime))
 
     def testGetSiteId(self):
         """Test case -  translate data set id to site id.
         """
-        startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             cfds = ConfigInfoGroupDataSet(self.__verbose, self.__lfh)
             for testId in self.__groupIdList:
                 siteId = cfds.getDefaultSiteId(groupId=testId)
-                self.__lfh.write(" testId %-12s siteId %20s\n" % (testId, siteId))
+                logger.info(" testId %-12s siteId %20s", testId, siteId)
 
-        except:
-            traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.exception("Unable to get group site id %s", str(e))
             self.fail()
-
-        endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%.2f seconds)\n" % (self.__class__.__name__,
-                                                                       sys._getframe().f_code.co_name,
-                                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                       endTime - startTime))
 
 
 def suiteGetSiteLocation():
@@ -139,16 +127,12 @@ def suiteGetGroupIdRange():
     return suiteSelect
 
 
-if __name__ == '__main__':
-    #
-    if (True):
-        mySuite = suiteGetSiteId()
-        unittest.TextTestRunner(verbosity=2).run(mySuite)
+if __name__ == "__main__":
+    mySuite = suiteGetSiteId()
+    unittest.TextTestRunner(verbosity=2).run(mySuite)
 
-        mySuite = suiteGetGroupIdRange()
-        unittest.TextTestRunner(verbosity=2).run(mySuite)
+    mySuite = suiteGetGroupIdRange()
+    unittest.TextTestRunner(verbosity=2).run(mySuite)
 
-        mySuite = suiteGetSiteLocation()
-        unittest.TextTestRunner(verbosity=2).run(mySuite)
-    #
-    #
+    mySuite = suiteGetSiteLocation()
+    unittest.TextTestRunner(verbosity=2).run(mySuite)

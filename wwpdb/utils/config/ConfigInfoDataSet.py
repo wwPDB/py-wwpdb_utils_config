@@ -24,10 +24,12 @@ __version__ = "V0.01"
 import sys
 import json
 import datetime
-import traceback
+import logging
 from oslo_concurrency import lockutils
 
 from wwpdb.utils.config.ConfigInfo import ConfigInfo
+
+logger = logging.getLogger(__name__)
 
 
 class ConfigInfoDataSet(object):
@@ -43,13 +45,13 @@ class ConfigInfoDataSet(object):
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
         # Default data set id range assignments
-        self.__depIdAssignments = self.__cI.get('SITE_DATASET_ID_ASSIGNMENT_DICTIONARY')
-        self.__depTestIdAssignments = self.__cI.get('SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY')
-        self.__groupIdAssignments = self.__cI.get('SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY')
-        self.__siteBackupD = self.__cI.get('SITE_BACKUP_DICT', default={})
+        self.__depIdAssignments = self.__cI.get("SITE_DATASET_ID_ASSIGNMENT_DICTIONARY")
+        self.__depTestIdAssignments = self.__cI.get("SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY")
+        self.__groupIdAssignments = self.__cI.get("SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY")
+        self.__siteBackupD = self.__cI.get("SITE_BACKUP_DICT", default={})
         self.__dsLocD = None
         #
-        self.__lockDirPath = self.__cI.get("SITE_SERVICE_REGISTRATION_LOCKDIR_PATH", '/tmp')
+        self.__lockDirPath = self.__cI.get("SITE_SERVICE_REGISTRATION_LOCKDIR_PATH", "/tmp")
         lockutils.set_defaults(self.__lockDirPath)
 
     def getSiteId(self, depSetId):
@@ -64,7 +66,7 @@ class ConfigInfoDataSet(object):
             # is mySiteId a backup for siteId?
             if siteId in self.__siteBackupD and mySiteId in self.__siteBackupD[siteId]:
                 if self.__debug:
-                    self.__lfh.write("%s.%s using backup %s for %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, mySiteId, siteId))
+                    logger.debug("using backup %s for %s", mySiteId, siteId)
                 siteId = mySiteId
 
         return siteId
@@ -74,10 +76,10 @@ class ConfigInfoDataSet(object):
         try:
             d = self.__readLocationDictionary()
             return d
-        except:
-            self.__lfh.write("%s.%s failed reading data set location dictionary.\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+        except Exception as e:
+            logger.error("failed reading data set location dictionary: %s", str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed reading data set location dictionary")
         return d
 
     def getDataSetLocations(self, siteId):
@@ -88,10 +90,10 @@ class ConfigInfoDataSet(object):
                 if d[ky] == siteId:
                     dsL.append(ky)
             return dsL
-        except:
-            self.__lfh.write("%s.%s failed reading data set locations for site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
+        except Exception as e:
+            logger.info("failed reading data set locations for site %r - %s", siteId, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed reading data set locations for site %r - %s", siteId, str(e))
         return []
 
     def removeDataSets(self, dataSetIdList):
@@ -101,10 +103,10 @@ class ConfigInfoDataSet(object):
                 if dsId in d:
                     del d[dsId]
             return self.__writeLocationDictionary(d)
-        except:
-            self.__lfh.write("%s.%s failed\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+        except Exception as e:
+            logger.error("failed %s", str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed")
         return False
 
     def writeLocationList(self, siteId, dataSetIdList):
@@ -113,10 +115,10 @@ class ConfigInfoDataSet(object):
             for dsId in dataSetIdList:
                 d[dsId] = siteId
             return self.__writeLocationDictionary(d)
-        except:
-            self.__lfh.write("%s.%s failed data set locations for site %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteId))
+        except Exception as e:
+            logger.error("failed data set locations for site %r - %s", siteId, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed data set locations for site %rs", siteId)
         return False
 
     def __readLocationDictionary(self):
@@ -124,27 +126,27 @@ class ConfigInfoDataSet(object):
 
              Returns: d[<data_set_id>] = <site_id> or a empty dictionary.
         """
-        fp = self.__cI.get('SITE_DATASET_SITELOC_FILE_PATH')
+        fp = self.__cI.get("SITE_DATASET_SITELOC_FILE_PATH")
         try:
             with open(fp, "r") as infile:
                 return json.load(infile)
-        except:
-            self.__lfh.write("%s.%s failed reading json resource file %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, fp))
+        except Exception as e:
+            logger.error("failed reading json resource file %s - %s", fp, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed reading json resource file %s", fp)
         return {}
 
-    @lockutils.synchronized('configdataset.exceptionfile-lock', external=True)
+    @lockutils.synchronized("configdataset.exceptionfile-lock", external=True)
     def __writeLocationDictionary(self, dsLocD, backup=True):
         """  Write the input dictionary cotaining exceptional data set to site correspondences,
 
              Returns: True for success or False otherwise
         """
-        fp = self.__cI.get('SITE_DATASET_SITELOC_FILE_PATH')
+        fp = self.__cI.get("SITE_DATASET_SITELOC_FILE_PATH")
 
         try:
             if backup:
-                bp = fp + datetime.datetime.now().strftime('-%Y-%m-%d-%H-%M-%S')
+                bp = fp + datetime.datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
                 d = self.__readLocationDictionary()
                 with open(bp, "w") as outfile:
                     json.dump(d, outfile, indent=4)
@@ -152,10 +154,10 @@ class ConfigInfoDataSet(object):
             with open(fp, "w") as outfile:
                 json.dump(dsLocD, outfile, indent=4)
             return True
-        except:
-            self.__lfh.write("%s.%s failed writing json resource file %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, fp))
+        except Exception as e:
+            logger.error("failed writing json resource file %s - %s", fp, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed writing json resource file %s", fp)
         return False
 
     def getDefaultIdRange(self, siteId):
@@ -168,8 +170,8 @@ class ConfigInfoDataSet(object):
         """
         if siteId in self.__depIdAssignments:
             DEPID_START, DEPID_STOP = self.__depIdAssignments[siteId]
-        elif 'UNASSIGNED' in self.__depIdAssignments:
-            DEPID_START, DEPID_STOP = self.__depIdAssignments['UNASSIGNED']
+        elif "UNASSIGNED" in self.__depIdAssignments:
+            DEPID_START, DEPID_STOP = self.__depIdAssignments["UNASSIGNED"]
         else:
             DEPID_START, DEPID_STOP = (-1, -1)
         return (DEPID_START, DEPID_STOP)
@@ -188,7 +190,6 @@ class ConfigInfoDataSet(object):
             DEPID_START, DEPID_STOP = (-1, -1)
         return (DEPID_START, DEPID_STOP)
 
-
     def getDefaultSiteId(self, depSetId):
         """  Get the default site assignment for the input data set id.
         """
@@ -205,32 +206,28 @@ class ConfigInfoDataSet(object):
         try:
             if self.__dsLocD is None:
                 self.__dsLocD = self.__readLocationDictionary()
-            if str(depSetId)[:2] == 'D_':
+            if str(depSetId)[:2] == "D_":
                 if depSetId in self.__dsLocD:
                     return self.__dsLocD[depSetId]
             else:
-                tId = 'D_' + str("%010d" % int(depSetId))
+                tId = "D_" + str("%010d" % int(depSetId))
                 if tId in self.__dsLocD:
                     return self.__dsLocD[tId]
-        except:
+        except Exception as e:
             if self.__debug:
-                self.__lfh.write("%s.%s failed checking for exception dictionary for %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, depSetId))
-                traceback.print_exc(file=self.__lfh)
-            pass
+                logger.exception("failed checking for exception dictionary for %r - %s", depSetId, str(e))
         #
         # check default range assignment --
         try:
-            if str(depSetId).startswith('D_'):
+            if str(depSetId).startswith("D_"):
                 idVal = int(str(depSetId)[2:])
             else:
                 idVal = int(str(depSetId))
             for ky in self.__depIdAssignments.keys():
                 idMin, idMax = self.__depIdAssignments[ky]
-                if ((idVal >= idMin) and (idVal <= idMax)):
+                if (idVal >= idMin) and (idVal <= idMax):
                     return ky
-        except:
+        except Exception as e:
             if self.__debug:
-                self.__lfh.write("%s.%s failed checking deposition range for %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, depSetId))
-                traceback.print_exc(file=self.__lfh)
-            pass
+                logger.exception("failed checking deposition range for %r - %s", depSetId, str(e))
         return None

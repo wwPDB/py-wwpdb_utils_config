@@ -28,14 +28,17 @@ import sys
 import datetime
 import shutil
 
-import traceback
 import ast
 import json
 from fnmatch import fnmatchcase
+import logging
+
 try:
     import ConfigParser
-except:
+except ImportError:
     import configparser as ConfigParser
+
+logger = logging.getLogger(__name__)
 
 
 class ConfigInfoFile(object):
@@ -48,7 +51,7 @@ class ConfigInfoFile(object):
         self.__lfh = log
         self.__debug = True
         if mockTopPath:
-            self.__mockdefaults = {'test_mockpath_env': mockTopPath}
+            self.__mockdefaults = {"test_mockpath_env": mockTopPath}
         else:
             self.__mockdefaults = {}
         #
@@ -74,7 +77,11 @@ class ConfigInfoFile(object):
         """
         retD = {}
         try:
-            config = ConfigParser.SafeConfigParser(defaults = self.__mockdefaults)
+            if sys.version_info[0] > 2:
+                # Python 3.2 deprecated
+                config = ConfigParser.ConfigParser(defaults=self.__mockdefaults)
+            else:
+                config = ConfigParser.SafeConfigParser(defaults=self.__mockdefaults)
             config.read(configFilePath)
             sectionL = config.sections()
             for section in sectionL:
@@ -84,10 +91,10 @@ class ConfigInfoFile(object):
                 for (k, v) in kvTupL:
                     d[k.upper()] = v
                 retD[sKyU] = d
-        except:
-            self.__lfh.write("+%s.%s failed reading %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, configFilePath))
-            if (self.__debug):
-                traceback.print_exc(file=self.__lfh)
+        except Exception as e:
+            logger.error("failed reading %s", configFilePath)
+            if self.__debug:
+                logger.exception("failed reading %s - %s", configFilePath, str(e))
 
         return retD
 
@@ -112,7 +119,7 @@ class ConfigInfoFile(object):
             # Template substitution performed explicitly here using any preceding content in the 'common' namespace --
             if configPathSectionList is not None:
                 for configFilePath, sectionName, context in configPathSectionList:
-                    config = ConfigParser.RawConfigParser(defaults = self.__mockdefaults, allow_no_value=True)
+                    config = ConfigParser.RawConfigParser(defaults=self.__mockdefaults, allow_no_value=True)
                     config.read(configFilePath)
                     sectionL = config.sections()
                     for tsn in sectionL:
@@ -121,20 +128,19 @@ class ConfigInfoFile(object):
                             # for k, v in kvTupL:
                             #    defaultD[k] = v
                             if self.__debug:
-                                self.__lfh.write("+%s.%s fetching section %s length %d\n" %
-                                                 (self.__class__.__name__, sys._getframe().f_code.co_name, tsn, len(kvTupL)))
-                            if context in ['common']:
+                                logger.info("fetching section %s length %d", tsn, len(kvTupL))
+                            if context in ["common"]:
                                 for (k, v) in kvTupL:
                                     # Respect existing values in the order of config files -
                                     if k not in saveD:
                                         try:
                                             saveD[k] = v % defaultD
                                         except BaseException as e:
-                                            self.__lfh.write("+%s.%s substitution failed for %r %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v, str(e)))
+                                            logger.error("substitution failed for %r %r %r", k, v, str(e))
                                             continue
                                         # update substitution defaults ...
                                         defaultD[k] = saveD[k]
-                            elif context in ['private']:
+                            elif context in ["private"]:
                                 pD = {}
                                 pDU = {}
                                 for (k, v) in kvTupL:
@@ -142,7 +148,7 @@ class ConfigInfoFile(object):
                                         try:
                                             pD[k] = v % defaultD
                                         except BaseException as e:
-                                            self.__lfh.write("+%s.%s substitution failed for %r %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v, str(e)))
+                                            logger.error("substitution failed for %r %r %r", k, v, str(e))
                                             continue
                                         # update substitution defaults ...
                                         defaultD[k] = pD[k]
@@ -154,10 +160,10 @@ class ConfigInfoFile(object):
             # Copy the accumulated saved items for return with upper-cased keys --
             for k, v in saveD.items():
                 retD[k.upper()] = v
-        except:
-            self.__lfh.write("+%s.%s failed reading configuration file list %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, configPathSectionList))
+        except Exception as e:  # noqa: E722
+            logger.error("failed reading configuration file list %r", configPathSectionList)
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed reading file - error %s", str(e))
 
         return retD
 
@@ -171,7 +177,7 @@ class ConfigInfoFile(object):
              sectionD [sectionName] stores a dictionary of options, opD  where opD[k] = v
         """
         try:
-            config = ConfigParser.RawConfigParser(defaults = self.__mockdefaults)
+            config = ConfigParser.RawConfigParser(defaults=self.__mockdefaults)
             for sectionKey in sectionL:
                 opD = sectionD[sectionKey]
                 sectionName = str(sectionKey).lower()
@@ -190,15 +196,15 @@ class ConfigInfoFile(object):
                 #
             ok = self.__copyWithTimeStamp(configFilePath)
             if not ok and requireBackup:
-                self.__lfh.write("+%s.%s failed writing backup config file for %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, configFilePath))
+                logger.error("failed writing backup config file for %s", configFilePath)
                 return False
-            with open(configFilePath, 'wb') as configfile:
+            with open(configFilePath, "w") as configfile:
                 config.write(configfile)
             return True
-        except:
-            self.__lfh.write("+%s.%s failing\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+        except Exception as e:
+            logger.info("failing")
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failing %s", str(e))
         return False
 
     def deserializeConfig(self, configD, optionD=None):
@@ -237,23 +243,23 @@ class ConfigInfoFile(object):
         try:
             if optionD is not None:
                 optD = dict((k.lower(), v) for k, v in optionD.items())
-                if 'config_as_object' in optD:
-                    objD = dict.fromkeys([t.strip().upper() for t in optD['config_as_object'].split(',') if len(t.strip()) > 0])
-                if 'config_csv_as_list' in optD:
-                    lstD = dict.fromkeys([t.strip().upper() for t in optD['config_csv_as_list'].split(',') if len(t.strip()) > 0])
-                if 'config_as_int' in optD:
-                    intD = dict.fromkeys([t.strip().upper() for t in optD['config_as_int'].split(',') if len(t.strip()) > 0])
-                if 'config_as_float' in optD:
-                    fltD = dict.fromkeys([t.strip().upper() for t in optD['config_as_float'].split(',') if len(t.strip()) > 0])
-                if 'config_csv_as_int_list' in optD:
-                    iLstD = dict.fromkeys([t.strip().upper() for t in optD['config_csv_as_int_list'].split(',') if len(t.strip()) > 0])
+                if "config_as_object" in optD:
+                    objD = dict.fromkeys([t.strip().upper() for t in optD["config_as_object"].split(",") if len(t.strip()) > 0])
+                if "config_csv_as_list" in optD:
+                    lstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_list"].split(",") if len(t.strip()) > 0])
+                if "config_as_int" in optD:
+                    intD = dict.fromkeys([t.strip().upper() for t in optD["config_as_int"].split(",") if len(t.strip()) > 0])
+                if "config_as_float" in optD:
+                    fltD = dict.fromkeys([t.strip().upper() for t in optD["config_as_float"].split(",") if len(t.strip()) > 0])
+                if "config_csv_as_int_list" in optD:
+                    iLstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_int_list"].split(",") if len(t.strip()) > 0])
             #
             # if self.__debug:
             #   print "Filter as object", objD
             #
             for (k, v) in configD.items():
                 retD[k] = v
-                if v == 'None':
+                if v == "None":
                     retD[k] = None
 
                 if k in intD:
@@ -264,21 +270,21 @@ class ConfigInfoFile(object):
 
                 try:
                     if k in lstD:
-                        retD[k] = [t.strip() for t in v.split(',')]
+                        retD[k] = [t.strip() for t in v.split(",")]
                     if k in iLstD:
-                        retD[k] = [int(t.strip()) for t in v.split(',')]
-                except:
-                    self.__lfh.write("+%s.%s failed csv list filter %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
+                        retD[k] = [int(t.strip()) for t in v.split(",")]
+                except Exception as e:
+                    logger.error("failed csv filter %r %r - %s", k, v, str(e))
                 #
                 try:
                     if k in objD:
                         retD[k] = ast.literal_eval(v)
-                except:
-                    self.__lfh.write("+%s.%s failed eval filter %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
-        except:
-            self.__lfh.write("+%s.%s failed configuration filter\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+                except Exception as e:
+                    logger.error("failed eval filter %r %r - %s", k, v, str(e))
+        except Exception as e:
+            logger.info("failed configuration filter")
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed configuration filter %s", str(e))
 
         return retD
 
@@ -314,43 +320,44 @@ class ConfigInfoFile(object):
         try:
             if optionD is not None:
                 optD = dict((k.lower(), v) for k, v in optionD.items())
-                if 'config_as_object' in optD:
-                    objD = dict.fromkeys([t.strip().upper() for t in optD['config_as_object'].split(',')])
-                if 'config_csv_as_list' in optD:
-                    lstD = dict.fromkeys([t.strip().upper() for t in optD['config_csv_as_list'].split(',')])
-                if 'config_csv_as_int_list' in optD:
-                    iLstD = dict.fromkeys([t.strip().upper() for t in optD['config_csv_as_int_list'].split(',')])
+                if "config_as_object" in optD:
+                    objD = dict.fromkeys([t.strip().upper() for t in optD["config_as_object"].split(",")])
+                if "config_csv_as_list" in optD:
+                    lstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_list"].split(",")])
+                if "config_csv_as_int_list" in optD:
+                    iLstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_int_list"].split(",")])
             #
             for (k, v) in configD.items():
                 retD[k] = v
                 if v is None:
-                    retD[k] = 'None'
+                    retD[k] = "None"
                 try:
                     if k in lstD or k in iLstD:
-                        if (isinstance(v, list)):
-                            retD[k] = ','.join(str(x) for x in v)
-                except:
-                    self.__lfh.write("+%s.%s failed list join %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
+                        if isinstance(v, list):
+                            retD[k] = ",".join(str(x) for x in v)
+                except Exception as e:
+                    logger.error("failed list join %r %r - %s", k, v, str(e))
                 #
                 try:
                     if k in objD:
                         retD[k] = "%r" % v
-                except:
-                    self.__lfh.write("+%s.%s failed __repr__ %r %r\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, k, v))
-        except:
-            self.__lfh.write("+%s.%s failed configuration filter\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
+                except Exception as e:
+                    logger.error("failed __repr__ %r %r - %s", k, v, str(e))
+        except Exception as e:
+            logger.info("failed configuration filter\n")
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed configuration filter %s", str(e))
 
         return retD
 
     def __copyWithTimeStamp(self, filePath):
         try:
-            bckupPath = filePath + datetime.datetime.now().strftime('-%Y-%m-%d-%H-%M-%S')
+            bckupPath = filePath + datetime.datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
             shutil.copyfile(filePath, bckupPath)
             return True
-        except:
-            pass
+        except Exception as e:
+            logger.info("Could not write backup file %s - %s", bckupPath, str(e))
+
         return False
 
     def writePythonConfigCache(self, cacheD, cacheFilePath, withBackup=True):
@@ -358,11 +365,12 @@ class ConfigInfoFile(object):
         This cache file wraps the configuration dictionary with a class in a module that can be imported.
 
         """
-        template = '''
+        template = """
 import os
 import sys
 import json
 import traceback
+
 
 class ConfigInfoFileCache(object):
     _configD=%r
@@ -407,24 +415,24 @@ class ConfigInfoFileCache(object):
 
         return {}
 
-        '''
+        """
         try:
             if os.access(cacheFilePath, os.R_OK):
                 if withBackup:
                     ok = self.__copyWithTimeStamp(cacheFilePath)
                     if not ok:
-                        self.__lfh.write("+%s.%s failed writing backup cache file for %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, cacheFilePath))
+                        logger.error("failed writing backup cache file for %s", cacheFilePath)
                         return False
-            with open(cacheFilePath, 'wb') as cacheFile:
+            with open(cacheFilePath, "wb") as cacheFile:
                 if sys.version_info[0] > 2:
                     cacheFile.write((template % cacheD).encode())
                 else:
                     cacheFile.write(template % cacheD)
             return True
-        except:
-            self.__lfh.write("+%s.%s failed writing %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, cacheFilePath))
+        except Exception as e:  # noqa: E722
+            logger.info("failed writing %s - %s", cacheFilePath, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed writing %s", cacheFilePath)
         return False
 
     def writeJsonConfigCache(self, cacheD, cacheFilePath, withBackup=True):
@@ -435,15 +443,15 @@ class ConfigInfoFileCache(object):
                 if withBackup:
                     ok = self.__copyWithTimeStamp(cacheFilePath)
                     if not ok:
-                        self.__lfh.write("+%s.%s failed writing backup cache file for %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, cacheFilePath))
+                        logger.error("failed writing backup cache file for %s", cacheFilePath)
                         return False
             with open(cacheFilePath, "w") as outfile:
                 json.dump(cacheD, outfile, indent=4)
             return True
-        except:
-            self.__lfh.write("+%s.%s failed writing %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, cacheFilePath))
+        except Exception as e:
+            logger.info("failed writing %s - %s", cacheFilePath, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed writing %s - %s", cacheFilePath, str(e))
         return False
 
     def readJsonConfigCache(self, cacheFilePath):
@@ -452,8 +460,8 @@ class ConfigInfoFileCache(object):
         try:
             with open(cacheFilePath, "r") as infile:
                 return json.load(infile)
-        except:
-            self.__lfh.write("+%s.%s failed reading %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, cacheFilePath))
+        except Exception as e:
+            logger.info("failed reading %s - %s", cacheFilePath, str(e))
             if self.__debug:
-                traceback.print_exc(file=self.__lfh)
+                logger.exception("failed reading file %s", cacheFilePath)
         return {}
