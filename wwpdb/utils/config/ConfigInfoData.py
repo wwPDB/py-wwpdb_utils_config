@@ -465,7 +465,7 @@ class ConfigInfoData(object):
     _projectDepositSiteServiceD = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://deposit.wwpdb.org/deposition",
         "WWPDB_DEPLOY_NEXT_RU": "https://deposit.wwpdb.org/deposition",
-        "WWPDB_DEPLOY_LEGACY_RU": "https://da-legacy-dep-1.rcsb.rutgers.edu",
+        "WWPDB_DEPLOY_LEGACY_RU": "https://deposit-legacy.wwpdb.org/deposition",
         "WWPDB_DEPLOY_PRODUCTION_UCSD": "https://deposit-rcsb-west.wwpdb.org/deposition",
         "WWPDB_DEPLOY_BETA_RU": "https://onedep-beta-dep-1.rcsb.rutgers.edu",
         "WWPDB_DEPLOY_PRODUCTION_PDBJ": "https://deposit-pdbj.wwpdb.org/deposition",
