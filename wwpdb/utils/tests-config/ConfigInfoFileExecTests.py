@@ -18,7 +18,6 @@ __version__ = "V0.01"
 import os
 import platform
 import unittest
-import shutil
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
@@ -63,26 +62,6 @@ class ConfigInfoFileExecTests(unittest.TestCase):
         cif = ConfigInfoFileExec()
         # Test coverage
         cif.printConfig("rcsb-east", "WWPDB_DEPLOY_TEST")
-
-    def testWriteConfigFallBack(self):
-        """Create a fake callback tree and instantiates files"""
-        outdir = os.path.join(TESTOUTPUT, "mocksite")
-        if os.path.exists(outdir):
-            shutil.rmtree(outdir)
-        cif = ConfigInfoFileExec(mockTopPath=outdir, sourceDirPath=os.path.join(outdir, "site-config"))
-        status = cif.writeConfigFallBack("rcsb-west", "WWPDB_DEPLOY_PRODUCTION_UCSD")
-        self.assertTrue(status, "Creating fallback")
-        testfile = os.path.join(outdir, "site-config", "rcsb-west", "wwpdb_deploy_production_ucsd", "site.cfg")
-        self.assertTrue(os.path.exists(testfile), "Created test file missing")
-
-        # Need to set os.environ for what comes next
-        savenv = os.getenv("TOP_WWPDB_SITE_CONFIG_DIR", default=None)
-        os.environ["TOP_WWPDB_SITE_CONFIG_DIR"] = os.path.join(outdir, "site-config")
-
-        cif = ConfigInfoFileExec(mockTopPath=outdir, sourceDirPath=os.path.join(outdir, "site-config"))
-        status = cif.writeConfigCache("rcsb-west", "wwpdb_deploy_production_ucsd")
-        self.assertTrue(status, "In creating cache files")
-        os.environ["TOP_WWPDB_SITE_CONFIG_DIR"] = savenv
 
 
 if __name__ == "__main__":

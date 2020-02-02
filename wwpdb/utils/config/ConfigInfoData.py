@@ -540,8 +540,6 @@ class ConfigInfoData(object):
         # """The list of configuration key names supported by all sites.
         # """
         self.__D = {}
-        self.__pD = {}
-        self.__rD = {}
         self.__siteId = siteId
         self.__verbose = verbose
         self.__debug = False
@@ -622,12 +620,6 @@ class ConfigInfoData(object):
 
     def getConfigDictionary(self):
         return self.__D
-
-    def getConfigParamDictionary(self):
-        return self.__pD
-
-    def getSiteReplacementDictionary(self):
-        return self.__rD
 
     def __addMilestoneVariants(self):
         """  Update base content dictionary with content milestone variants.
