@@ -22,7 +22,7 @@ import unittest
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
-if not os.path.exists(TESTOUTPUT):
+if not os.path.exists(TESTOUTPUT):  # pragma: no cover
     os.makedirs(TESTOUTPUT)
 mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 rwMockTopPath = os.path.join(TESTOUTPUT)

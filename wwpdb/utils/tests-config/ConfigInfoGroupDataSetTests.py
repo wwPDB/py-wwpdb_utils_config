@@ -27,7 +27,7 @@ import logging
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
-if not os.path.exists(TESTOUTPUT):
+if not os.path.exists(TESTOUTPUT):  # pragma: no cover
     os.makedirs(TESTOUTPUT)
 mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 rwMockTopPath = os.path.join(TESTOUTPUT)
@@ -79,7 +79,7 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
                 siteName = ci.get("SITE_NAME", default=None)
                 siteLoc = ci.get("WWPDB_SITE_LOC", default=None)
                 logger.info(" siteId %-30s siteName %s siteLoc %s", siteId, siteName, siteLoc)
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             logger.exception("Unable to get group site location %s", str(e))
             self.fail()
 
@@ -91,7 +91,7 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
             for siteId in self.__siteIdList:
                 (lId, uId) = cfds.getDefaultGroupIdRange(siteId=siteId)
                 logger.info(" siteId %-30s lower %-12d upper %-12d", siteId, lId, uId)
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             logger.exception("Unable to get group id range %s", str(e))
             self.fail()
 
@@ -104,30 +104,30 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
                 siteId = cfds.getDefaultSiteId(groupId=testId)
                 logger.info(" testId %-12s siteId %20s", testId, siteId)
 
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             logger.exception("Unable to get group site id %s", str(e))
             self.fail()
 
 
-def suiteGetSiteLocation():
+def suiteGetSiteLocation():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoGroupDataSetTests("testGetSiteLocation"))
     return suiteSelect
 
 
-def suiteGetSiteId():
+def suiteGetSiteId():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoGroupDataSetTests("testGetSiteId"))
     return suiteSelect
 
 
-def suiteGetGroupIdRange():
+def suiteGetGroupIdRange():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoGroupDataSetTests("testGetSiteGroupIdRange"))
     return suiteSelect
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     mySuite = suiteGetSiteId()
     unittest.TextTestRunner(verbosity=2).run(mySuite)
 
