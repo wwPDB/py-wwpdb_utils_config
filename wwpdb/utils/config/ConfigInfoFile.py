@@ -167,6 +167,46 @@ class ConfigInfoFile(object):
 
         return retD
 
+    def writeConfig(self, configFilePath, sectionL, sectionD, requireBackup=True, sortKeys=True):
+        """  Write configuration file for the key-value options in the input section dictionary.
+
+             Section names and option keys are converted to lower case.   Option values are
+             not modified.
+
+             sectionL [sectionName,sectionName,...]  oder of
+             sectionD [sectionName] stores a dictionary of options, opD  where opD[k] = v
+        """
+        try:
+            config = ConfigParser.RawConfigParser(defaults=self.__mockdefaults)
+            for sectionKey in sectionL:
+                opD = sectionD[sectionKey]
+                sectionName = str(sectionKey).lower()
+                config.add_section(sectionName)
+                #
+                if sortKeys:
+                    for ky in sorted(opD.keys()):
+                        v = opD[ky]
+                        kyDsp = str(ky).lower()
+                        config.set(sectionName, kyDsp, v)
+                else:
+                    for ky, v in opD.items():
+                        kyDsp = str(ky).lower()
+                        config.set(sectionName, kyDsp, v)
+                #
+                #
+            ok = self.__copyWithTimeStamp(configFilePath)
+            if not ok and requireBackup:
+                logger.error("failed writing backup config file for %s", configFilePath)
+                return False
+            with open(configFilePath, "w") as configfile:
+                config.write(configfile)
+            return True
+        except Exception as e:
+            logger.info("failing")
+            if self.__debug:
+                logger.exception("failing %s", str(e))
+        return False
+
     def deserializeConfig(self, configD, optionD=None):
         """  Apply an adhoc set of filters on the input configuration dictionary.
         Input option values are assumed to be the string values returned by the configuration file parser.
