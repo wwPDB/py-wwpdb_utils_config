@@ -132,7 +132,7 @@ class ConfigInfoFileExec(object):
             cfPath, sectionName, context = self.__getCommonConfigPath(sectionName="common", context="common")  # pylint: disable=unused-variable
             cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
             tD = cf.readConfig(configFilePath=cfPath)
-            if sectionName in tD:
+            if sectionName.upper() in tD:
                 cD = cf.deserializeConfig(tD[sectionName.upper()], optionD=tD[sectionName.upper()])
         except Exception as e:
             self.__lfh.write("__getCommonConfig failing %r\n" % str(e))
