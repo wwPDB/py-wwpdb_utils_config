@@ -187,6 +187,7 @@
 # 17-Jan-2018 ep   add SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY to support testing datasets that are outside normal assignment range
 # 20-Jun-2019 my   add content type 'nmr-unified-data-nef' and 'nmr-unified-data-str'
 # 27-Jun-2019 my   add content type 'nmr-unified-data-nef-report' and 'nmr-unified-data-str-report'
+# 21-Feb-2020 ep   change 'nmr-unified-data-{nef,str}' to 'nmr-data-{nef,str}'
 ##
 """
 Container for general and site-specific configuration data.
@@ -232,11 +233,11 @@ class ConfigInfoData(object):
         "model-legacy-rcsb": (["pdbx", "pdb"], "model-legacy-rcsb"),
         "structure-factors": (["pdbx", "mtz", "txt"], "sf"),
         "structure-factors-legacy-rcsb": (["pdbx", "mtz"], "sf-legacy-rcsb"),
-        "nmr-unified-data-config": (["json"], "nmr-unified-data-config"),
-        "nmr-unified-data-nef": (["nmr-star", "pdbx"], "nmr-unified-data-nef"),
-        "nmr-unified-data-str": (["nmr-star", "pdbx"], "nmr-unified-data-str"),
-        "nmr-unified-data-nef-report": (["json"], "nmr-unified-data-nef-report"),
-        "nmr-unified-data-str-report": (["json"], "nmr-unified-data-str-report"),
+        "nmr-data-config": (["json"], "nmr-data-config"),
+        "nmr-data-nef": (["nmr-star", "pdbx"], "nmr-data-nef"),
+        "nmr-data-str": (["nmr-star", "pdbx"], "nmr-data-str"),
+        "nmr-data-nef-report": (["json"], "nmr-data-nef-report"),
+        "nmr-data-str-report": (["json"], "nmr-data-str-report"),
         "nmr-restraints": (["any", "nmr-star", "amber", "amber-aux", "cns", "cyana", "xplor", "xplor-nih", "pdb-mr", "mr"], "mr"),
         "nmr-chemical-shifts": (["nmr-star", "pdbx", "any"], "cs"),
         "nmr-chemical-shifts-raw": (["nmr-star", "pdbx"], "cs-raw"),
