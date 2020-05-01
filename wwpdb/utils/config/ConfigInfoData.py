@@ -206,7 +206,7 @@ import traceback
 # ----------------------------------------------------------------------------------------------
 #  Try to import externally cached configuration options.  Gracefully ignore any errors.
 try:
-    from ConfigInfoFileCache import ConfigInfoFileCache
+    from ConfigInfoFileCache import ConfigInfoFileCache  # pylint: disable=import-error
 except:  # noqa: E722 pylint: disable=bare-except
     pass
 
