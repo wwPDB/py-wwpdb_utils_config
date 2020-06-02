@@ -62,3 +62,9 @@ class ConfigInfoFileTests(unittest.TestCase):
     def testMock(self):
         cI = ConfigInfo()
         self.assertEqual(cI.get("DEPLOY_PATH"), os.path.join(rwMockTopPath, "da_top"))
+
+    def testBuiltin(self):
+        """Tests if common built in definitions are set"""
+        cI = ConfigInfo()
+        self.assertIsNotNone(cI.get("PROJECT_VAL_REL_CUTOFF"))
+        self.assertIsNone(cI.get("PROJECT_RANDOM"))

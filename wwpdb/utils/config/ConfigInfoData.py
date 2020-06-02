@@ -529,6 +529,8 @@ class ConfigInfoData(object):
     }
     """Dictionary of well known contentws forwarding service urls"""
 
+    _valRelCutoff = "19:00:00"
+    """Local cutoff time on Thursday for producing validation reports"""
     #
     # ----------------------------------------------------------------------------------------------
     #   --- PLEASE remove the following unused class-level assignments ---
@@ -621,6 +623,7 @@ class ConfigInfoData(object):
         self.__D["PROJECT_CORRESPOND_SERVICE_DICTIONARY"] = ConfigInfoData._projectCorrespondSiteServiceD
         self.__D["PROJECT_FORWARDING_SERVICE_DICTIONARY"] = ConfigInfoData._projectForwardingSiteServiceD
         self.__D["PROJECT_CONTENTWS_SERVICE_DICTIONARY"] = ConfigInfoData._projectContentWSiteServiceD
+        self.__D["PROJECT_VAL_REL_CUTOFF"] = ConfigInfoData._valRelCutoff
 
     def getConfigDictionary(self):
         return self.__D
