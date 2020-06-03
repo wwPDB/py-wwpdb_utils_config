@@ -18,6 +18,7 @@ __version__ = "V0.01"
 import os
 import platform
 import unittest
+from datetime import datetime
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
@@ -68,3 +69,21 @@ class ConfigInfoFileTests(unittest.TestCase):
         cI = ConfigInfo()
         self.assertIsNotNone(cI.get("PROJECT_VAL_REL_CUTOFF"))
         self.assertIsNone(cI.get("PROJECT_RANDOM"))
+
+    def testParseCutoff(self):
+        """Tests if common built in definitions are set"""
+        cI = ConfigInfo()
+        val = cI.get("PROJECT_VAL_REL_CUTOFF")
+
+        weeknum = datetime.today().strftime("%U")
+        this_year = datetime.today().strftime("%G")
+        mytime = "{}:{}:{}".format(this_year, weeknum, val)
+        time_t = datetime.strptime(mytime, "%Y:%U:%a:%H:%M:%S")
+        self.assertEqual(time_t.hour, 19)
+        self.assertEqual(time_t.minute, 0)
+        self.assertEqual(time_t.second, 0)
+        self.assertEqual(time_t.isoweekday(), 4)
+
+
+if __name__ == "__main__":
+    unittest.main()

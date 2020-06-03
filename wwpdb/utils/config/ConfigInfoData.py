@@ -529,8 +529,8 @@ class ConfigInfoData(object):
     }
     """Dictionary of well known contentws forwarding service urls"""
 
-    _valRelCutoff = "19:00:00"
-    """Local cutoff time on Thursday for producing validation reports"""
+    _valRelCutoff = "Thu:19:00:00"
+    """Local cutoff weekday/time for producing validation reports"""
     #
     # ----------------------------------------------------------------------------------------------
     #   --- PLEASE remove the following unused class-level assignments ---
