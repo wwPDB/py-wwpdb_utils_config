@@ -70,19 +70,31 @@ class ConfigInfoFileTests(unittest.TestCase):
         self.assertIsNotNone(cI.get("PROJECT_VAL_REL_CUTOFF"))
         self.assertIsNone(cI.get("PROJECT_RANDOM"))
 
+    def _parseTime(self, timestr):
+        weeknum = datetime.today().strftime("%U")
+        this_year = datetime.today().strftime("%G")
+        mytime = "{}:{}:{}".format(this_year, weeknum, timestr)
+        time_t = datetime.strptime(mytime, "%Y:%U:%a:%H:%M:%S")
+        return time_t
+
     def testParseCutoff(self):
         """Tests if common built in definitions are set"""
         cI = ConfigInfo()
         val = cI.get("PROJECT_VAL_REL_CUTOFF")
 
-        weeknum = datetime.today().strftime("%U")
-        this_year = datetime.today().strftime("%G")
-        mytime = "{}:{}:{}".format(this_year, weeknum, val)
-        time_t = datetime.strptime(mytime, "%Y:%U:%a:%H:%M:%S")
+        self.assertEqual(len(val), 2)
+
+        time_t = self._parseTime(val["start"])
         self.assertEqual(time_t.hour, 19)
         self.assertEqual(time_t.minute, 0)
         self.assertEqual(time_t.second, 0)
         self.assertEqual(time_t.isoweekday(), 4)
+
+        time_t = self._parseTime(val["end"])
+        self.assertEqual(time_t.hour, 23)
+        self.assertEqual(time_t.minute, 59)
+        self.assertEqual(time_t.second, 59)
+        self.assertEqual(time_t.isoweekday(), 5)
 
 
 if __name__ == "__main__":
