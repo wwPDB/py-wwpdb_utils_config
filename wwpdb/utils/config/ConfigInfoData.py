@@ -309,6 +309,7 @@ class ConfigInfoData(object):
         "validation-data": (["xml"], "val-data"),
         "validation-report-2fo-map-coef": (["pdbx"], "val-report-wwpdb-2fo-fc-edmap-coef"),
         "validation-report-fo-map-coef": (["pdbx"], "val-report-wwpdb-fo-fc-edmap-coef"),
+        "validation-report-images": (["tar"], "val-report-images"),
         "map-2fofc": (["map"], "map-2fofc"),
         "map-fofc": (["map"], "map-fofc"),
         "map-omit-2fofc": (["map"], "map-omit-2fofc"),
