@@ -150,7 +150,7 @@ class ConfigInfoSiteAccess(object):
             tBegin, tEnd = self.__siteAccessD[siteId]
             dtBegin = self.__getDateTimeUTC(tBegin)
             dtEnd = self.__getDateTimeUTC(tEnd)
-            dtNow = datetime.datetime.utcnow().replace(tzinfo=tz.tzutc())
+            dtNow = datetime.datetime.utcnow() # .replace(tzinfo=tz.tzutc())
             if self.__debug:
                 logger.debug("site %s time begin %s  seconds %r", siteId, tBegin, dtBegin.strftime("%s"))
                 logger.debug("site %s time end   %s  seconds %r", siteId, tBegin, dtBegin.strftime("%s"))
@@ -180,4 +180,4 @@ class ConfigInfoSiteAccess(object):
         utctz = tz.tzutc()
         dt = datetime.datetime.strptime(dateTimeStamp, "%Y-%m-%d %H:%M:%S")
         dtUtc = dt.replace(tzinfo=utctz)
-        return dtUtc
+        return dt
