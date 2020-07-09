@@ -517,6 +517,18 @@ class ConfigInfoData(object):
     }
     """Dictionary of well known project message forwarding service end points"""
 
+    _regions = {'pdbe': ['europe', 'africa', 'antarctica'],
+                'pdbj': ['asia', 'middle east'],
+                'rcsb': ['north america', 'south america', 'oceania']
+                }
+    """Dictionary of geographical locations for each site"""
+
+    _production_sites = {'pdbe': 'PDBE_PROD',
+                         'pdbj': 'WWPDB_DEPLOY_PRODUCTION_PDBJ',
+                         'rcsb': 'WWPDB_DEPLOY_PRODUCTION_RU'
+                         }
+    """names of sites used in production"""
+
     _projectContentWSiteServiceD = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://onedep-contentws-rcsb.wwpdb.org",
         "WWPDB_DEPLOY_LEGACY_RU": "https://onedep-contentws-rcsb.wwpdb.org",
@@ -625,6 +637,8 @@ class ConfigInfoData(object):
         self.__D["PROJECT_FORWARDING_SERVICE_DICTIONARY"] = ConfigInfoData._projectForwardingSiteServiceD
         self.__D["PROJECT_CONTENTWS_SERVICE_DICTIONARY"] = ConfigInfoData._projectContentWSiteServiceD
         self.__D["PROJECT_VAL_REL_CUTOFF"] = ConfigInfoData._valRelCutoffD
+        self.__D["REGIONS"] = ConfigInfoData._regions
+        self.__D["PRODUCTION_SITES"] = ConfigInfoData._production_sites
 
     def getConfigDictionary(self):
         return self.__D
