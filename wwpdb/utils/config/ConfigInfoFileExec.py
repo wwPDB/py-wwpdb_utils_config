@@ -36,7 +36,6 @@ import logging
 from optparse import OptionParser, SUPPRESS_HELP  # pylint: disable=deprecated-module
 
 from wwpdb.utils.config.ConfigInfoFile import ConfigInfoFile
-from wwpdb.utils.config.ConfigInfoFallBack import ConfigInfoFallBack
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s]-%(module)s.%(funcName)s: %(message)s")
 logger = logging.getLogger()
@@ -133,7 +132,7 @@ class ConfigInfoFileExec(object):
             cfPath, sectionName, context = self.__getCommonConfigPath(sectionName="common", context="common")  # pylint: disable=unused-variable
             cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
             tD = cf.readConfig(configFilePath=cfPath)
-            if sectionName in tD:
+            if sectionName.upper() in tD:
                 cD = cf.deserializeConfig(tD[sectionName.upper()], optionD=tD[sectionName.upper()])
         except Exception as e:
             self.__lfh.write("__getCommonConfig failing %r\n" % str(e))
@@ -348,88 +347,6 @@ class ConfigInfoFileExec(object):
             }
         return siteD
 
-    def writeConfigFallBack(self, siteLoc, selectSiteId=None):
-        """ Using the legacy fallback configuration options, create initial configuration files (.cfg) for
-        all of the sites defined for the input location.  Files are created in the project configuration
-        file system path (e.g. within the path assigned to environmental variable "TOP_WWPDB_SITE_CONFIG_DIR").
-        Directories are create as needed within this path.  Configuration options which are common for all
-        sites are stored in the site_common/common.cfg file.  Site specific options are stored under each
-        site as siteId1/site.cfg.  Common path elements are templatized (e.g. %(replace_me)s) in the
-        common.cfg file.
-
-        siteId != None to selectively update the input site.
-
-        The file organization is as follows::
-
-                                           top_config_dir
-                                                 |
-                    ----------------------------------------------------------------  ....
-                    |                           |                                  |
-                 common                      siteLoc1                            siteLoc2
-                    |                           |
-                common.cfg           ----------------------------- ....
-                                     |          |           |
-                                site_common   siteId1   siteId2 ....
-                                     |          |           |
-                                 common.cfg   site.cfg  site.cfg
-
-
-
-
-
-        """
-        self.__lfh.write("Starting with location %r\n" % siteLoc)
-
-        try:
-            siteD = self.__getLocSiteD()
-            cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
-            cfb = ConfigInfoFallBack(verbose=self.__verbose, log=self.__lfh)
-            locCmD = cfb.getCommonOptions(siteD=siteD)
-            #
-
-            if siteLoc.upper() in siteD:
-                siteIdList = siteD[siteLoc.upper()]
-                siteCmL, siteKyL = locCmD[siteLoc.upper()]
-                siteCmD = {}
-                for siteId in siteIdList:
-                    siteSpD = {}
-                    cfPath, sectName, context = self.__getSiteConfigPath(siteLoc=siteLoc, siteId=siteId, sectionName=siteId.lower())  # pylint: disable=unused-variable
-                    dP, fN = os.path.split(cfPath)  # pylint: disable=unused-variable
-                    self.__mkdir(dP)
-                    spD, cmD, subList, pD, rD, cD = cfb.getFallBackConfig(siteId=siteId)  # pylint: disable=unused-variable
-                    if self.__debug:
-                        self.__lfh.write("Location %s site %s length spD %d length cmD %d length siteKL %d\n" % (siteLoc, siteId, len(spD), len(cmD), len(siteKyL)))
-                    # fill in the values for the common options dictionary --
-                    for k in spD.keys():
-                        siteSpD[k] = spD[k]
-                    otherL = list(set(siteKyL) - set(siteCmL))
-                    for k in otherL:
-                        if k in spD:
-                            siteSpD[k] = spD[k]
-                        elif k in cmD:
-                            siteSpD[k] = cmD[k]
-                    for k in siteCmL:
-                        if k in cmD and k not in siteCmD:
-                            siteCmD[k] = cmD[k]
-                    if (selectSiteId is None) or (selectSiteId.upper() == siteId.upper()):
-                        if self.__verbose:
-                            self.__lfh.write("Creating configuration file for location %s site %s option length %d\n" % (siteLoc, siteId, len(siteSpD)))
-                        cf.writeConfig(configFilePath=cfPath, sectionL=[siteId], sectionD={siteId: siteSpD}, requireBackup=False)
-                #
-                cfPath, sectName, context = self.__getSiteCommonConfigPath(siteLoc=siteLoc)
-                dP, fN = os.path.split(cfPath)
-                self.__mkdir(dP)
-                if self.__verbose:
-                    self.__lfh.write("Creating site common configuration file for location %s option length %d\n" % (siteLoc, len(siteCmD)))
-
-                cf.writeConfig(configFilePath=cfPath, sectionL=["site_common"], sectionD={"site_common": siteCmD}, requireBackup=False)
-                return True
-        except Exception as e:
-            self.__lfh.write("writeConfigFallBack for %r - %r\n" % (siteLoc, str(e)))
-            traceback.print_exc(file=self.__lfh)
-
-        return False
-
 
 def main():  # pragma: no cover
     usage = """usage: %prog [options]
@@ -451,13 +368,6 @@ def main():  # pragma: no cover
      Include additional locally scoped configuration sections using --sections="sec1,sec2,..." that
      will be stored in embedded dictionaries using section name keys (default=os_environment,httpd_services)
 
-     Write the initial configuration files for a project location using fallback options stored
-     in the ConfigInfoData() class.  Common configuration options are identified and stored in
-     the file <top_config_dir>/site-common/common.cfg.  This is option is provided as a one-time
-     bootstrap to create a preliminaty set of configuration option files.
-
-       python %prog --writefallback --locid=rcsb-east
-
     """
     parser = OptionParser(usage)
 
@@ -466,7 +376,6 @@ def main():  # pragma: no cover
     parser.add_option(
         "--writecache", dest="writeCache", action="store_true", default=False, help="Write configuration cache file for a site (--siteid) within a location (--locid)"
     )
-    parser.add_option("--writefallback", dest="writeFallBack", action="store_true", default=False, help="Write default configuration files for a location (--locid)")
 
     parser.add_option("--siteid", dest="siteId", default=None, help="wwPDB site ID (e.g. WWPDB_DEPLOY_TEST_RU)")
     parser.add_option("--locid", dest="locId", default=None, help="wwPDB location ID (e.g. pdbe, pdbj, rcsb-east, ... )")
@@ -520,9 +429,6 @@ def main():  # pragma: no cover
         cI.writeConfigCache(siteLoc=options.locId, siteId=options.siteId)
     elif options.writeCache and options.siteId is None and options.locId is not None and cI.testConfigPath(accessType="write"):
         cI.writeLocationConfigCache(siteLoc=options.locId)
-
-    if options.writeFallBack and options.locId is not None and cI.testConfigPath(accessType="write"):
-        cI.writeConfigFallBack(siteLoc=options.locId, selectSiteId=options.siteId)
 
 
 if __name__ == "__main__":

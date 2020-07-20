@@ -26,7 +26,7 @@ import logging
 try:
     from urllib.request import urlopen
     from urllib.error import HTTPError, URLError
-except ImportError:
+except ImportError:  # pragma: no cover
     from urllib2 import urlopen, HTTPError, URLError
 import ssl
 import traceback
@@ -125,10 +125,10 @@ class ConfigInfoSiteAccess(object):
         except HTTPError as e:
             if e.code < 402:
                 return True
-        except URLError as e:
+        except URLError as e:  # pragma: no cover
             if self.__verbose:
                 logger.info("site %s url %s error %s", siteId, url, str(e.reason))
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             if self.__verbose:
                 logger.error("site %s scode %r url %s\n", siteId, scode, url)
             if self.__debug:

@@ -27,7 +27,7 @@ import logging
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
-if not os.path.exists(TESTOUTPUT):
+if not os.path.exists(TESTOUTPUT):  # pragma: no cover
     os.makedirs(TESTOUTPUT)
 mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 rwMockTopPath = os.path.join(TESTOUTPUT)
@@ -116,7 +116,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
                 if siteId in self.__siteIdRanges:
                     self.assertEqual(lId, refLid)
                     self.assertEqual(uId, refUid)
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             logger.exception("Failure in getting id range %s", str(e))
             self.fail()
 
@@ -129,7 +129,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
                 siteId = cfds.getSiteId(depSetId=testId)
                 logger.info(" testId %-12s siteId %20s", testId, siteId)
                 self.assertEqual(siteId, self.__testIdLoc[testId])
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             logger.exception("Update to get site id for dataset %s", str(e))
             self.fail()
 
@@ -145,30 +145,30 @@ class ConfigInfoDataSetTests(unittest.TestCase):
                 if siteId in self.__siteIdTestRanges:
                     self.assertEqual(lId, refLid)
                     self.assertEqual(uId, refUid)
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             logger.exception("Failre to get SiteIdTestRange %s", str(e))
             self.fail()
 
 
-def suiteGetSiteId():
+def suiteGetSiteId():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoDataSetTests("testGetSiteId"))
     return suiteSelect
 
 
-def suiteGetIdTestRange():
+def suiteGetIdTestRange():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoDataSetTests("testGetSiteIdTestRange"))
     return suiteSelect
 
 
-def suiteGetIdRange():
+def suiteGetIdRange():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoDataSetTests("testGetSiteIdRange"))
     return suiteSelect
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     #
     mySuite = suiteGetSiteId()
     siteRes = unittest.TextTestRunner(verbosity=2).run(mySuite).wasSuccessful()

@@ -27,7 +27,7 @@ import logging
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
-if not os.path.exists(TESTOUTPUT):
+if not os.path.exists(TESTOUTPUT):  # pragma: no cover
     os.makedirs(TESTOUTPUT)
 mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 rwMockTopPath = os.path.join(TESTOUTPUT)
@@ -81,7 +81,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
 
                 logger.info(" siteId %-30s status %r", siteId, status)
                 self.assertEqual(status, should, "Status mismatch for %s" % siteId)
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             logger.exception("Determining if site is available %s", str(e))
             self.fail()
 
@@ -93,7 +93,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
             for siteId in self.__siteIdList:
                 status = cfsa.isServiceReachable(siteId, timeout=5)
                 logger.info(" siteId %-30s reachable %r", siteId, status)
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             logger.exception("Determining if site is reachable %s", str(e))
             self.fail()
 
@@ -130,7 +130,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
         self.assertEqual(status, ("2016-08-26 06:00:00", "2016-09-02 06:00:00"), "Failed to get downtime")
 
 
-def suiteTestSiteAccess():
+def suiteTestSiteAccess():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoSiteAccessTests("testSiteAvailable"))
     suiteSelect.addTest(ConfigInfoSiteAccessTests("testSiteReachable"))
@@ -138,6 +138,6 @@ def suiteTestSiteAccess():
     return suiteSelect
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     mySuite = suiteTestSiteAccess()
     unittest.TextTestRunner(verbosity=2).run(mySuite)
