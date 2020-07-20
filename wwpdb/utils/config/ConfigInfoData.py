@@ -309,6 +309,7 @@ class ConfigInfoData(object):
         "validation-data": (["xml"], "val-data"),
         "validation-report-2fo-map-coef": (["pdbx"], "val-report-wwpdb-2fo-fc-edmap-coef"),
         "validation-report-fo-map-coef": (["pdbx"], "val-report-wwpdb-fo-fc-edmap-coef"),
+        "validation-report-images": (["tar"], "val-report-images"),
         "map-2fofc": (["map"], "map-2fofc"),
         "map-fofc": (["map"], "map-fofc"),
         "map-omit-2fofc": (["map"], "map-omit-2fofc"),
@@ -529,6 +530,8 @@ class ConfigInfoData(object):
     }
     """Dictionary of well known contentws forwarding service urls"""
 
+    _valRelCutoffD = {"start": "Thu:19:00:00", "end": "Fri:23:59:59"}
+    """Local cutoff blackout weekday/time for producing validation reports"""
     #
     # ----------------------------------------------------------------------------------------------
     #   --- PLEASE remove the following unused class-level assignments ---
@@ -619,6 +622,7 @@ class ConfigInfoData(object):
         self.__D["PROJECT_CORRESPOND_SERVICE_DICTIONARY"] = ConfigInfoData._projectCorrespondSiteServiceD
         self.__D["PROJECT_FORWARDING_SERVICE_DICTIONARY"] = ConfigInfoData._projectForwardingSiteServiceD
         self.__D["PROJECT_CONTENTWS_SERVICE_DICTIONARY"] = ConfigInfoData._projectContentWSiteServiceD
+        self.__D["PROJECT_VAL_REL_CUTOFF"] = ConfigInfoData._valRelCutoffD
 
     def getConfigDictionary(self):
         return self.__D
