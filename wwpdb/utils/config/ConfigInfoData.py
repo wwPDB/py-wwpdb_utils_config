@@ -517,16 +517,10 @@ class ConfigInfoData(object):
     }
     """Dictionary of well known project message forwarding service end points"""
 
-    _regions = {'pdbe': ['europe', 'africa', 'antarctica'],
-                'pdbj': ['asia', 'middle east'],
-                'rcsb': ['north america', 'south america', 'oceania']
-                }
+    _regions = {"pdbe": ["europe", "africa", "antarctica"], "pdbj": ["asia", "middle east"], "rcsb": ["north america", "south america", "oceania"]}
     """Dictionary of geographical locations for each site"""
 
-    _production_sites = {'pdbe': 'PDBE_PROD',
-                         'pdbj': 'WWPDB_DEPLOY_PRODUCTION_PDBJ',
-                         'rcsb': 'WWPDB_DEPLOY_PRODUCTION_RU'
-                         }
+    _production_sites = {"pdbe": "PDBE_PROD", "pdbj": "WWPDB_DEPLOY_PRODUCTION_PDBJ", "rcsb": "WWPDB_DEPLOY_PRODUCTION_RU"}
     """names of sites used in production"""
 
     _projectContentWSiteServiceD = {
