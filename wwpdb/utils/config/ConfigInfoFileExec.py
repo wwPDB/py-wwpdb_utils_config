@@ -301,12 +301,16 @@ class ConfigInfoFileExec(object):
                     self.__lfh.write("SKIPPING update of empty cache files for location %r site %r\n" % (siteLoc, siteId))
                     continue
                 cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
-                cfCachePath = self.__getSitePythonCachePath(siteLoc, siteId)
-                cf.writePythonConfigCache(cacheD={siteId.upper(): cD}, cacheFilePath=cfCachePath)
-                #
-                cfCachePath = self.__getSiteJsonCachePath(siteLoc, siteId)
-                cf.writeJsonConfigCache(cacheD={siteId.upper(): cD}, cacheFilePath=cfCachePath)
-                self.__lfh.write("updating cache files with %d options for location %r site %r\n" % (len(cD), siteLoc, siteId))
+                cfPath = self.__getSiteConfigPath(siteLoc, siteId, "none")[0]
+                if os.path.exists(cfPath):
+                    cfCachePath = self.__getSitePythonCachePath(siteLoc, siteId)
+                    cf.writePythonConfigCache(cacheD={siteId.upper(): cD}, cacheFilePath=cfCachePath)
+                    #
+                    cfCachePath = self.__getSiteJsonCachePath(siteLoc, siteId)
+                    cf.writeJsonConfigCache(cacheD={siteId.upper(): cD}, cacheFilePath=cfCachePath)
+                    self.__lfh.write("updating cache files with %d options for location %r site %r\n" % (len(cD), siteLoc, siteId))
+                else:
+                    self.__lfh.write("skipping cache files with for location %r site %r as site.cfg missing %s \n" % (siteLoc, siteId, cfPath))
             return True
         except Exception as e:
             self.__lfh.write("writeLocationConfigCache failing for location %r site %r - %r\n" % (siteLoc, siteId, str(e)))
