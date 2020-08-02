@@ -268,6 +268,7 @@ class ConfigInfoData(object):
         "em-volume-header": (["xml"], "em-volume-header"),
         "em-model-emd": (["pdbx"], "em-model-emd"),
         "em-structure-factors": (["pdbx", "mtz"], "em-sf"),
+        "emd-xml-header-report": (['txt'], "emd-xml-header-report"),
         "validation-report-depositor": (["pdf"], "valdep"),
         "seqdb-match": (["pdbx", "pic"], "seqdb-match"),
         "blast-match": (["xml"], "blast-match"),
