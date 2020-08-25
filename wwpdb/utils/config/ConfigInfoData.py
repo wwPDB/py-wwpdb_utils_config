@@ -537,7 +537,7 @@ class ConfigInfoData(object):
     }
     """Dictionary of well known contentws forwarding service urls"""
 
-    _valRelCutoffD = {"start": "Thu:19:00:00", "end": "Fri:23:59:59"}
+    _valRelCutoffD = {"start": "Fri:09:00:00", "end": "Fri:23:59:59"}
     """Local cutoff blackout weekday/time for producing validation reports"""
     #
     # ----------------------------------------------------------------------------------------------

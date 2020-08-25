@@ -85,10 +85,10 @@ class ConfigInfoFileTests(unittest.TestCase):
         self.assertEqual(len(val), 2)
 
         time_t = self._parseTime(val["start"])
-        self.assertEqual(time_t.hour, 19)
+        self.assertEqual(time_t.hour, 9)
         self.assertEqual(time_t.minute, 0)
         self.assertEqual(time_t.second, 0)
-        self.assertEqual(time_t.isoweekday(), 4)
+        self.assertEqual(time_t.isoweekday(), 5)
 
         time_t = self._parseTime(val["end"])
         self.assertEqual(time_t.hour, 23)
