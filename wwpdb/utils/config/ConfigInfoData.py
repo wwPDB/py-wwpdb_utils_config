@@ -598,14 +598,14 @@ class ConfigInfoData(object):
             #
             # Use fall back configuration options for now  -- to be deprecated in the future --
             #
-            if not readCache and self.__siteId is not None:
+            if not readCache and self.__siteId is not None and self.__debug:
                 self.__lfh.write("%s.%s No configuration for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
                 # self.__setup(self.__siteId)
                 # if self.__verbose:
                 #    self.__lfh.write("%s.%s Cache not used imported fallback configuration dictionary length %d for site %s\n" %
                 #                     (self.__class__.__name__, sys._getframe().f_code.co_name, len(self.__D), self.__siteId))
         else:
-            if self.__siteId is not None:
+            if self.__siteId is not None and self.__debug:
                 self.__lfh.write("%s.%s No configuration for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
                 # self.__setup(self.__siteId)
                 # if self.__verbose:
