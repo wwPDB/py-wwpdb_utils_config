@@ -29,9 +29,7 @@ from oslo_concurrency import lockutils
 
 from wwpdb.utils.config.ConfigInfo import ConfigInfo
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]-%(module)s.%(funcName)s: %(message)s")
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 
 class ConfigInfoDataSet(object):
