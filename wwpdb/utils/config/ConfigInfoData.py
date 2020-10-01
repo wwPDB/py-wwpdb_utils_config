@@ -212,7 +212,6 @@ except:  # noqa: E722 pylint: disable=bare-except
 
 
 class ConfigInfoData(object):
-
     """Provides access to shared and site-specific configuration information for the common
        deposition and annotation system.
 
@@ -238,7 +237,8 @@ class ConfigInfoData(object):
         "nmr-data-str": (["nmr-star", "pdbx"], "nmr-data-str"),
         "nmr-data-nef-report": (["json"], "nmr-data-nef-report"),
         "nmr-data-str-report": (["json"], "nmr-data-str-report"),
-        "nmr-restraints": (["any", "nmr-star", "amber", "amber-aux", "cns", "cyana", "xplor", "xplor-nih", "pdb-mr", "mr"], "mr"),
+        "nmr-restraints": (
+        ["any", "nmr-star", "amber", "amber-aux", "cns", "cyana", "xplor", "xplor-nih", "pdb-mr", "mr"], "mr"),
         "nmr-chemical-shifts": (["nmr-star", "pdbx", "any"], "cs"),
         "nmr-chemical-shifts-raw": (["nmr-star", "pdbx"], "cs-raw"),
         "nmr-chemical-shifts-auth": (["nmr-star", "pdbx"], "cs-auth"),
@@ -455,7 +455,8 @@ class ConfigInfoData(object):
     }
     """Dictionary of site-level deposition data set identifier assignment ranges"""
     #
-    _siteGroupDataSetIdAssignmentD = {"WWPDB_DEPLOY_DEPGRP1_RU": (1000000, 2000000), "WWPDB_DEPLOY_DEPGRP2_RU": (1000000, 2000000), "UNASSIGNED": (0000000, 1000000)}
+    _siteGroupDataSetIdAssignmentD = {"WWPDB_DEPLOY_DEPGRP1_RU": (1000000, 2000000),
+                                      "WWPDB_DEPLOY_DEPGRP2_RU": (1000000, 2000000), "UNASSIGNED": (0000000, 1000000)}
     """Dictionary of site-level group deposition data set identifier assignment ranges"""
 
     #
@@ -518,11 +519,22 @@ class ConfigInfoData(object):
     }
     """Dictionary of well known project message forwarding service end points"""
 
-    _regions = {"pdbe": ["europe", "africa", "antarctica"], "pdbj": ["asia", "middle east"], "rcsb": ["north america", "south america", "oceania"]}
+    _regions = {"pdbe": ["europe", "africa", "antarctica"], "pdbj": ["asia", "middle east"],
+                "rcsb": ["north america", "south america", "oceania"]}
     """Dictionary of geographical locations for each site"""
 
-    _production_sites = {"pdbe": "PDBE_PROD", "pdbj": "WWPDB_DEPLOY_PRODUCTION_PDBJ", "rcsb": "WWPDB_DEPLOY_PRODUCTION_RU"}
+    _production_sites = {"pdbe": "PDBE_PROD", "pdbj": "WWPDB_DEPLOY_PRODUCTION_PDBJ",
+                         "rcsb": "WWPDB_DEPLOY_PRODUCTION_RU"}
     """names of sites used in production"""
+
+    """subjects for messages - used in the depUI and communication"""
+    _release_message_subjects = ['release request', 'citation update']
+    _message_subjects = ['approval without corrections',
+                         'approval with corrections',
+                         'unlock request',
+                         'withdrawal request',
+                         'other']
+    _message_subjects.extend(_release_message_subjects)
 
     _projectContentWSiteServiceD = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://onedep-contentws-rcsb.wwpdb.org",
@@ -564,7 +576,8 @@ class ConfigInfoData(object):
 
         if self.__verbose and self.__siteId is None:
             self.__lfh.write(
-                "%s.%s WARNING - no siteId assigned in constructor or found in the environemt (WWPDB_SITE_ID).\n" % (self.__class__.__name__, sys._getframe().f_code.co_name)
+                "%s.%s WARNING - no siteId assigned in constructor or found in the environemt (WWPDB_SITE_ID).\n" % (
+                self.__class__.__name__, sys._getframe().f_code.co_name)
             )
 
         #
@@ -591,7 +604,8 @@ class ConfigInfoData(object):
                     self.__D = cacheD
             except:  # noqa: E722 pylint: disable=bare-except
                 if self.__debug:
-                    self.__lfh.write("%s.%s failed importing cache for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
+                    self.__lfh.write("%s.%s failed importing cache for site %s\n" % (
+                    self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
                     traceback.print_exc(file=self.__lfh)
                 readCache = False
 
@@ -599,14 +613,16 @@ class ConfigInfoData(object):
             # Use fall back configuration options for now  -- to be deprecated in the future --
             #
             if not readCache and self.__siteId is not None and self.__debug:
-                self.__lfh.write("%s.%s No configuration for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
+                self.__lfh.write("%s.%s No configuration for site %s\n" % (
+                self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
                 # self.__setup(self.__siteId)
                 # if self.__verbose:
                 #    self.__lfh.write("%s.%s Cache not used imported fallback configuration dictionary length %d for site %s\n" %
                 #                     (self.__class__.__name__, sys._getframe().f_code.co_name, len(self.__D), self.__siteId))
         else:
             if self.__siteId is not None and self.__debug:
-                self.__lfh.write("%s.%s No configuration for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
+                self.__lfh.write("%s.%s No configuration for site %s\n" % (
+                self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
                 # self.__setup(self.__siteId)
                 # if self.__verbose:
                 #    self.__lfh.write("%s.%s Imported fallback configuration dictionary length %d for site %s\n" %
@@ -620,7 +636,8 @@ class ConfigInfoData(object):
         self.__D["FILE_FORMAT_EXTENSION_DICTIONARY"] = ConfigInfoData._fileFormatExtensionD
         self.__D["CONTENT_TYPE_DICTIONARY"] = ConfigInfoData._contentTypeInfoD
         self.__D["CONTENT_MILESTONE_LIST"] = ConfigInfoData._contentMilestoneL
-        self.__D["CONTENT_MILESTONE_ARCHIVE_LIST"] = [t for t in ConfigInfoData._contentMilestoneL if t != "upload-convert"]
+        self.__D["CONTENT_MILESTONE_ARCHIVE_LIST"] = [t for t in ConfigInfoData._contentMilestoneL if
+                                                      t != "upload-convert"]
         self.__D["CONTENT_TYPE_BASE_DICTIONARY"] = ConfigInfoData._contentTypeInfoBaseD
         self.__D["SITE_DATASET_ID_ASSIGNMENT_DICTIONARY"] = ConfigInfoData._siteDataSetIdAssignmentD
         self.__D["SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY"] = ConfigInfoData._siteDataSetTestIdAssignmentD
@@ -632,6 +649,8 @@ class ConfigInfoData(object):
         self.__D["PROJECT_VAL_REL_CUTOFF"] = ConfigInfoData._valRelCutoffD
         self.__D["REGIONS"] = ConfigInfoData._regions
         self.__D["PRODUCTION_SITES"] = ConfigInfoData._production_sites
+        self.__D["RELEASE_MESSAGE_SUBJECTS"] = ConfigInfoData._release_message_subjects
+        self.__D["MESSAGE_SUBJECTS"] = ConfigInfoData._message_subjects
 
     def getConfigDictionary(self):
         return self.__D
