@@ -527,7 +527,6 @@ class ConfigInfoData(object):
                          "rcsb": "WWPDB_DEPLOY_PRODUCTION_RU"}
     """names of sites used in production"""
 
-    """subjects for messages - used in the depUI and communication"""
     _release_message_subjects = ['release request', 'citation update']
     _message_subjects = ['approval without corrections',
                          'approval with corrections',
@@ -535,6 +534,7 @@ class ConfigInfoData(object):
                          'withdrawal request',
                          'other']
     _message_subjects.extend(_release_message_subjects)
+    """subjects for messages - used in the depUI and communication"""
 
     _projectContentWSiteServiceD = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://onedep-contentws-rcsb.wwpdb.org",
