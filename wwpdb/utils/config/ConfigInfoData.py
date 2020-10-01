@@ -238,7 +238,7 @@ class ConfigInfoData(object):
         "nmr-data-nef-report": (["json"], "nmr-data-nef-report"),
         "nmr-data-str-report": (["json"], "nmr-data-str-report"),
         "nmr-restraints": (
-        ["any", "nmr-star", "amber", "amber-aux", "cns", "cyana", "xplor", "xplor-nih", "pdb-mr", "mr"], "mr"),
+            ["any", "nmr-star", "amber", "amber-aux", "cns", "cyana", "xplor", "xplor-nih", "pdb-mr", "mr"], "mr"),
         "nmr-chemical-shifts": (["nmr-star", "pdbx", "any"], "cs"),
         "nmr-chemical-shifts-raw": (["nmr-star", "pdbx"], "cs-raw"),
         "nmr-chemical-shifts-auth": (["nmr-star", "pdbx"], "cs-auth"),
@@ -577,7 +577,7 @@ class ConfigInfoData(object):
         if self.__verbose and self.__siteId is None:
             self.__lfh.write(
                 "%s.%s WARNING - no siteId assigned in constructor or found in the environemt (WWPDB_SITE_ID).\n" % (
-                self.__class__.__name__, sys._getframe().f_code.co_name)
+                    self.__class__.__name__, sys._getframe().f_code.co_name)
             )
 
         #
@@ -605,7 +605,7 @@ class ConfigInfoData(object):
             except:  # noqa: E722 pylint: disable=bare-except
                 if self.__debug:
                     self.__lfh.write("%s.%s failed importing cache for site %s\n" % (
-                    self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
+                        self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
                     traceback.print_exc(file=self.__lfh)
                 readCache = False
 
@@ -614,7 +614,7 @@ class ConfigInfoData(object):
             #
             if not readCache and self.__siteId is not None and self.__debug:
                 self.__lfh.write("%s.%s No configuration for site %s\n" % (
-                self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
+                    self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
                 # self.__setup(self.__siteId)
                 # if self.__verbose:
                 #    self.__lfh.write("%s.%s Cache not used imported fallback configuration dictionary length %d for site %s\n" %
@@ -622,7 +622,7 @@ class ConfigInfoData(object):
         else:
             if self.__siteId is not None and self.__debug:
                 self.__lfh.write("%s.%s No configuration for site %s\n" % (
-                self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
+                    self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
                 # self.__setup(self.__siteId)
                 # if self.__verbose:
                 #    self.__lfh.write("%s.%s Imported fallback configuration dictionary length %d for site %s\n" %
