@@ -123,9 +123,9 @@ class ConfigInfoFileExec(object):
         return cfPath
 
     def __getCommonConfig(self):
-        """  Return the project common configuration options as a dictionary.
+        """Return the project common configuration options as a dictionary.
 
-             Really depends on config_as_object setting to deserialize dictionary ...
+        Really depends on config_as_object setting to deserialize dictionary ...
         """
         cD = {}
         try:
@@ -141,7 +141,7 @@ class ConfigInfoFileExec(object):
         return cD
 
     def __getConfigPathSectionList(self, siteLoc, siteId, extraCommonSectionNameList, privateSectionNameList):
-        """ Returns the search path of sections and configuration file paths for the input location and site.
+        """Returns the search path of sections and configuration file paths for the input location and site.
         The site specific configuration file path is always included.   The site-common or project common
         configuration files are included only if these exist.
 
@@ -185,9 +185,7 @@ class ConfigInfoFileExec(object):
         return cfPathSectionList
 
     def __getSiteConfig(self, siteLoc, siteId, deserialize=True):
-        """ Return the complete site of configuration options for the input location and site.
-
-        """
+        """Return the complete site of configuration options for the input location and site."""
         cD = {}
         try:
             privateSectionNameList = self.__getPrivateSectionNames()
@@ -219,8 +217,7 @@ class ConfigInfoFileExec(object):
         return cD
 
     def checkConfig(self, siteLoc, siteId, deserialize=True):
-        """  Perform sanity checks for the configuration options for the input location and site.
-        """
+        """Perform sanity checks for the configuration options for the input location and site."""
         try:
             cD = self.__getSiteConfig(siteLoc, siteId, deserialize=deserialize)
             self.__lfh.write("read %d options for location %r site %r\n" % (len(cD), siteLoc, siteId))
@@ -243,8 +240,7 @@ class ConfigInfoFileExec(object):
             traceback.print_exc(file=self.__lfh)
 
     def printConfig(self, siteLoc, siteId, deserialize=True):
-        """ Print the configuration options for the input location and site.
-        """
+        """Print the configuration options for the input location and site."""
         try:
             cD = self.__getSiteConfig(siteLoc, siteId, deserialize=deserialize)
             self.__lfh.write("read %d options for location %r site %r\n" % (len(cD), siteLoc, siteId))
@@ -261,8 +257,7 @@ class ConfigInfoFileExec(object):
             traceback.print_exc(file=self.__lfh)
 
     def writeConfigCache(self, siteLoc, siteId, skipEmpty=True):
-        """  Write Python and JSON format cache files using the configuration options for input location and site.
-        """
+        """Write Python and JSON format cache files using the configuration options for input location and site."""
         self.__lfh.write("Starting writeConfigCache\n")
         try:
             cD = self.__getSiteConfig(siteLoc, siteId, deserialize=True)
@@ -285,8 +280,7 @@ class ConfigInfoFileExec(object):
         return False
 
     def writeLocationConfigCache(self, siteLoc, skipEmpty=True):
-        """  Write Python and JSON format cache files using the configuration options for input location and site.
-        """
+        """Write Python and JSON format cache files using the configuration options for input location and site."""
         self.__lfh.write("Starting writeLocationConfigCache\n")
         try:
             siteD = self.__getLocSiteD()

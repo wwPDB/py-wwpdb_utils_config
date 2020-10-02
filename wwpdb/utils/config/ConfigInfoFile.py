@@ -57,7 +57,7 @@ class ConfigInfoFile(object):
         #
 
     def readSiteConfig(self, siteId, configFilePath):
-        """ Read the input configuration file and return a configuration dictionary for
+        """Read the input configuration file and return a configuration dictionary for
         the input site.  This corresponds to the items and values within the configuration
         section identified by the input site identifier.   All configuration sections and
         option keys are converted to upper case in the returned dictionary.
@@ -70,7 +70,7 @@ class ConfigInfoFile(object):
             return {}
 
     def readConfig(self, configFilePath):
-        """  Read the input configuration file and return a dictionary of configuration items
+        """Read the input configuration file and return a dictionary of configuration items
         where all configuration keys are converted to upper case.  The returned dictionary is
         organized in configuration sections (e.g. retD[sectionN.upper()]={k1:v1,k2:v2,...})
 
@@ -99,15 +99,15 @@ class ConfigInfoFile(object):
         return retD
 
     def readConfigFileList(self, configPathSectionList=None):
-        """  Read the input list of configuration file paths/section names   [(configPath,sectionName,context), (configPath,sectionName,context),].
-             Preceding files in this list may supply substition values for subsequent files through string interpolation
-             such as %(replace_me)s.  The first instance of any option/value encountered in the path list is treated as authoritative.
+        """Read the input list of configuration file paths/section names   [(configPath,sectionName,context), (configPath,sectionName,context),].
+        Preceding files in this list may supply substition values for subsequent files through string interpolation
+        such as %(replace_me)s.  The first instance of any option/value encountered in the path list is treated as authoritative.
 
-             The ConfigParser class processes all configuration option values as strings.  Section names are searched in lower case.
+        The ConfigParser class processes all configuration option values as strings.  Section names are searched in lower case.
 
-             Target section names may contain wildcard characters supported by fnmatch()
+        Target section names may contain wildcard characters supported by fnmatch()
 
-             Returns configuration options from all sections in a dictionary with option keys in upper case.
+        Returns configuration options from all sections in a dictionary with option keys in upper case.
 
         """
         retD = {}
@@ -168,13 +168,13 @@ class ConfigInfoFile(object):
         return retD
 
     def writeConfig(self, configFilePath, sectionL, sectionD, requireBackup=True, sortKeys=True):
-        """  Write configuration file for the key-value options in the input section dictionary.
+        """Write configuration file for the key-value options in the input section dictionary.
 
-             Section names and option keys are converted to lower case.   Option values are
-             not modified.
+        Section names and option keys are converted to lower case.   Option values are
+        not modified.
 
-             sectionL [sectionName,sectionName,...]  oder of
-             sectionD [sectionName] stores a dictionary of options, opD  where opD[k] = v
+        sectionL [sectionName,sectionName,...]  oder of
+        sectionD [sectionName] stores a dictionary of options, opD  where opD[k] = v
         """
         try:
             config = ConfigParser.RawConfigParser(defaults=self.__mockdefaults)
@@ -208,7 +208,7 @@ class ConfigInfoFile(object):
         return False
 
     def deserializeConfig(self, configD, optionD=None):
-        """  Apply an adhoc set of filters on the input configuration dictionary.
+        """Apply an adhoc set of filters on the input configuration dictionary.
         Input option values are assumed to be the string values returned by the configuration file parser.
 
         The following inline options are used as filter selectors:
@@ -289,7 +289,7 @@ class ConfigInfoFile(object):
         return retD
 
     def serializeConfig(self, configD, optionD=None):
-        """  Apply an adhoc set of filters on the input configuration dictionary.
+        """Apply an adhoc set of filters on the input configuration dictionary.
         Input option values are assumed to be python objects to be converted to strings for output
         by the configuration file writer
 
@@ -361,7 +361,7 @@ class ConfigInfoFile(object):
         return False
 
     def writePythonConfigCache(self, cacheD, cacheFilePath, withBackup=True):
-        """ Write a Python cache file containing configuration option data in the input cache dictionary.
+        """Write a Python cache file containing configuration option data in the input cache dictionary.
         This cache file wraps the configuration dictionary with a class in a module that can be imported.
 
         """
@@ -436,8 +436,7 @@ class ConfigInfoFileCache(object):
         return False
 
     def writeJsonConfigCache(self, cacheD, cacheFilePath, withBackup=True):
-        """ Write a JSON cache file containing configuration option data in the input cache dictionary.
-        """
+        """Write a JSON cache file containing configuration option data in the input cache dictionary."""
         try:
             if os.access(cacheFilePath, os.R_OK):
                 if withBackup:
@@ -455,8 +454,7 @@ class ConfigInfoFileCache(object):
         return False
 
     def readJsonConfigCache(self, cacheFilePath):
-        """ Read a JSON cache file and return a dictionary containing configuration option data.
-        """
+        """Read a JSON cache file and return a dictionary containing configuration option data."""
         try:
             with open(cacheFilePath, "r") as infile:
                 return json.load(infile)

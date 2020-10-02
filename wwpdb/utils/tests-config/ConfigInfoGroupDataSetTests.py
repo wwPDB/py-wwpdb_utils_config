@@ -71,8 +71,7 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
         logger.info("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
 
     def testGetSiteLocation(self):
-        """Test case -  return site location
-        """
+        """Test case -  return site location"""
         try:
             for siteId in self.__siteIdList:
                 ci = ConfigInfo(siteId=siteId, verbose=self.__verbose, log=self.__lfh)
@@ -84,8 +83,7 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
             self.fail()
 
     def testGetSiteGroupIdRange(self):
-        """Test case -  return default id ranges selected sites.
-        """
+        """Test case -  return default id ranges selected sites."""
         try:
             cfds = ConfigInfoGroupDataSet(self.__verbose, self.__lfh)
             for siteId in self.__siteIdList:
@@ -96,8 +94,7 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
             self.fail()
 
     def testGetSiteId(self):
-        """Test case -  translate data set id to site id.
-        """
+        """Test case -  translate data set id to site id."""
         try:
             cfds = ConfigInfoGroupDataSet(self.__verbose, self.__lfh)
             for testId in self.__groupIdList:

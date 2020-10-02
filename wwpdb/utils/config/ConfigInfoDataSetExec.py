@@ -42,8 +42,7 @@ class ConfigInfoDataSetExec(object):
         #
 
     def checkConfig(self):
-        """  Perform read check for the data set configuration file.
-        """
+        """Perform read check for the data set configuration file."""
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             d = cfds.getDataSetLocationDict()
@@ -61,8 +60,7 @@ class ConfigInfoDataSetExec(object):
             traceback.print_exc(file=self.__lfh)
 
     def printConfig(self, siteId):
-        """ Print the configuration options for the input site.
-        """
+        """Print the configuration options for the input site."""
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             (lId, uId) = cfds.getDefaultIdRange(siteId=siteId)
@@ -78,8 +76,7 @@ class ConfigInfoDataSetExec(object):
             traceback.print_exc(file=self.__lfh)
 
     def setLocations(self, siteId, dataSetIdList):
-        """ Set the site location for the input data list.
-        """
+        """Set the site location for the input data list."""
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             return cfds.writeLocationList(siteId, dataSetIdList)

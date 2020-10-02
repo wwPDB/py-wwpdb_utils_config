@@ -81,8 +81,7 @@ class ConfigInfoShellExec(object):
                 self.__cD = self.__getSiteConfigRaw(self.__topConfigPath, self.__siteLoc, self.__siteId)
 
     def __setup(self, topConfigPath, inpHostName, inpSiteLoc, inpSiteId):
-        """
-        """
+        """"""
         siteLoc = None
         siteId = None
         #
@@ -117,8 +116,8 @@ class ConfigInfoShellExec(object):
         return self.__extraCommonSectionNameList
 
     def __getConfigD(self, topConfigPath, siteLoc, siteId):
-        """  Load the current python cache configuration data for the input location/site
-             and return a dictionary of this data.
+        """Load the current python cache configuration data for the input location/site
+        and return a dictionary of this data.
         """
         #
         tD = {}
@@ -174,7 +173,7 @@ class ConfigInfoShellExec(object):
         return cfPath
 
     def __readConfigTextFile(self, configFilePath):
-        """  Read the input configuration file and return a dictionary of configuration items
+        """Read the input configuration file and return a dictionary of configuration items
         where all configuration keys are converted to upper case.  The returned dictionary is
         organized in configuration sections (e.g. retD[sectionN.upper()]={k1:v1,k2:v2,...})
 
@@ -201,7 +200,7 @@ class ConfigInfoShellExec(object):
         return retD
 
     def __getConfigPathSectionList(self, topConfigPath, siteLoc, siteId, extraCommonSectionNameList, privateSectionNameList):
-        """ Returns the search path of sections and configuration file paths for the input location and site.
+        """Returns the search path of sections and configuration file paths for the input location and site.
         The site specific configuration file path is always included.   The site-common or project common
         configuration files are included only if these exist.
 
@@ -237,9 +236,7 @@ class ConfigInfoShellExec(object):
         return cfPathSectionList
 
     def __getSiteConfigRaw(self, topConfigPath, siteLoc, siteId, deserialize=True):
-        """ Return the complete site of configuration options for the input location and site.
-
-        """
+        """Return the complete site of configuration options for the input location and site."""
         cD = {}
         try:
             privateSectionNameList = self.__getPrivateSectionNames()
@@ -261,13 +258,13 @@ class ConfigInfoShellExec(object):
         return cD
 
     def __readConfigFileList(self, configPathSectionList=None):
-        """  Read the input list of configuration file paths/section names   [(configPath,sectionName,context), (configPath,sectionName,context),].
-             Preceding files in this list may supply substition values for subsequent files through string interpolation
-             such as %(replace_me)s.  The first instance of any option/value encountered in the path list is treated as authoritative.
+        """Read the input list of configuration file paths/section names   [(configPath,sectionName,context), (configPath,sectionName,context),].
+        Preceding files in this list may supply substition values for subsequent files through string interpolation
+        such as %(replace_me)s.  The first instance of any option/value encountered in the path list is treated as authoritative.
 
-             The ConfigParser class processes all configuration option values as strings.  Section names are searched in lower case.
+        The ConfigParser class processes all configuration option values as strings.  Section names are searched in lower case.
 
-             Returns configuration options from all sections in a dictionary with option keys in upper case.
+        Returns configuration options from all sections in a dictionary with option keys in upper case.
 
         """
         retD = {}
@@ -327,7 +324,7 @@ class ConfigInfoShellExec(object):
         return retD
 
     def __deserializeConfig(self, configD, optionD=None):
-        """  Apply an adhoc set of filters on the input configuration dictionary.
+        """Apply an adhoc set of filters on the input configuration dictionary.
         Input option values are assumed to be the string values returned by the configuration file parser.
 
         The following inline options are used as filter selectors:
@@ -411,8 +408,7 @@ class ConfigInfoShellExec(object):
         return self.__printConfig(self.__siteLoc, self.__siteId, self.__cD)
 
     def __printConfig(self, siteLoc, siteId, cD):
-        """ Print the configuration options for the input location and site.
-        """
+        """Print the configuration options for the input location and site."""
         try:
             self.__lfh.write("read %d options for location %r site %r\n" % (len(cD), siteLoc, siteId))
             for k in sorted(cD.keys()):
@@ -444,8 +440,7 @@ class ConfigInfoShellExec(object):
         return self.__exportConfig(self.__siteLoc, self.__siteId, self.__cD, expKey="DATABASE_SERVICES", shellType=shellType)
 
     def __exportConfig(self, siteLoc, siteId, cD, expKey="OS_ENVIRONMENT", shellType="bash"):
-        """ Print the configuration options for the input location and site.
-        """
+        """Print the configuration options for the input location and site."""
         try:
             if expKey in cD:
                 dd = cD[expKey]

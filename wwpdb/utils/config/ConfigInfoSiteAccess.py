@@ -57,9 +57,9 @@ class ConfigInfoSiteAccess(object):
         self.__siteAccessD = None
 
     def getCorrespondenceService(self, siteId):
-        """ Get the correspondence archiving service end point for the input site -
+        """Get the correspondence archiving service end point for the input site -
 
-             Return the service URL or None
+        Return the service URL or None
 
         """
         serviceD = self.__cI.get("PROJECT_CORRESPOND_SERVICE_DICTIONARY")
@@ -72,9 +72,9 @@ class ConfigInfoSiteAccess(object):
             return None
 
     def getForwardingService(self, siteId):
-        """ Get the message forwarding service end point for the input site -
+        """Get the message forwarding service end point for the input site -
 
-             Return the service URL or None
+        Return the service URL or None
 
         """
         serviceD = self.__cI.get("PROJECT_FORWARDING_SERVICE_DICTIONARY")
@@ -87,7 +87,7 @@ class ConfigInfoSiteAccess(object):
             return None
 
     def __getAccessDictionary(self):
-        """  Fetch the dictionary cotaining exceptional access information for each site
+        """Fetch the dictionary cotaining exceptional access information for each site
         expressed as the time interval when the site is not available.    Times are
         encoded as timestamps in UTC.
 
@@ -137,9 +137,9 @@ class ConfigInfoSiteAccess(object):
         return False
 
     def isSiteAvailable(self, siteId):
-        """ Check if there is scheduled downtime for the input deposition site.
+        """Check if there is scheduled downtime for the input deposition site.
 
-             Return True if deposition site is available (i.e. no scheduled downtime)
+        Return True if deposition site is available (i.e. no scheduled downtime)
 
         """
         if self.__siteAccessD is None:
@@ -159,9 +159,9 @@ class ConfigInfoSiteAccess(object):
         return True
 
     def getSiteDownTimeRange(self, siteId):
-        """ Get the scheduled down time range for the input site.
+        """Get the scheduled down time range for the input site.
 
-             Return tuple of timestamps (UTC) or (None,None)
+        Return tuple of timestamps (UTC) or (None,None)
 
         """
         if self.__siteAccessD is None:

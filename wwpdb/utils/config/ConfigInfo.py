@@ -30,8 +30,7 @@ from wwpdb.utils.config.ConfigInfoData import ConfigInfoData
 
 
 def getSiteId(defaultSiteId=None):
-    """  Obtain the site information from the environment or failover to the development site id.
-    """
+    """Obtain the site information from the environment or failover to the development site id."""
     siteId = str(os.getenv("WWPDB_SITE_ID", defaultSiteId))
     if siteId is None:
         siteId = "WWPDB_DEPLOY"
@@ -40,13 +39,13 @@ def getSiteId(defaultSiteId=None):
 
 class ConfigInfo(object):
     """Provides access to site-specific configuration information for the common
-       deposition and annotation system.
+    deposition and annotation system.
 
-       Configuration data is stored in a dictionary of key value pairs.
+    Configuration data is stored in a dictionary of key value pairs.
 
-       Configuration data is defined in class ConfigInfoData().
+    Configuration data is defined in class ConfigInfoData().
 
-       SiteId provided in the constructor overrides any value in the environment.
+    SiteId provided in the constructor overrides any value in the environment.
 
     """
 
@@ -66,15 +65,13 @@ class ConfigInfo(object):
         self.__D = self.__sI.getConfigDictionary()
 
     def get(self, keyWord, default=None):
-        """Returns the site-specific value assigned to the input keyword or the default value -
-        """
+        """Returns the site-specific value assigned to the input keyword or the default value -"""
         if keyWord is not None and keyWord in self.__D:
             return self.__D[keyWord]
         else:
             return default
 
     def dump(self, ofh):
-        """ Print the current configuration dictionary .
-        """
+        """Print the current configuration dictionary ."""
         for ky in sorted(self.__D.keys()):
             ofh.write("+ConfigInfo.dump() key: %-40s   value: %s\n" % (ky, self.__D[ky]))

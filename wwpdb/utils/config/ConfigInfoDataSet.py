@@ -55,9 +55,9 @@ class ConfigInfoDataSet(object):
         lockutils.set_defaults(self.__lockDirPath)
 
     def getSiteId(self, depSetId):
-        """  Return siteId for the input depSetId subject to site backup details -
+        """Return siteId for the input depSetId subject to site backup details -
 
-            siteBackupD[prodSite] = [backupSite1, backupSite2,...]
+        siteBackupD[prodSite] = [backupSite1, backupSite2,...]
         """
         siteId = self.__getSiteId(depSetId)
         mySiteId = self.__cI.get("SITE_PREFIX", default=None)
@@ -122,9 +122,9 @@ class ConfigInfoDataSet(object):
         return False
 
     def __readLocationDictionary(self):
-        """  Read the dictionary cotaining data set site location information.
+        """Read the dictionary cotaining data set site location information.
 
-             Returns: d[<data_set_id>] = <site_id> or a empty dictionary.
+        Returns: d[<data_set_id>] = <site_id> or a empty dictionary.
         """
         fp = self.__cI.get("SITE_DATASET_SITELOC_FILE_PATH")
         try:
@@ -138,9 +138,9 @@ class ConfigInfoDataSet(object):
 
     @lockutils.synchronized("configdataset.exceptionfile-lock", external=True)
     def __writeLocationDictionary(self, dsLocD, backup=True):
-        """  Write the input dictionary cotaining exceptional data set to site correspondences,
+        """Write the input dictionary cotaining exceptional data set to site correspondences,
 
-             Returns: True for success or False otherwise
+        Returns: True for success or False otherwise
         """
         fp = self.__cI.get("SITE_DATASET_SITELOC_FILE_PATH")
 
@@ -161,12 +161,12 @@ class ConfigInfoDataSet(object):
         return False
 
     def getDefaultIdRange(self, siteId):
-        """ Return the default upper and lower deposition data set identifier codes
-            assigned to the input siteId.
+        """Return the default upper and lower deposition data set identifier codes
+        assigned to the input siteId.
 
-            Any site lacking a default range will get the range assigned to the UNASSIGNED site.
+        Any site lacking a default range will get the range assigned to the UNASSIGNED site.
 
-            Returns:   (lower bound, upper bound) for data set identifiers (int)
+        Returns:   (lower bound, upper bound) for data set identifiers (int)
         """
         if siteId in self.__depIdAssignments:
             DEPID_START, DEPID_STOP = self.__depIdAssignments[siteId]
@@ -177,12 +177,12 @@ class ConfigInfoDataSet(object):
         return (DEPID_START, DEPID_STOP)
 
     def getTestIdRange(self, siteId):
-        """ Return the upper and lower deposition data set identifier codes
-            assigned to the input siteId.
+        """Return the upper and lower deposition data set identifier codes
+        assigned to the input siteId.
 
-            Any site lacking a default range will get the range (-1, -1)
+        Any site lacking a default range will get the range (-1, -1)
 
-            Returns:   (lower bound, upper bound) for data set identifiers (int)
+        Returns:   (lower bound, upper bound) for data set identifiers (int)
         """
         if siteId in self.__depTestIdAssignments:
             DEPID_START, DEPID_STOP = self.__depTestIdAssignments[siteId]
@@ -191,15 +191,14 @@ class ConfigInfoDataSet(object):
         return (DEPID_START, DEPID_STOP)
 
     def getDefaultSiteId(self, depSetId):
-        """  Get the default site assignment for the input data set id.
-        """
+        """Get the default site assignment for the input data set id."""
         return self.__getSiteId(depSetId)
 
     def __getSiteId(self, depSetId):
-        """ Return the siteId to which the input depSetId is within the default
-            code assignment range.
+        """Return the siteId to which the input depSetId is within the default
+        code assignment range.
 
-            Input may be either a string "D_xxxxxxxxxx" or an integer/string "xxxxxxxxxx".
+        Input may be either a string "D_xxxxxxxxxx" or an integer/string "xxxxxxxxxx".
 
         """
         # check for exceptional cases --

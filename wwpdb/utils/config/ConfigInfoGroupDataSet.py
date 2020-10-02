@@ -38,12 +38,12 @@ class ConfigInfoGroupDataSet(object):
         self.__groupIdAssignments = self.__cI.get("SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY")
 
     def getDefaultGroupIdRange(self, siteId):
-        """ Return the default upper and lower group deposition data set identifier codes
-            assigned to the input siteId.
+        """Return the default upper and lower group deposition data set identifier codes
+        assigned to the input siteId.
 
-            Any site lacking a default range will get return tuple (-1,-1)
+        Any site lacking a default range will get return tuple (-1,-1)
 
-            Returns:   (lower bound, upper bound) for data set identifiers (int)
+        Returns:   (lower bound, upper bound) for data set identifiers (int)
         """
         if siteId in self.__groupIdAssignments:
             GID_START, GID_STOP = self.__groupIdAssignments[siteId]
@@ -54,15 +54,14 @@ class ConfigInfoGroupDataSet(object):
         return (GID_START, GID_STOP)
 
     def getDefaultSiteId(self, groupId):
-        """  Get the default site assignment for the input group data set id.
-        """
+        """Get the default site assignment for the input group data set id."""
         return self.__getSiteIdForGroup(groupId)
 
     def __getSiteIdForGroup(self, groupId):
-        """ Return the siteId to which the input groupId is within the default
-            code assignment range.
+        """Return the siteId to which the input groupId is within the default
+        code assignment range.
 
-            Input may be either a string "G_xxxxxxx" or an integer/string "xxxxxx".
+        Input may be either a string "G_xxxxxxx" or an integer/string "xxxxxx".
 
         """
         # check default group range assignment --

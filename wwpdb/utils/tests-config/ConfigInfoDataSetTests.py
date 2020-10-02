@@ -105,8 +105,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
         logger.debug("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
 
     def testGetSiteIdRange(self):
-        """Test case -  return default id ranges selected sites.
-        """
+        """Test case -  return default id ranges selected sites."""
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             for siteId in self.__siteIdList:
@@ -121,8 +120,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
             self.fail()
 
     def testGetSiteId(self):
-        """Test case -  translate data set id to site id.
-        """
+        """Test case -  translate data set id to site id."""
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             for testId in self.__testIdList:
@@ -134,8 +132,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
             self.fail()
 
     def testGetSiteIdTestRange(self):
-        """Test case -  return default id ranges selected sites.
-        """
+        """Test case -  return default id ranges selected sites."""
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             for siteId in self.__siteIdTestRanges:

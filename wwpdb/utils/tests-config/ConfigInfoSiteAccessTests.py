@@ -68,8 +68,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
         logger.info("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
 
     def testSiteAvailable(self):
-        """Test case -  return site access status.
-        """
+        """Test case -  return site access status."""
         try:
             cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
             for siteId in self.__siteIdList:
@@ -86,8 +85,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
             self.fail()
 
     def testSiteReachable(self):
-        """Test case -  return if the site is reachable.
-        """
+        """Test case -  return if the site is reachable."""
         try:
             cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
             for siteId in self.__siteIdList:
@@ -103,8 +101,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
         self.assertFalse(status, "Received info on nonexistant site")
 
     def testSiteGetCorrespondence(self):
-        """Test case -  return if site correspondence returned
-        """
+        """Test case -  return if site correspondence returned"""
         cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
         status = cfsa.getCorrespondenceService("WWPDB_DEPLOY_PRODUCTION_RU")
         self.assertIsNotNone(status, "Failed to get correspondece endpoint")
@@ -112,8 +109,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
         self.assertIsNone(status, "Found unexpected correspondece endpoint")
 
     def testSiteGetForwarding(self):
-        """Test case -  return for site forwarding endpoint
-        """
+        """Test case -  return for site forwarding endpoint"""
         cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
         status = cfsa.getForwardingService("WWPDB_DEPLOY_PRODUCTION_RU")
         self.assertIsNotNone(status, "Failed to get forwarding endpoint")
@@ -121,8 +117,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
         self.assertIsNone(status, "Found unexpected forwarding endpoint")
 
     def testSiteGetDownTimeRange(self):
-        """Test case -  return for site forwarding endpoint
-        """
+        """Test case -  return for site forwarding endpoint"""
         cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
         status = cfsa.getSiteDownTimeRange("WWPDB_DEPLOY_PRODUCTION_RU")
         self.assertEqual(status, (None, None), "Failed to get downtime")
