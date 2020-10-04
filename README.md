@@ -1,5 +1,10 @@
-# py-www_api_config
-Configuration utilities for OneDep system
+# OneDep Configuration Utility Library
+
+[![Build Status](https://dev.azure.com/wwPDB/wwPDB%20Python%20Projects/_apis/build/status/wwPDB.py-wwpdb_utils_config?branchName=master)](https://dev.azure.com/wwPDB/wwPDB%20Python%20Projects/_build/latest?definitionId=2&branchName=master)
+
+## Introduction
+
+This repository povides the tools and access to OneDep configuration environments.
 
 ### Installation
 
@@ -11,9 +16,7 @@ git clone --recurse-submodules https://github.com/wwpdb/py-wwpdb_utils_config.gi
 
 ```
 
-Optionally, run test suite (Python versions 2.7, 3.6, and 3.7) using
-[setuptools](https://setuptools.readthedocs.io/en/latest/) or
-[tox](http://tox.readthedocs.io/en/latest/example/platform.html):
+Optionally, run test suite using the Tox test runner
 
 ```bash
 python setup.py test
@@ -21,4 +24,13 @@ python setup.py test
 or simply run
 
 tox
+
+Installation is via the program [pip](https://pypi.python.org/pypi/pip).
+
+```bash
+pip install wwpdb.utils.config
+
+or from the local repository:
+
+pip install .
 ```
