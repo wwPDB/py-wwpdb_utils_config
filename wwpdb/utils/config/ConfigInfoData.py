@@ -542,7 +542,7 @@ class ConfigInfoData(object):
                                             'Blocked deposition'
                                             ],
                          'withdrawal': ['Withdrawal request'],
-                         'hold extension': ['Hold extension']
+                         'hold extension': ['Hold expiration']
                          }
 
     _communication_release_message_subjects = []
