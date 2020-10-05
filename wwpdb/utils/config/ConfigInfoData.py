@@ -528,25 +528,27 @@ class ConfigInfoData(object):
     """names of sites used in production"""
 
     # subjects for messages - used in the depUI and communication
-    _message_subjects = {'general': ["Annotation corrections required",
-                                     "Other"
-                                     ],
+    _message_subjects = {'general': ["Other"],
                          'approval': ["Approval without corrections",
                                       "Approval with corrections"
                                       ],
-                         'unlock': ["Coordinate corrections required"],
-                         'release': ["Release request"],
+                         'meta corrections': ['Other corrections'],
+                         'unlock': ["Coordinate corrections"],
+                         'release': ["Release"],
+                         'release_with_citation': ["Release with citation"],
                          'citation': ['Citation update'],
-                         'pre-submission': ['General pre-submission question',
-                                            'Validation pre-submission question',
-                                            'Blocked deposition'
+                         'pre-submission': ['File upload issue',
+                                            'Submission issue',
+                                            'General question',
                                             ],
-                         'withdrawal': ['Withdrawal request'],
-                         'hold extension': ['Hold expiration']
+                         'withdrawal': ['Withdrawal'],
+                         'hold extension': ['Hold expiration'],
+                         'major issues': ['Response to issues']
                          }
 
     _communication_release_message_subjects = []
     _communication_release_message_subjects.extend(_message_subjects.get('release'))
+    _communication_release_message_subjects.extend(_message_subjects.get('release_with_citation'))
     _communication_release_message_subjects.extend(_message_subjects.get('citation'))
 
     _projectContentWSiteServiceD = {
