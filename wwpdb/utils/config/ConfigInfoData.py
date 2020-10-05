@@ -535,7 +535,7 @@ class ConfigInfoData(object):
                          'meta corrections': ['Other corrections'],
                          'unlock': ["Coordinate corrections"],
                          'release': ["Release"],
-                         'release_with_citation': ["Release with citation"],
+                         'release_with_citation': ["Release with citation update"],
                          'citation': ['Citation update'],
                          'pre-submission': ['File upload issue',
                                             'Submission issue',
