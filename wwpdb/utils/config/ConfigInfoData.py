@@ -528,7 +528,7 @@ class ConfigInfoData(object):
         "general": ["Other"],
         "approval": ["Approval without corrections", "Approval with corrections"],
         "meta corrections": ["Other corrections"],
-        "unlock": ["Coordinate corrections"],
+        "unlock": ["Re-upload files"],
         "release": ["Release"],
         "release_with_citation": ["Release with citation update"],
         "citation": ["Citation update"],
