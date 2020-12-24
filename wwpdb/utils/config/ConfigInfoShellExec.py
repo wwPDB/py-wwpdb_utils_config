@@ -192,7 +192,11 @@ class ConfigInfoShellExec(object):
         """
         retD = {}
         try:
-            config = ConfigParser.SafeConfigParser()
+            if sys.version_info[0] > 2:
+                # Python 3.2 deprecates SafeConfigParser()
+                config = ConfigParser.ConfigParser()
+            else:
+                config = ConfigParser.SafeConfigParser()
             # print configFilePath
             config.read(configFilePath)
             sectionL = config.sections()
