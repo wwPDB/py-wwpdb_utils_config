@@ -386,8 +386,8 @@ class ConfigInfoFileCache(object):
     def getJsonConfigDictionary(cls, siteId):
         try:
             p = os.getenv("TOP_WWPDB_SITE_CONFIG_DIR")
-            for l in ['rcsb-east','rcsb-west','pdbj','pdbe']:
-                jsonPath = os.path.join(p,l,siteId.lower(),'ConfigInfoFileCache.json')
+            for l in ["rcsb-east", "rcsb-west", "pdbj", "pdbe", "pdbc"]:
+                jsonPath = os.path.join(p,l,siteId.lower(),"ConfigInfoFileCache.json")
                 if os.access(jsonPath, os.R_OK):
                     with open(jsonPath, "r") as infile:
                         cD = json.load(infile)
@@ -405,7 +405,7 @@ class ConfigInfoFileCache(object):
             if siteId != id:
                 p = os.getenv("TOP_WWPDB_SITE_CONFIG_DIR")
                 l = str(os.getenv("WWPDB_SITE_LOC")).lower()
-                jsonPath = os.path.join(p,l,siteId.lower(),'ConfigInfoFileCache.json')
+                jsonPath = os.path.join(p,l,siteId.lower(),"ConfigInfoFileCache.json")
                 with open(jsonPath, "r") as infile:
                     cD = json.load(infile)
                 return cD[siteId]
