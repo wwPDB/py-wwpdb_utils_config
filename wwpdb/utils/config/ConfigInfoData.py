@@ -530,7 +530,7 @@ class ConfigInfoData(object):
         "approval": ["Approval without corrections", "Approval with corrections"],
         "meta corrections": ["Other corrections"],
         "unlock": ["Re-upload files"],
-        "release": ["Release"],
+        "release": ["Release request"],
         "release_with_citation": ["Release with citation update"],
         "citation": ["Citation update"],
         "pre-submission": [
