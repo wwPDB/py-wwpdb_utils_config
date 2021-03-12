@@ -408,6 +408,7 @@ class ConfigInfoData(object):
         "xml": "xml",
         "pdf": "pdf",
         "map": "map",
+        "bcif": "bcif",
         "amber": "amber",
         "amber-aux": "amber-aux",
         "cns": "cns",
