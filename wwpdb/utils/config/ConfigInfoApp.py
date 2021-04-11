@@ -97,11 +97,6 @@ class ConfigInfoAppEm(ConfigInfoAppBase):
         val = self._getlegacy("SITE_EXT_DICT_MAP_EMD_FILE_PATH", newpath)
         return val
 
-    def get_emd_schema_file_path(self):
-        """Returns the full path to the EMD V3 schema"""
-        # Former access was through SITE_EM_DICT_PATH
-        return os.path.join(self.__getlegacyemdpath(), "emdb-v3.xsd")
-
     def get_emd_fsc_scheme_file_path(self):
         """Returns the full path the EMD FSC schema file"""
         # Former access was through SITE_EM_DICT_PATH
