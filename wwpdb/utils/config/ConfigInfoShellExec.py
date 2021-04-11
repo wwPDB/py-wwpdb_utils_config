@@ -25,7 +25,11 @@ __version__ = "V0.001"
 import sys
 import os
 import traceback
-import imp
+
+if sys.version_info[0] > 2:
+    import importlib
+else:
+    import imp
 import ast
 
 try:
@@ -123,8 +127,16 @@ class ConfigInfoShellExec(object):
         tD = {}
         try:
             fp = self.__getSitePythonCachePath(topConfigPath, siteLoc, siteId)
-            oD = imp.load_source("ConfigInfoFileCache", fp)
-            cD = oD.ConfigInfoFileCache._configD  # pylint: disable=protected-access
+            if sys.version_info[0] > 2:
+                # Assumes > python 3.4 - import.machinery.SourceFileLoader
+                # would be needed
+                spec = importlib.util.spec_from_file_location("ConfigInfoFileCache", fp)
+                oD = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(oD)
+                cD = oD.ConfigInfoFileCache._configD  # pylint: disable=protected-access
+            else:
+                oD = imp.load_source("ConfigInfoFileCache", fp)
+                cD = oD.ConfigInfoFileCache._configD  # pylint: disable=protected-access
             tD = cD[siteId]
         except Exception as e:
             self.__lfh.write("failing %s\n" % str(e))
@@ -180,7 +192,11 @@ class ConfigInfoShellExec(object):
         """
         retD = {}
         try:
-            config = ConfigParser.SafeConfigParser()
+            if sys.version_info[0] > 2:
+                # Python 3.2 deprecates SafeConfigParser()
+                config = ConfigParser.ConfigParser()
+            else:
+                config = ConfigParser.SafeConfigParser()
             # print configFilePath
             config.read(configFilePath)
             sectionL = config.sections()
