@@ -549,6 +549,12 @@ class ConfigInfoData(object):
     _communication_release_message_subjects.extend(_message_subjects.get("release_with_citation"))
     _communication_release_message_subjects.extend(_message_subjects.get("citation"))
 
+    # mmCIF dictionary
+    _pdbx_dictionary_name_dict = {"ARCHIVE_CURRENT": "mmcif_pdbx_v50",
+                                  "ARCHIVE_NEXT": "mmcif_pdbx_v50",
+                                  "DEPOSIT": "mmcif_pdbx_v5_next"
+                                 }
+
     _projectContentWSiteServiceD = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://onedep-contentws-rcsb.wwpdb.org",
         "WWPDB_DEPLOY_LEGACY_RU": "https://onedep-contentws-rcsb.wwpdb.org",
@@ -659,6 +665,7 @@ class ConfigInfoData(object):
         self.__D["PRODUCTION_SITES"] = ConfigInfoData._production_sites
         self.__D["MESSAGE_SUBJECTS"] = ConfigInfoData._message_subjects
         self.__D["COMMUNICATION_RELEASE_MESSAGE_SUBJECTS"] = ConfigInfoData._communication_release_message_subjects
+        self.__D["PDBX_DICTIONARY_NAME_DICT"] = ConfigInfoData._pdbx_dictionary_name_dict
 
     def getConfigDictionary(self):
         return self.__D
