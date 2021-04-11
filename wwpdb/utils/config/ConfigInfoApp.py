@@ -53,6 +53,21 @@ class ConfigInfoAppBase(object):
         warnings.warn(msg, DeprecationWarning, stacklevel=4)
 
 
+class ConfigInfoAppDepUI(ConfigInfoAppBase):
+
+    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+        super(ConfigInfoAppDepUI, self).__init__(siteId=siteId, verbose=verbose, log=log)
+
+    def __get_depui_dir(self):
+        """Returns the preferred path to depui subdir of resources_ro"""
+        return os.path.join(self._getresourcedir(), "depui")
+
+    def get_depui_resources_ro_dir(self):
+        """Performs legacy lookup of depUI subdir referenced through DEPUI_RESOURCE_PATH.
+                Returns either legacy or new hardcoded lookup"""
+        return self._getlegacy("DEPUI_RESOURCE_PATH", self.__get_depui_dir())
+
+
 class ConfigInfoAppEm(ConfigInfoAppBase):
     """Access configuration for EM schema, resources, etc."""
 
