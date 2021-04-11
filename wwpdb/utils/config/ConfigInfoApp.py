@@ -67,6 +67,14 @@ class ConfigInfoAppDepUI(ConfigInfoAppBase):
                 Returns either legacy or new hardcoded lookup"""
         return self._getlegacy("DEPUI_RESOURCE_PATH", self.__get_depui_dir())
 
+    def get_site_access_info_file_path(self):
+        newpath = os.path.join(self.__get_depui_dir(), "site_access_info.json")
+        return self._getlegacy("SITE_ACCESS_INFO_FILE_PATH", newpath)
+
+    def get_site_dataset_siteloc_file_path(self):
+        newpath = os.path.join(self.__get_depui_dir(), "site_dataset_siteloc_info.json")
+        return self._getlegacy("SITE_DATASET_SITELOC_FILE_PATH", newpath)
+
 
 class ConfigInfoAppEm(ConfigInfoAppBase):
     """Access configuration for EM schema, resources, etc."""
