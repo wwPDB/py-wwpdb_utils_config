@@ -54,7 +54,6 @@ class ConfigInfoAppBase(object):
 
 
 class ConfigInfoAppDepUI(ConfigInfoAppBase):
-
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
         super(ConfigInfoAppDepUI, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
@@ -64,7 +63,7 @@ class ConfigInfoAppDepUI(ConfigInfoAppBase):
 
     def get_depui_resources_ro_dir(self):
         """Performs legacy lookup of depUI subdir referenced through DEPUI_RESOURCE_PATH.
-                Returns either legacy or new hardcoded lookup"""
+        Returns either legacy or new hardcoded lookup"""
         return self._getlegacy("DEPUI_RESOURCE_PATH", self.__get_depui_dir())
 
     def get_site_access_info_file_path(self):

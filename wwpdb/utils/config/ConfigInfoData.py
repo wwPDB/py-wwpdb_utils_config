@@ -550,10 +550,7 @@ class ConfigInfoData(object):
     _communication_release_message_subjects.extend(_message_subjects.get("citation"))
 
     # mmCIF dictionary
-    _pdbx_dictionary_name_dict = {"ARCHIVE_CURRENT": "mmcif_pdbx_v50",
-                                  "ARCHIVE_NEXT": "mmcif_pdbx_v50",
-                                  "DEPOSIT": "mmcif_pdbx_v5_next"
-                                 }
+    _pdbx_dictionary_name_dict = {"ARCHIVE_CURRENT": "mmcif_pdbx_v50", "ARCHIVE_NEXT": "mmcif_pdbx_v50", "DEPOSIT": "mmcif_pdbx_v5_next"}
 
     _projectContentWSiteServiceD = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://onedep-contentws-rcsb.wwpdb.org",
