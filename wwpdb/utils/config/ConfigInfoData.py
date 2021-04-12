@@ -550,19 +550,10 @@ class ConfigInfoData(object):
     _communication_release_message_subjects.extend(_message_subjects.get("citation"))
 
     # mmCIF dictionary
-    _pdbx_dictionary_name_dict = {"ARCHIVE_CURRENT": "mmcif_pdbx_v50",
-                                  "ARCHIVE_NEXT": "mmcif_pdbx_v50",
-                                  "DEPOSIT": "mmcif_pdbx_v5_next"
-                                  }
+    _pdbx_dictionary_name_dict = {"ARCHIVE_CURRENT": "mmcif_pdbx_v50", "ARCHIVE_NEXT": "mmcif_pdbx_v50", "DEPOSIT": "mmcif_pdbx_v5_next"}
 
     # CCD and PRD variables
-    _ref_data_proj_names = {
-        'cvs_path': '/cvs-ligands',
-        'ccd': 'ligand-dict-v3',
-        'prd': 'prd-v3',
-        'prdcc': 'prdcc-v3',
-        'prd_family': 'family-v3'
-    }
+    _ref_data_proj_names = {"cvs_path": "/cvs-ligands", "ccd": "ligand-dict-v3", "prd": "prd-v3", "prdcc": "prdcc-v3", "prd_family": "family-v3"}
 
     _projectContentWSiteServiceD = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://onedep-contentws-rcsb.wwpdb.org",
@@ -675,12 +666,11 @@ class ConfigInfoData(object):
         self.__D["MESSAGE_SUBJECTS"] = ConfigInfoData._message_subjects
         self.__D["COMMUNICATION_RELEASE_MESSAGE_SUBJECTS"] = ConfigInfoData._communication_release_message_subjects
         self.__D["PDBX_DICTIONARY_NAME_DICT"] = ConfigInfoData._pdbx_dictionary_name_dict
-        self.__D["SITE_CC_CVS_PATH"] = ConfigInfoData._ref_data_proj_names.get('csv_path')
-        self.__D["SITE_REFDATA_PROJ_NAME_CC"] = ConfigInfoData._ref_data_proj_names.get('ccd')
-        self.__D["SITE_REFDATA_PROJ_NAME_PRD"] = ConfigInfoData._ref_data_proj_names.get('prd')
-        self.__D["SITE_REFDATA_PROJ_NAME_PRDCC"] = ConfigInfoData._ref_data_proj_names.get('prdcc')
-        self.__D["SITE_REFDATA_PROJ_NAME_PRD_FAMILY"] = ConfigInfoData._ref_data_proj_names.get('prd_family')
-
+        self.__D["SITE_CC_CVS_PATH"] = ConfigInfoData._ref_data_proj_names.get("cvs_path")
+        self.__D["SITE_REFDATA_PROJ_NAME_CC"] = ConfigInfoData._ref_data_proj_names.get("ccd")
+        self.__D["SITE_REFDATA_PROJ_NAME_PRD"] = ConfigInfoData._ref_data_proj_names.get("prd")
+        self.__D["SITE_REFDATA_PROJ_NAME_PRDCC"] = ConfigInfoData._ref_data_proj_names.get("prdcc")
+        self.__D["SITE_REFDATA_PROJ_NAME_PRD_FAMILY"] = ConfigInfoData._ref_data_proj_names.get("prd_family")
 
     def getConfigDictionary(self):
         return self.__D
