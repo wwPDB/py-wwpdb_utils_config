@@ -27,7 +27,8 @@ import datetime
 import logging
 from oslo_concurrency import lockutils
 
-from wwpdb.utils.config.ConfigInfo import ConfigInfo
+from wwpdb.utils.config.ConfigInfo import ConfigInfo, getSiteId
+from wwpdb.utils.config.ConfigInfoApp import ConfigInfoAppDepUI
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,7 @@ class ConfigInfoDataSet(object):
         self.__lfh = log
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
+        self.__cIDepUI = ConfigInfoAppDepUI(siteId=getSiteId())
         # Default data set id range assignments
         self.__depIdAssignments = self.__cI.get("SITE_DATASET_ID_ASSIGNMENT_DICTIONARY")
         self.__depTestIdAssignments = self.__cI.get("SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY")
@@ -126,7 +128,7 @@ class ConfigInfoDataSet(object):
 
         Returns: d[<data_set_id>] = <site_id> or a empty dictionary.
         """
-        fp = self.__cI.get("SITE_DATASET_SITELOC_FILE_PATH")
+        fp = self.__cIDepUI.get_site_dataset_siteloc_file_path()
         try:
             with open(fp, "r") as infile:
                 return json.load(infile)
@@ -142,7 +144,7 @@ class ConfigInfoDataSet(object):
 
         Returns: True for success or False otherwise
         """
-        fp = self.__cI.get("SITE_DATASET_SITELOC_FILE_PATH")
+        fp = self.__cIDepUI.get_site_dataset_siteloc_file_path()
 
         try:
             if backup:
