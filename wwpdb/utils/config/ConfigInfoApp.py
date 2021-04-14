@@ -31,6 +31,7 @@ class ConfigInfoAppBase(object):
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
         self._cI = ConfigInfo(siteId=siteId, verbose=verbose, log=log)
         self._resourcedir = None
+        self._referencedir = None
 
     def _getlegacy(self, key, default=None):
         """Retrieves key from configuration.  If key is found, provide a warning"""
@@ -47,10 +48,36 @@ class ConfigInfoAppBase(object):
             self._resourcedir = self._cI.get("RO_RESOURCE_PATH")
         return self._resourcedir
 
+    def _getreferencedir(self):
+        if self._referencedir is None:
+            self._referencedir = self._cI.get("REFERENCE_PATH")
+        return self._referencedir
+
+    def _get_mmcif_deposit_dict_filename(self):
+        return self._cI.get("PDBX_DICTIONARY_NAME_DICT", {}).get('DEPOSIT')
+
     def __warndeprecated(self, msg):
         """Logs warning message"""
         # stacklevel is to get up high enough to get caller
         warnings.warn(msg, DeprecationWarning, stacklevel=4)
+
+
+class ConfigInfoAppCommon(ConfigInfoAppBase):
+
+    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+        super(ConfigInfoAppCommon, self).__init__(siteId=siteId, verbose=verbose, log=log)
+
+    def get_mmcif_dict_path(self):
+        reference_path = self._getreferencedir()
+        site_pdbx_dict_path = os.path.join(reference_path, 'dict')
+        return self._getlegacy("SITE_PDBX_DICT_PATH", site_pdbx_dict_path)
+
+    def get_mmcif_next_dictionary_file_path(self):
+
+        mmcif_dictionary_name = self._get_mmcif_deposit_dict_filename()
+        mmcif_dictionary_file_name = mmcif_dictionary_name + '.dic'
+        newpath = os.path.join(self.get_mmcif_dict_path(), mmcif_dictionary_file_name)
+        return self._getlegacy("SITE_MMCIF_DICT_FILE_PATH", newpath)
 
 
 class ConfigInfoAppDepUI(ConfigInfoAppBase):
