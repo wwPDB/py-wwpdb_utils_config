@@ -72,6 +72,9 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def get_mmcif_archive_current_dict_filename(self):
         return self._get_pdbx_dictionary_name_dict().get('ARCHIVE_CURRENT')
 
+    def get_mmcif_archive_next_dict_filename(self):
+        return self._get_pdbx_dictionary_name_dict().get('ARCHIVE_NEXT')
+
     def get_mmcif_dict_path(self):
         reference_path = self._getreferencedir()
         site_pdbx_dict_path = os.path.join(reference_path, 'dict')
