@@ -58,8 +58,8 @@ class ConfigInfoAppBase(object):
         # stacklevel is to get up high enough to get caller
         warnings.warn(msg, DeprecationWarning, stacklevel=4)
 
-class ConfigInfoAppCommon(ConfigInfoAppBase):
 
+class ConfigInfoAppCommon(ConfigInfoAppBase):
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
         super(ConfigInfoAppCommon, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
@@ -67,23 +67,23 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._cI.get("PDBX_DICTIONARY_NAME_DICT", {})
 
     def get_mmcif_deposit_dict_filename(self):
-        return self._get_pdbx_dictionary_name_dict().get('DEPOSIT')
+        return self._get_pdbx_dictionary_name_dict().get("DEPOSIT")
 
     def get_mmcif_archive_current_dict_filename(self):
-        return self._get_pdbx_dictionary_name_dict().get('ARCHIVE_CURRENT')
+        return self._get_pdbx_dictionary_name_dict().get("ARCHIVE_CURRENT")
 
     def get_mmcif_archive_next_dict_filename(self):
-        return self._get_pdbx_dictionary_name_dict().get('ARCHIVE_NEXT')
+        return self._get_pdbx_dictionary_name_dict().get("ARCHIVE_NEXT")
 
     def get_mmcif_dict_path(self):
         reference_path = self._getreferencedir()
-        site_pdbx_dict_path = os.path.join(reference_path, 'dict')
+        site_pdbx_dict_path = os.path.join(reference_path, "dict")
         return self._getlegacy("SITE_PDBX_DICT_PATH", site_pdbx_dict_path)
 
     def get_mmcif_next_dictionary_file_path(self):
 
         mmcif_dictionary_name = self.get_mmcif_deposit_dict_filename()
-        mmcif_dictionary_file_name = mmcif_dictionary_name + '.dic'
+        mmcif_dictionary_file_name = mmcif_dictionary_name + ".dic"
         newpath = os.path.join(self.get_mmcif_dict_path(), mmcif_dictionary_file_name)
         return self._getlegacy("SITE_MMCIF_DICT_FILE_PATH", newpath)
 
