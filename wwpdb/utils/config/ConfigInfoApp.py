@@ -53,25 +53,24 @@ class ConfigInfoAppBase(object):
             self._referencedir = self._cI.get("REFERENCE_PATH")
         return self._referencedir
 
-    def _get_pdbx_dictionary_name_dict(self):
-        return self._cI.get("PDBX_DICTIONARY_NAME_DICT", {})
-
     def __warndeprecated(self, msg):
         """Logs warning message"""
         # stacklevel is to get up high enough to get caller
         warnings.warn(msg, DeprecationWarning, stacklevel=4)
+
+class ConfigInfoAppCommon(ConfigInfoAppBase):
+
+    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+        super(ConfigInfoAppCommon, self).__init__(siteId=siteId, verbose=verbose, log=log)
+
+    def _get_pdbx_dictionary_name_dict(self):
+        return self._cI.get("PDBX_DICTIONARY_NAME_DICT", {})
 
     def get_mmcif_deposit_dict_filename(self):
         return self._get_pdbx_dictionary_name_dict().get('DEPOSIT')
 
     def get_mmcif_archive_current_dict_filename(self):
         return self._get_pdbx_dictionary_name_dict().get('ARCHIVE_CURRENT')
-
-
-class ConfigInfoAppCommon(ConfigInfoAppBase):
-
-    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
-        super(ConfigInfoAppCommon, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
     def get_mmcif_dict_path(self):
         reference_path = self._getreferencedir()
