@@ -306,7 +306,7 @@ class ConfigInfoData(object):
         "validation-report": (["pdf"], "val-report"),
         "validation-report-full": (["pdf"], "val-report-full"),
         "validation-report-slider": (["png", "svg"], "val-report-slider"),
-        "validation-data": (["xml"], "val-data"),
+        "validation-data": (["pdbx", "xml"], "val-data"),
         "validation-report-2fo-map-coef": (["pdbx"], "val-report-wwpdb-2fo-fc-edmap-coef"),
         "validation-report-fo-map-coef": (["pdbx"], "val-report-wwpdb-fo-fc-edmap-coef"),
         "validation-report-images": (["tar"], "val-report-images"),
