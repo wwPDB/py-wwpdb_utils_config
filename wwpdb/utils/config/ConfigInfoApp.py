@@ -87,6 +87,10 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         newpath = os.path.join(self.get_mmcif_dict_path(), mmcif_dictionary_file_name)
         return self._getlegacy("SITE_MMCIF_DICT_FILE_PATH", newpath)
 
+    def get_taxdump_path(self):
+        reference_path = self._getreferencedir()
+        site_pdbx_dict_path = os.path.join(reference_path, "taxdump")
+        return self._getlegacy("SITE_TAXDUMP_PATH", site_pdbx_dict_path)
 
 class ConfigInfoAppDepUI(ConfigInfoAppBase):
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
