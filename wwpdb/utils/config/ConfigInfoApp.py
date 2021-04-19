@@ -103,8 +103,8 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._getlegacy("FOR_RELEASE_DATA_PATH", release_path)
 
     def get_status_export_path(self):
-        release_path = os.path.join(self._get_site_archive_dir(), 'status')
-        return self._getlegacy("STATUS_EXPORT_DATA_PATH", release_path)
+        status_path = os.path.join(self.get_for_release_path(), 'status')
+        return self._getlegacy("STATUS_EXPORT_DATA_PATH", status_path)
 
     def get_nmr_exchange_path(self):
         release_path = os.path.join(self._get_site_archive_dir(), 'nmr_exchange_data')
