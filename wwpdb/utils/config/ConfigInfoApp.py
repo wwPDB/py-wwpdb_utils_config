@@ -32,6 +32,7 @@ class ConfigInfoAppBase(object):
         self._cI = ConfigInfo(siteId=siteId, verbose=verbose, log=log)
         self._resourcedir = None
         self._referencedir = None
+        self._site_archive_dir = None
 
     def _getlegacy(self, key, default=None):
         """Retrieves key from configuration.  If key is found, provide a warning"""
@@ -52,6 +53,11 @@ class ConfigInfoAppBase(object):
         if self._referencedir is None:
             self._referencedir = self._cI.get("REFERENCE_PATH")
         return self._referencedir
+
+    def _get_site_archive_dir(self):
+        if self._site_archive_dir is None:
+            self._site_archive_dir = self._cI.get("SITE_ARCHIVE_STORAGE_PATH")
+        return self._site_archive_dir
 
     def __warndeprecated(self, msg):
         """Logs warning message"""
@@ -91,6 +97,19 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         reference_path = self._getreferencedir()
         site_pdbx_dict_path = os.path.join(reference_path, "taxdump")
         return self._getlegacy("SITE_TAXDUMP_PATH", site_pdbx_dict_path)
+
+    def get_for_release_path(self):
+        release_path = os.path.join(self._get_site_archive_dir(), 'for_release')
+        return self._getlegacy("FOR_RELEASE_DATA_PATH", release_path)
+
+    def get_status_export_path(self):
+        release_path = os.path.join(self._get_site_archive_dir(), 'status')
+        return self._getlegacy("STATUS_EXPORT_DATA_PATH", release_path)
+
+    def get_nmr_exchange_path(self):
+        release_path = os.path.join(self._get_site_archive_dir(), 'nmr_exchange_data')
+        return self._getlegacy("NMR_EXCHANGE_DATA", release_path)
+
 
 class ConfigInfoAppDepUI(ConfigInfoAppBase):
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
