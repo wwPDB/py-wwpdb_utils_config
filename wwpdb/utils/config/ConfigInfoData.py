@@ -666,7 +666,7 @@ class ConfigInfoData(object):
         self.__D["MESSAGE_SUBJECTS"] = ConfigInfoData._message_subjects
         self.__D["COMMUNICATION_RELEASE_MESSAGE_SUBJECTS"] = ConfigInfoData._communication_release_message_subjects
         self.__D["PDBX_DICTIONARY_NAME_DICT"] = ConfigInfoData._pdbx_dictionary_name_dict
-        self.__D["SITE_CC_CVS_PATH"] = ConfigInfoData._ref_data_proj_names.get("cvs_path")
+        self.__D["SITE_REFDATA_CVS_PATH"] = ConfigInfoData._ref_data_proj_names.get("cvs_path")
         self.__D["SITE_REFDATA_PROJ_NAME_CC"] = ConfigInfoData._ref_data_proj_names.get("ccd")
         self.__D["SITE_REFDATA_PROJ_NAME_PRD"] = ConfigInfoData._ref_data_proj_names.get("prd")
         self.__D["SITE_REFDATA_PROJ_NAME_PRDCC"] = ConfigInfoData._ref_data_proj_names.get("prdcc")
