@@ -15,9 +15,9 @@ __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
+import logging
 import os.path
 import sys
-import logging
 import warnings
 
 from wwpdb.utils.config.ConfigInfo import ConfigInfo
@@ -41,6 +41,12 @@ class ConfigInfoAppBase(object):
             # logging will repeat with each occurance
             self.__warndeprecated("Access key %s has been used but is deprecated" % key)
         else:
+            val = default
+        return val
+
+    def _getValue(self, key, default=None):
+        val = self._cI.get(key)
+        if val is None:
             val = default
         return val
 
@@ -87,7 +93,6 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._getlegacy("SITE_PDBX_DICT_PATH", site_pdbx_dict_path)
 
     def get_mmcif_next_dictionary_file_path(self):
-
         mmcif_dictionary_name = self.get_mmcif_deposit_dict_filename()
         mmcif_dictionary_file_name = mmcif_dictionary_name + ".dic"
         newpath = os.path.join(self.get_mmcif_dict_path(), mmcif_dictionary_file_name)
@@ -109,6 +114,93 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def get_nmr_exchange_path(self):
         release_path = os.path.join(self._get_site_archive_dir(), 'nmr_exchange_data')
         return self._getlegacy("NMR_EXCHANGE_DATA", release_path)
+
+    def get_site_refdata_sequence_path(self):
+        reference_path = self._getreferencedir()
+        ref_cc_dir = os.path.join(reference_path, 'sequence')
+        return self._getlegacy("SITE_REFDATA_SEQUENCE_PATH", ref_cc_dir)
+
+    def get_site_refdata_sequence_db_path(self):
+        reference_path = self.get_site_refdata_sequence_path()
+        ref_cc_dir = os.path.join(reference_path, 'seq-db')
+        return self._getlegacy("SITE_REFDATA_SEQUENCE_DB_PATH", ref_cc_dir)
+
+    def get_ref_cc_dir(self):
+        reference_path = self._getreferencedir()
+        ref_cc_dir = os.path.join(reference_path, 'components')
+        return self._getlegacy("REF_CC_DIR", ref_cc_dir)
+
+    def get_site_cc_dict_path(self):
+        site_cc_dict_path = os.path.join(self.get_ref_cc_dir(), 'cc-dict')
+        return self._getlegacy("SITE_CC_DICT_PATH", site_cc_dict_path)
+
+    def get_site_refdata_top_cvs_sb_path(self):
+        return self._getlegacy("SITE_REFDATA_TOP_CVS_SB_PATH", self.get_site_cc_dict_path())
+
+    def get_cc_dict(self):
+        return os.path.join(self.get_site_cc_dict_path(), 'Components-all-v3.cif')
+
+    def get_cc_path_list(self):
+        return os.path.join(self.get_site_cc_dict_path(), 'PATHLIST-v3')
+
+    def get_cc_id_list(self):
+        return os.path.join(self.get_site_cc_dict_path(), 'IDLIST-v3')
+
+    def get_cc_dict_serial(self):
+        return os.path.join(self.get_site_cc_dict_path(), 'Components-all-v3.sdb')
+
+    def get_cc_dict_idx(self):
+        return os.path.join(self.get_site_cc_dict_path(), 'Components-all-v3-r4.idx')
+
+    def get_cc_db(self):
+        return os.path.join(self.get_site_cc_dict_path(), 'chemcomp_v3.db')
+
+    def get_cc_index(self):
+        return os.path.join(self.get_site_cc_dict_path(), 'chemcomp-index.pic')
+
+    def get_cc_parent_index(self):
+        return os.path.join(self.get_site_cc_dict_path(), 'chemcomp-parent-index.pic')
+
+    def get_site_prdcc_cvs_path(self):
+        site_prdcc_cvs_path = os.path.join(self.get_ref_cc_dir(), self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
+        return self._getlegacy("SITE_PRDCC_CVS_PATH", site_prdcc_cvs_path)
+
+    def get_site_cc_cvs_path(self):
+        site_cc_cvs_path = os.path.join(self.get_ref_cc_dir(), self._getValue("SITE_REFDATA_PROJ_NAME_CC"))
+        return self._getlegacy("SITE_CC_CVS_PATH", site_cc_cvs_path)
+
+    def get_site_family_cvs_path(self):
+        site_family_cvs_path = os.path.join(self.get_ref_cc_dir(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD_FAMILY"))
+        return self._getlegacy("SITE_FAMILY_CVS_PATH", site_family_cvs_path)
+
+    def get_site_prd_cvs_path(self):
+        site_prd_cvs_path = os.path.join(self.get_ref_cc_dir(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD"))
+        return self._getlegacy("SITE_PRD_CVS_PATH", site_prd_cvs_path)
+
+    def get_site_prd_dict_path(self):
+        site_prd_dict_path = os.path.join(self.get_ref_cc_dir(), 'prd-dict')
+        return self._getlegacy("SITE_PRD_DICT_PATH", site_prd_dict_path)
+
+    def get_prd_summary_sdb(self):
+        return os.path.join(self.get_site_prd_dict_path(), 'prd_summary.sdb')
+
+    def get_prd_summary_cif(self):
+        return os.path.join(self.get_site_prd_dict_path(), 'prd_summary.cif')
+
+    def get_prd_dict_file(self):
+        return os.path.join(self.get_site_prd_dict_path(), 'Prd-all-v3.cif')
+
+    def get_prd_dict_serial(self):
+        return os.path.join(self.get_site_prd_dict_path(), 'Prd-all-v3.sdb')
+
+    def get_prd_cc_file(self):
+        return os.path.join(self.get_site_prd_dict_path(), 'Prdcc-all-v3.cif')
+
+    def get_prd_cc_serial(self):
+        return os.path.join(self.get_site_prd_dict_path(), 'Prdcc-all-v3.sdb')
+
+    def get_prd_family_mapping(self):
+        return os.path.join(self.get_site_prd_dict_path(), 'PrdFamilyIDMapping.lst')
 
 
 class ConfigInfoAppDepUI(ConfigInfoAppBase):
