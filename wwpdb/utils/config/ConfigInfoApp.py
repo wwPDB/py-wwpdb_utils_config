@@ -130,6 +130,14 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         release_path = os.path.join(self._get_site_archive_dir(), 'for_release')
         return self._getlegacy("FOR_RELEASE_DATA_PATH", release_path)
 
+    def get_for_release_beta_path(self):
+        release_path = os.path.join(self._get_site_archive_dir(), 'for_release_beta')
+        return release_path
+
+    def get_for_release_version_path(self):
+        release_path = os.path.join(self._get_site_archive_dir(), 'for_release_version')
+        return release_path
+
     def get_status_export_path(self):
         status_path = os.path.join(self.get_for_release_path(), 'status')
         return self._getlegacy("STATUS_EXPORT_DATA_PATH", status_path)
