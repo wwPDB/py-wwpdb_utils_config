@@ -33,6 +33,7 @@ class ConfigInfoAppBase(object):
         self._resourcedir = None
         self._referencedir = None
         self._site_archive_dir = None
+        self._site_local_apps_path = None
 
     def _getlegacy(self, key, default=None):
         """Retrieves key from configuration.  If key is found, provide a warning"""
@@ -64,6 +65,11 @@ class ConfigInfoAppBase(object):
         if self._site_archive_dir is None:
             self._site_archive_dir = self._cI.get("SITE_ARCHIVE_STORAGE_PATH")
         return self._site_archive_dir
+
+    def _get_site_local_apps(self):
+        if self._site_local_apps_path is None:
+            self._site_local_apps_path = self._cI.get('SITE_LOCAL_APPS_PATH')
+        return self._site_local_apps_path
 
     def __warndeprecated(self, msg):
         """Logs warning message"""
@@ -97,6 +103,19 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         mmcif_dictionary_file_name = mmcif_dictionary_name + ".dic"
         newpath = os.path.join(self.get_mmcif_dict_path(), mmcif_dictionary_file_name)
         return self._getlegacy("SITE_MMCIF_DICT_FILE_PATH", newpath)
+
+    def get_site_packages_path(self):
+        tools_dir = self._get_site_local_apps()
+        packages_path = os.path.join(tools_dir, 'packages')
+        return self._getlegacy("SITE_PACKAGES_PATH", packages_path)
+
+    def get_site_cc_oe_dir(self):
+        packages_dir = self.get_site_packages_path()
+        return self._getlegacy("SITE_CC_OE_DIR", os.path.join(packages_dir, 'openeye'))
+
+    def get_site_cc_oe_licence(self):
+        oe_dir = self.get_site_cc_oe_dir()
+        return self._getlegacy("SITE_CC_OE_LICENSE", os.path.join(oe_dir, 'etc', 'oe_license.txt'))
 
     def get_taxdump_path(self):
         reference_path = self._getreferencedir()
