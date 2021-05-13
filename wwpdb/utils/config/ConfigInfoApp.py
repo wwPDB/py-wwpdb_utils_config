@@ -109,6 +109,10 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         packages_path = os.path.join(tools_dir, 'packages')
         return self._getlegacy("SITE_PACKAGES_PATH", packages_path)
 
+    def get_site_annot_tools_path(self):
+        packages_dir = self.get_site_packages_path()
+        return self._getlegacy("SITE_ANNOT_TOOLS_PATH", os.path.join(packages_dir, "annotation"))
+
     def get_site_cc_oe_dir(self):
         packages_dir = self.get_site_packages_path()
         return self._getlegacy("SITE_CC_OE_DIR", os.path.join(packages_dir, 'openeye'))
