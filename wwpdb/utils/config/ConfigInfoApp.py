@@ -104,6 +104,9 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         newpath = os.path.join(self.get_mmcif_dict_path(), mmcif_dictionary_file_name)
         return self._getlegacy("SITE_MMCIF_DICT_FILE_PATH", newpath)
 
+    def get_site_local_apps_path(self):
+        return self._get_site_local_apps()
+
     def get_site_packages_path(self):
         tools_dir = self._get_site_local_apps()
         packages_path = os.path.join(tools_dir, 'packages')
