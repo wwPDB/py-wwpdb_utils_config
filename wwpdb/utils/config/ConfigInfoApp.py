@@ -161,6 +161,9 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def get_cc_parent_index(self):
         return os.path.join(self.get_site_cc_dict_path(), 'chemcomp-parent-index.pic')
 
+    def get_cc_fp_patterns(self):
+        return os.path.join(self.get_site_cc_dict_path(), 'fp_patterns.txt')
+
     def get_site_prdcc_cvs_path(self):
         site_prdcc_cvs_path = os.path.join(self.get_ref_cc_dir(), self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
         return self._getlegacy("SITE_PRDCC_CVS_PATH", site_prdcc_cvs_path)
