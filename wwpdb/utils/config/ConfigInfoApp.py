@@ -129,6 +129,15 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         site_pdbx_dict_path = os.path.join(reference_path, "taxdump")
         return self._getlegacy("SITE_TAXDUMP_PATH", site_pdbx_dict_path)
 
+    def get_idcode_dir(self):
+        reference_path = self._getreferencedir()
+        return os.path.join(reference_path, "id_codes")
+
+    def get_unused_prd_file(self):
+        reference_path = self._getreferencedir()
+        unused_list_file = os.path.join(self.get_idcode_dir(), "unusedPrdId.lst")
+        return unused_list_file
+
     def get_for_release_path(self):
         release_path = os.path.join(self._get_site_archive_dir(), 'for_release')
         return self._getlegacy("FOR_RELEASE_DATA_PATH", release_path)
