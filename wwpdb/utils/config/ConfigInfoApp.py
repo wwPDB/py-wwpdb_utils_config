@@ -116,6 +116,36 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def get_site_cc_apps_path(self):
         return self._getlegacy("SITE_CC_APPS_PATH", os.path.join(self.get_site_packages_path(), "cc-tools-v2"))
 
+    def get_site_cc_inchi_dir(self):
+        return self._getlegacy("SITE_CC_INCHI_DIR", os.path.join(self.get_site_packages_path(), "bin"))
+
+    def get_site_cc_corina_dir(self):
+        return self._getlegacy("SITE_CC_CORINA_DIR", os.path.join(self.get_site_packages_path(), 'corina'))
+
+    def get_site_cc_cactvs_dir(self):
+        return self._getlegacy("SITE_CC_CACTVS_DIR", os.path.join(self.get_site_packages_path(), 'cactvs', 'bin'))
+
+    def get_site_openbabel_dir(self):
+        return os.path.join(self.get_site_packages_path(), 'openbabel-2.2.3')
+
+    def get_site_cc_babel_lib(self):
+        return self._getlegacy("SITE_CC_BABEL_LIB", os.path.join(self.get_site_openbabel_dir(), 'lib'))
+
+    def get_site_cc_babel_dir(self):
+        return self._getlegacy("SITE_CC_BABEL_DIR", os.path.join(self.get_site_openbabel_dir(), 'lib'))
+
+    def get_site_cc_babel_datadir(self):
+        return self._getlegacy("SITE_CC_BABEL_DATADIR", os.path.join(self.get_site_openbabel_dir(), 'share', 'openbabel''2.2.3'))
+
+    def get_site_cc_acd_dir(self):
+        return self._getlegacy("site_cc_acd_dir", os.path.join(self.get_site_packages_path(), 'acd'))
+
+    def get_site_pisa_top_path(self):
+        return self._getlegacy("SITE_PISA_TOP_PATH", os.path.join(self.get_site_packages_path(), 'pisa'))
+
+    def get_site_pisa_conf_path(self):
+        return self._getlegacy("SITE_PISA_CONF_PATH", os.path.join(self.get_site_pisa_top_path(), 'configure'))
+
     def get_site_cc_oe_dir(self):
         return self._getlegacy("SITE_CC_OE_DIR", os.path.join(self.get_site_packages_path(), 'openeye'))
 
