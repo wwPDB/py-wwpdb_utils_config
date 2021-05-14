@@ -163,25 +163,22 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
 
     def get_site_refdata_sequence_path(self):
         reference_path = self._getreferencedir()
-        ref_cc_dir = os.path.join(reference_path, 'sequence')
-        return self._getlegacy("SITE_REFDATA_SEQUENCE_PATH", ref_cc_dir)
+        sequence_path = os.path.join(reference_path, 'sequence')
+        return self._getlegacy("SITE_REFDATA_SEQUENCE_PATH", sequence_path)
 
     def get_site_refdata_sequence_db_path(self):
         reference_path = self.get_site_refdata_sequence_path()
-        ref_cc_dir = os.path.join(reference_path, 'seq-db')
-        return self._getlegacy("SITE_REFDATA_SEQUENCE_DB_PATH", ref_cc_dir)
-
-    def get_ref_cc_dir(self):
-        reference_path = self._getreferencedir()
-        ref_cc_dir = os.path.join(reference_path, 'components')
-        return self._getlegacy("REF_CC_DIR", ref_cc_dir)
-
-    def get_site_cc_dict_path(self):
-        site_cc_dict_path = os.path.join(self.get_ref_cc_dir(), 'cc-dict')
-        return self._getlegacy("SITE_CC_DICT_PATH", site_cc_dict_path)
+        seq_db_path = os.path.join(reference_path, 'seq-db')
+        return self._getlegacy("SITE_REFDATA_SEQUENCE_DB_PATH", seq_db_path)
 
     def get_site_refdata_top_cvs_sb_path(self):
-        return self._getlegacy("SITE_REFDATA_TOP_CVS_SB_PATH", self.get_site_cc_dict_path())
+        reference_path = self._getreferencedir()
+        ref_cc_dir = os.path.join(reference_path, 'components')
+        return self._getlegacy("SITE_REFDATA_TOP_CVS_SB_PATH", ref_cc_dir)
+
+    def get_site_cc_dict_path(self):
+        site_cc_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), 'cc-dict')
+        return self._getlegacy("SITE_CC_DICT_PATH", site_cc_dict_path)
 
     def get_cc_dict(self):
         return os.path.join(self.get_site_cc_dict_path(), 'Components-all-v3.cif')
@@ -211,23 +208,23 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return os.path.join(self.get_site_cc_dict_path(), 'fp_patterns.txt')
 
     def get_site_prdcc_cvs_path(self):
-        site_prdcc_cvs_path = os.path.join(self.get_ref_cc_dir(), self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
+        site_prdcc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
         return self._getlegacy("SITE_PRDCC_CVS_PATH", site_prdcc_cvs_path)
 
     def get_site_cc_cvs_path(self):
-        site_cc_cvs_path = os.path.join(self.get_ref_cc_dir(), self._getValue("SITE_REFDATA_PROJ_NAME_CC"))
+        site_cc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_CC"))
         return self._getlegacy("SITE_CC_CVS_PATH", site_cc_cvs_path)
 
     def get_site_family_cvs_path(self):
-        site_family_cvs_path = os.path.join(self.get_ref_cc_dir(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD_FAMILY"))
+        site_family_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD_FAMILY"))
         return self._getlegacy("SITE_FAMILY_CVS_PATH", site_family_cvs_path)
 
     def get_site_prd_cvs_path(self):
-        site_prd_cvs_path = os.path.join(self.get_ref_cc_dir(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD"))
+        site_prd_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD"))
         return self._getlegacy("SITE_PRD_CVS_PATH", site_prd_cvs_path)
 
     def get_site_prd_dict_path(self):
-        site_prd_dict_path = os.path.join(self.get_ref_cc_dir(), 'prd-dict')
+        site_prd_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), 'prd-dict')
         return self._getlegacy("SITE_PRD_DICT_PATH", site_prd_dict_path)
 
     def get_prd_summary_sdb(self):
