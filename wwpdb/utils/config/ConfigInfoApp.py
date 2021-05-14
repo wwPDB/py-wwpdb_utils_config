@@ -153,6 +153,9 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         oe_dir = self.get_site_cc_oe_dir()
         return self._getlegacy("SITE_CC_OE_LICENSE", os.path.join(oe_dir, 'etc', 'oe_license.txt'))
 
+    def get_site_space_group_file_path(self):
+        return self._getlegacy("SITE_SPACE_GROUP_FILE_PATH", os.path.join(self.get_site_annot_tools_path(), 'data', 'ascii', 'space_group.cif'))
+
     def get_taxdump_path(self):
         reference_path = self._getreferencedir()
         site_pdbx_dict_path = os.path.join(reference_path, "taxdump")
