@@ -71,6 +71,9 @@ class ConfigInfoAppBase(object):
             self._site_local_apps_path = self._cI.get('SITE_LOCAL_APPS_PATH')
         return self._site_local_apps_path
 
+    def get_site_packages_path(self):
+        return self._getlegacy("SITE_PACKAGES_PATH", os.path.join(self._get_site_local_apps(), 'packages'))
+
     def __warndeprecated(self, msg):
         """Logs warning message"""
         # stacklevel is to get up high enough to get caller
@@ -106,9 +109,6 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
 
     def get_site_local_apps_path(self):
         return self._get_site_local_apps()
-
-    def get_site_packages_path(self):
-        return self._getlegacy("SITE_PACKAGES_PATH", os.path.join(self._get_site_local_apps(), 'packages'))
 
     def get_site_annot_tools_path(self):
         return self._getlegacy("SITE_ANNOT_TOOLS_PATH", os.path.join(self.get_site_packages_path(), "annotation"))
