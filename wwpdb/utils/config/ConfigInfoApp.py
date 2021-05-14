@@ -134,8 +134,11 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return os.path.join(reference_path, "id_codes")
 
     def get_unused_prd_file(self):
-        reference_path = self._getreferencedir()
         unused_list_file = os.path.join(self.get_idcode_dir(), "unusedPrdId.lst")
+        return unused_list_file
+
+    def get_unused_ccd_file(self):
+        unused_list_file = os.path.join(self.get_idcode_dir(), "unusedCodes.lst")
         return unused_list_file
 
     def get_for_release_path(self):
