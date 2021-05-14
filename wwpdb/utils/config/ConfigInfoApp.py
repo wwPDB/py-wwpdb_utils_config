@@ -116,6 +116,9 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def get_site_cc_apps_path(self):
         return self._getlegacy("SITE_CC_APPS_PATH", os.path.join(self.get_site_packages_path(), "cc-tools-v2"))
 
+    def get_sf_valid(self):
+        return self._getlegacy("SF_VALID", os.path.join(self.get_site_packages_path(), "sf-valid"))
+
     def get_site_cc_inchi_dir(self):
         return self._getlegacy("SITE_CC_INCHI_DIR", os.path.join(self.get_site_packages_path(), "bin"))
 
@@ -332,3 +335,68 @@ class ConfigInfoAppEm(ConfigInfoAppBase):
         """Returns the full path the EMD FSC schema file"""
         # Former access was through SITE_EM_DICT_PATH
         return os.path.join(self.__getlegacyemdpath(), "emdb_fsc.xsd")
+
+
+class ConfigInfoAppValidation(ConfigInfoAppBase):
+    """Access configuration for Validation run time variables"""
+
+    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+        super(ConfigInfoAppValidation, self).__init__(siteId=siteId, verbose=verbose, log=log)
+
+    def get_validation_tools_path(self):
+        return self._getlegacy("VALIDATIONTOOLSPATH", os.path.join(self.get_site_packages_path(), 'ValidationSupport'))
+
+    def get_sf_valid(self):
+        return self._getlegacy("DCCROOT", os.path.join(self.get_site_packages_path(), "sf-valid"))
+
+    def get_pymolexe(self):
+        return self._getlegacy("PYMOLEXE", os.path.join(self.get_site_packages_path(), "open_pymol", 'pymol'))
+
+    def get_java_home(self):
+        return self._getlegacy("JAVA_HOME", os.path.join(self.get_site_packages_path(), "java", 'jdk'))
+
+    def get_ccp4root(self):
+        return self._getlegacy("CCP4ROOT", os.path.join(self.get_site_packages_path(), 'ccp4'))
+
+    def get_validator_ccp4setup(self):
+        return self._getlegacy("VALIDATOR_CCP4SETUP", os.path.join(self.get_ccp4root(), 'bin', 'ccp4.setup-sh'))
+
+    def get_phenixroot(self):
+        return self._getlegacy("PHENIXROOT", os.path.join(self.get_site_packages_path(), "phenix"))
+
+    def get_cnsroot(self):
+        return self._getlegacy("CNSROOT", os.path.join(self.get_site_packages_path(), "cns_solve"))
+
+    def get_edstools(self):
+        return self._getlegacy("EDSTOOLS", os.path.join(self.get_site_packages_path(), 'EDStools'))
+
+    def get_cif2text(self):
+        return self._getlegacy("CIF2TEXT", os.path.join(self.get_edstools(), "CIF2TEXT", 'cif2text_internal'))
+
+    def get_ccp4symoplib(self):
+        return self._getlegacy("CCP4SYMOPLIB", os.path.join(self.get_edstools(), "symop.lib"))
+
+    def get_edssubpath(self):
+        return self._getlegacy("EDSSUBPATH", os.path.join(self.get_edstools(), "Gerard"))
+
+    def get_dataman(self):
+        return self._getlegacy("DATAMAN", os.path.join(self.get_edssubpath(), "LX_DATAMAN"))
+
+    def get_o2d(self):
+        return self._getlegacy("O2D", os.path.join(self.get_edssubpath(), "LX_O2D"))
+
+    def get_filpdb(self):
+        return self._getlegacy("FILPDB", os.path.join(self.get_edssubpath(), "lx_filpdb"))
+
+    def get_mapman(self):
+        return self._getlegacy("MAPMAN", os.path.join(self.get_edssubpath(), "lx_mapman"))
+
+    def get_stat2o(self):
+        return self._getlegacy("STAT2O", os.path.join(self.get_edssubpath(), "LX_STAT2O"))
+
+    def get_pdbmod(self):
+        return self._getlegacy("PDBMOD", os.path.join(self.get_edssubpath(), "pdb_mod"))
+
+    def get_osymdir(self):
+        return self._getlegacy("osymdir", os.path.join(self.get_site_packages_path(), "symm"))
+
