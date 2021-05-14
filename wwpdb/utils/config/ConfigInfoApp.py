@@ -108,17 +108,16 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._get_site_local_apps()
 
     def get_site_packages_path(self):
-        tools_dir = self._get_site_local_apps()
-        packages_path = os.path.join(tools_dir, 'packages')
-        return self._getlegacy("SITE_PACKAGES_PATH", packages_path)
+        return self._getlegacy("SITE_PACKAGES_PATH", os.path.join(self._get_site_local_apps(), 'packages'))
 
     def get_site_annot_tools_path(self):
-        packages_dir = self.get_site_packages_path()
-        return self._getlegacy("SITE_ANNOT_TOOLS_PATH", os.path.join(packages_dir, "annotation"))
+        return self._getlegacy("SITE_ANNOT_TOOLS_PATH", os.path.join(self.get_site_packages_path(), "annotation"))
+
+    def get_site_cc_apps_path(self):
+        return self._getlegacy("SITE_CC_APPS_PATH", os.path.join(self.get_site_packages_path(), "cc-tools-v2"))
 
     def get_site_cc_oe_dir(self):
-        packages_dir = self.get_site_packages_path()
-        return self._getlegacy("SITE_CC_OE_DIR", os.path.join(packages_dir, 'openeye'))
+        return self._getlegacy("SITE_CC_OE_DIR", os.path.join(self.get_site_packages_path(), 'openeye'))
 
     def get_site_cc_oe_licence(self):
         oe_dir = self.get_site_cc_oe_dir()
