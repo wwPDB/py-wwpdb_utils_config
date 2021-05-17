@@ -286,6 +286,18 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def get_prd_family_mapping(self):
         return os.path.join(self.get_site_prd_dict_path(), 'PrdFamilyIDMapping.lst')
 
+    def get_node_bin_path(self):
+        return os.path.join(self.get_site_packages_path(), 'node', 'bin', 'node')
+
+    def get_molstar_packages_path(self):
+        return os.path.join(self.get_site_packages_path(), 'molstar')
+
+    def get_volume_server_pack_path(self):
+        return os.path.join(self.get_molstar_packages_path(), 'lib', 'servers', 'pack.js')
+
+    def get_volume_server_query_path(self):
+        return os.path.join(self.get_molstar_packages_path(), 'lib', 'servers', 'query.js')
+
 
 class ConfigInfoAppDepUI(ConfigInfoAppBase):
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
