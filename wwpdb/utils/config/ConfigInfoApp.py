@@ -68,11 +68,11 @@ class ConfigInfoAppBase(object):
 
     def _get_site_local_apps(self):
         if self._site_local_apps_path is None:
-            self._site_local_apps_path = self._cI.get('SITE_LOCAL_APPS_PATH')
+            self._site_local_apps_path = self._cI.get("SITE_LOCAL_APPS_PATH")
         return self._site_local_apps_path
 
     def get_site_packages_path(self):
-        return self._getlegacy("SITE_PACKAGES_PATH", os.path.join(self._get_site_local_apps(), 'packages'))
+        return self._getlegacy("SITE_PACKAGES_PATH", os.path.join(self._get_site_local_apps(), "packages"))
 
     def __warndeprecated(self, msg):
         """Logs warning message"""
@@ -123,44 +123,44 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._getlegacy("SITE_CC_INCHI_DIR", os.path.join(self.get_site_packages_path(), "bin"))
 
     def get_site_cc_corina_dir(self):
-        return self._getlegacy("SITE_CC_CORINA_DIR", os.path.join(self.get_site_packages_path(), 'corina'))
+        return self._getlegacy("SITE_CC_CORINA_DIR", os.path.join(self.get_site_packages_path(), "corina"))
 
     def get_site_cc_cactvs_dir(self):
-        return self._getlegacy("SITE_CC_CACTVS_DIR", os.path.join(self.get_site_packages_path(), 'cactvs', 'bin'))
+        return self._getlegacy("SITE_CC_CACTVS_DIR", os.path.join(self.get_site_packages_path(), "cactvs", "bin"))
 
     def get_site_openbabel_dir(self):
-        return os.path.join(self.get_site_packages_path(), 'openbabel-2.2.3')
+        return os.path.join(self.get_site_packages_path(), "openbabel-2.2.3")
 
     def get_site_cc_babel_lib(self):
-        return self._getlegacy("SITE_CC_BABEL_LIB", os.path.join(self.get_site_openbabel_dir(), 'lib'))
+        return self._getlegacy("SITE_CC_BABEL_LIB", os.path.join(self.get_site_openbabel_dir(), "lib"))
 
     def get_site_cc_babel_dir(self):
-        return self._getlegacy("SITE_CC_BABEL_DIR", os.path.join(self.get_site_openbabel_dir(), 'lib'))
+        return self._getlegacy("SITE_CC_BABEL_DIR", os.path.join(self.get_site_openbabel_dir(), "lib"))
 
     def get_site_cc_babel_datadir(self):
-        return self._getlegacy("SITE_CC_BABEL_DATADIR", os.path.join(self.get_site_openbabel_dir(), 'share', 'openbabel''2.2.3'))
+        return self._getlegacy("SITE_CC_BABEL_DATADIR", os.path.join(self.get_site_openbabel_dir(), "share", "openbabel" "2.2.3"))
 
     def get_site_cc_acd_dir(self):
-        return self._getlegacy("site_cc_acd_dir", os.path.join(self.get_site_packages_path(), 'acd'))
+        return self._getlegacy("site_cc_acd_dir", os.path.join(self.get_site_packages_path(), "acd"))
 
     def get_site_pisa_top_path(self):
-        return self._getlegacy("SITE_PISA_TOP_PATH", os.path.join(self.get_site_packages_path(), 'pisa'))
+        return self._getlegacy("SITE_PISA_TOP_PATH", os.path.join(self.get_site_packages_path(), "pisa"))
 
     def get_site_pisa_conf_path(self):
-        return self._getlegacy("SITE_PISA_CONF_PATH", os.path.join(self.get_site_pisa_top_path(), 'configure'))
+        return self._getlegacy("SITE_PISA_CONF_PATH", os.path.join(self.get_site_pisa_top_path(), "configure"))
 
     def get_site_cc_oe_dir(self):
-        return self._getlegacy("SITE_CC_OE_DIR", os.path.join(self.get_site_packages_path(), 'openeye'))
+        return self._getlegacy("SITE_CC_OE_DIR", os.path.join(self.get_site_packages_path(), "openeye"))
 
     def get_site_cc_oe_licence(self):
         oe_dir = self.get_site_cc_oe_dir()
-        return self._getlegacy("SITE_CC_OE_LICENSE", os.path.join(oe_dir, 'etc', 'oe_license.txt'))
+        return self._getlegacy("SITE_CC_OE_LICENSE", os.path.join(oe_dir, "etc", "oe_license.txt"))
 
     def get_site_rcsb_apps_path(self):
-        return self._getlegacy("SITE_RCSB_APPS_PATH", os.path.join(self.get_site_annot_tools_path(), 'bin', 'maxit'))
+        return self._getlegacy("SITE_RCSB_APPS_PATH", os.path.join(self.get_site_annot_tools_path(), "bin", "maxit"))
 
     def get_site_space_group_file_path(self):
-        return self._getlegacy("SITE_SPACE_GROUP_FILE_PATH", os.path.join(self.get_site_annot_tools_path(), 'data', 'ascii', 'space_group.cif'))
+        return self._getlegacy("SITE_SPACE_GROUP_FILE_PATH", os.path.join(self.get_site_annot_tools_path(), "data", "ascii", "space_group.cif"))
 
     def get_taxdump_path(self):
         reference_path = self._getreferencedir()
@@ -180,70 +180,70 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return unused_list_file
 
     def get_for_release_path(self):
-        release_path = os.path.join(self._get_site_archive_dir(), 'for_release')
+        release_path = os.path.join(self._get_site_archive_dir(), "for_release")
         return self._getlegacy("FOR_RELEASE_DATA_PATH", release_path)
 
     def get_for_release_beta_path(self):
-        release_path = os.path.join(self._get_site_archive_dir(), 'for_release_beta')
+        release_path = os.path.join(self._get_site_archive_dir(), "for_release_beta")
         return release_path
 
     def get_for_release_version_path(self):
-        release_path = os.path.join(self._get_site_archive_dir(), 'for_release_version')
+        release_path = os.path.join(self._get_site_archive_dir(), "for_release_version")
         return release_path
 
     def get_status_export_path(self):
-        status_path = os.path.join(self.get_for_release_path(), 'status')
+        status_path = os.path.join(self.get_for_release_path(), "status")
         return self._getlegacy("STATUS_EXPORT_DATA_PATH", status_path)
 
     def get_nmr_exchange_path(self):
-        release_path = os.path.join(self._get_site_archive_dir(), 'nmr_exchange_data')
+        release_path = os.path.join(self._get_site_archive_dir(), "nmr_exchange_data")
         return self._getlegacy("NMR_EXCHANGE_DATA", release_path)
 
     def get_site_refdata_sequence_path(self):
         reference_path = self._getreferencedir()
-        sequence_path = os.path.join(reference_path, 'sequence')
+        sequence_path = os.path.join(reference_path, "sequence")
         return self._getlegacy("SITE_REFDATA_SEQUENCE_PATH", sequence_path)
 
     def get_site_refdata_sequence_db_path(self):
         reference_path = self.get_site_refdata_sequence_path()
-        seq_db_path = os.path.join(reference_path, 'seq-db')
+        seq_db_path = os.path.join(reference_path, "seq-db")
         return self._getlegacy("SITE_REFDATA_SEQUENCE_DB_PATH", seq_db_path)
 
     def get_site_refdata_top_cvs_sb_path(self):
         reference_path = self._getreferencedir()
-        ref_cc_dir = os.path.join(reference_path, 'components')
+        ref_cc_dir = os.path.join(reference_path, "components")
         return self._getlegacy("SITE_REFDATA_TOP_CVS_SB_PATH", ref_cc_dir)
 
     def get_site_cc_dict_path(self):
-        site_cc_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), 'cc-dict')
+        site_cc_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), "cc-dict")
         return self._getlegacy("SITE_CC_DICT_PATH", site_cc_dict_path)
 
     def get_cc_dict(self):
-        return os.path.join(self.get_site_cc_dict_path(), 'Components-all-v3.cif')
+        return os.path.join(self.get_site_cc_dict_path(), "Components-all-v3.cif")
 
     def get_cc_path_list(self):
-        return os.path.join(self.get_site_cc_dict_path(), 'PATHLIST-v3')
+        return os.path.join(self.get_site_cc_dict_path(), "PATHLIST-v3")
 
     def get_cc_id_list(self):
-        return os.path.join(self.get_site_cc_dict_path(), 'IDLIST-v3')
+        return os.path.join(self.get_site_cc_dict_path(), "IDLIST-v3")
 
     def get_cc_dict_serial(self):
-        return os.path.join(self.get_site_cc_dict_path(), 'Components-all-v3.sdb')
+        return os.path.join(self.get_site_cc_dict_path(), "Components-all-v3.sdb")
 
     def get_cc_dict_idx(self):
-        return os.path.join(self.get_site_cc_dict_path(), 'Components-all-v3-r4.idx')
+        return os.path.join(self.get_site_cc_dict_path(), "Components-all-v3-r4.idx")
 
     def get_cc_db(self):
-        return os.path.join(self.get_site_cc_dict_path(), 'chemcomp_v3.db')
+        return os.path.join(self.get_site_cc_dict_path(), "chemcomp_v3.db")
 
     def get_cc_index(self):
-        return os.path.join(self.get_site_cc_dict_path(), 'chemcomp-index.pic')
+        return os.path.join(self.get_site_cc_dict_path(), "chemcomp-index.pic")
 
     def get_cc_parent_index(self):
-        return os.path.join(self.get_site_cc_dict_path(), 'chemcomp-parent-index.pic')
+        return os.path.join(self.get_site_cc_dict_path(), "chemcomp-parent-index.pic")
 
     def get_cc_fp_patterns(self):
-        return os.path.join(self.get_site_cc_dict_path(), 'fp_patterns.txt')
+        return os.path.join(self.get_site_cc_dict_path(), "fp_patterns.txt")
 
     def get_site_prdcc_cvs_path(self):
         site_prdcc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
@@ -262,29 +262,29 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._getlegacy("SITE_PRD_CVS_PATH", site_prd_cvs_path)
 
     def get_site_prd_dict_path(self):
-        site_prd_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), 'prd-dict')
+        site_prd_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), "prd-dict")
         return self._getlegacy("SITE_PRD_DICT_PATH", site_prd_dict_path)
 
     def get_prd_summary_sdb(self):
-        return os.path.join(self.get_site_prd_dict_path(), 'prd_summary.sdb')
+        return os.path.join(self.get_site_prd_dict_path(), "prd_summary.sdb")
 
     def get_prd_summary_cif(self):
-        return os.path.join(self.get_site_prd_dict_path(), 'prd_summary.cif')
+        return os.path.join(self.get_site_prd_dict_path(), "prd_summary.cif")
 
     def get_prd_dict_file(self):
-        return os.path.join(self.get_site_prd_dict_path(), 'Prd-all-v3.cif')
+        return os.path.join(self.get_site_prd_dict_path(), "Prd-all-v3.cif")
 
     def get_prd_dict_serial(self):
-        return os.path.join(self.get_site_prd_dict_path(), 'Prd-all-v3.sdb')
+        return os.path.join(self.get_site_prd_dict_path(), "Prd-all-v3.sdb")
 
     def get_prd_cc_file(self):
-        return os.path.join(self.get_site_prd_dict_path(), 'Prdcc-all-v3.cif')
+        return os.path.join(self.get_site_prd_dict_path(), "Prdcc-all-v3.cif")
 
     def get_prd_cc_serial(self):
-        return os.path.join(self.get_site_prd_dict_path(), 'Prdcc-all-v3.sdb')
+        return os.path.join(self.get_site_prd_dict_path(), "Prdcc-all-v3.sdb")
 
     def get_prd_family_mapping(self):
-        return os.path.join(self.get_site_prd_dict_path(), 'PrdFamilyIDMapping.lst')
+        return os.path.join(self.get_site_prd_dict_path(), "PrdFamilyIDMapping.lst")
 
 
 class ConfigInfoAppDepUI(ConfigInfoAppBase):
@@ -344,22 +344,22 @@ class ConfigInfoAppValidation(ConfigInfoAppBase):
         super(ConfigInfoAppValidation, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
     def get_validation_tools_path(self):
-        return self._getlegacy("VALIDATIONTOOLSPATH", os.path.join(self.get_site_packages_path(), 'ValidationSupport'))
+        return self._getlegacy("VALIDATIONTOOLSPATH", os.path.join(self.get_site_packages_path(), "ValidationSupport"))
 
     def get_sf_valid(self):
         return self._getlegacy("DCCROOT", os.path.join(self.get_site_packages_path(), "sf-valid"))
 
     def get_pymolexe(self):
-        return self._getlegacy("PYMOLEXE", os.path.join(self.get_site_packages_path(), "open_pymol", 'pymol'))
+        return self._getlegacy("PYMOLEXE", os.path.join(self.get_site_packages_path(), "open_pymol", "pymol"))
 
     def get_java_home(self):
-        return self._getlegacy("JAVA_HOME", os.path.join(self.get_site_packages_path(), "java", 'jdk'))
+        return self._getlegacy("JAVA_HOME", os.path.join(self.get_site_packages_path(), "java", "jdk"))
 
     def get_ccp4root(self):
-        return self._getlegacy("CCP4ROOT", os.path.join(self.get_site_packages_path(), 'ccp4'))
+        return self._getlegacy("CCP4ROOT", os.path.join(self.get_site_packages_path(), "ccp4"))
 
     def get_validator_ccp4setup(self):
-        return self._getlegacy("VALIDATOR_CCP4SETUP", os.path.join(self.get_ccp4root(), 'bin', 'ccp4.setup-sh'))
+        return self._getlegacy("VALIDATOR_CCP4SETUP", os.path.join(self.get_ccp4root(), "bin", "ccp4.setup-sh"))
 
     def get_phenixroot(self):
         return self._getlegacy("PHENIXROOT", os.path.join(self.get_site_packages_path(), "phenix"))
@@ -368,10 +368,10 @@ class ConfigInfoAppValidation(ConfigInfoAppBase):
         return self._getlegacy("CNSROOT", os.path.join(self.get_site_packages_path(), "cns_solve"))
 
     def get_edstools(self):
-        return self._getlegacy("EDSTOOLS", os.path.join(self.get_site_packages_path(), 'EDStools'))
+        return self._getlegacy("EDSTOOLS", os.path.join(self.get_site_packages_path(), "EDStools"))
 
     def get_cif2text(self):
-        return self._getlegacy("CIF2TEXT", os.path.join(self.get_edstools(), "CIF2TEXT", 'cif2text_internal'))
+        return self._getlegacy("CIF2TEXT", os.path.join(self.get_edstools(), "CIF2TEXT", "cif2text_internal"))
 
     def get_ccp4symoplib(self):
         return self._getlegacy("CCP4SYMOPLIB", os.path.join(self.get_edstools(), "symop.lib"))
@@ -399,4 +399,3 @@ class ConfigInfoAppValidation(ConfigInfoAppBase):
 
     def get_osymdir(self):
         return self._getlegacy("osymdir", os.path.join(self.get_site_packages_path(), "symm"))
-
