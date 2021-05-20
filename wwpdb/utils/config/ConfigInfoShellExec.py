@@ -85,7 +85,7 @@ class ConfigInfoShellExec(object):
                 self.__cD = self.__getSiteConfigRaw(self.__topConfigPath, self.__siteLoc, self.__siteId)
 
     def __setup(self, topConfigPath, inpHostName, inpSiteLoc, inpSiteId):
-        """"""
+        """ """
         siteLoc = None
         siteId = None
         #
