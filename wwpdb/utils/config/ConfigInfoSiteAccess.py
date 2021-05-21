@@ -30,6 +30,7 @@ except ImportError:  # pragma: no cover
 import ssl
 import traceback
 from wwpdb.utils.config.ConfigInfo import ConfigInfo
+from wwpdb.utils.config.ConfigInfoApp import ConfigInfoAppDepUI
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +54,7 @@ class ConfigInfoSiteAccess(object):
         self.__lfh = log
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
+        self.__cICommon = ConfigInfoAppDepUI()
         self.__serviceD = self.__cI.get("PROJECT_DEPOSIT_SERVICE_DICTIONARY")
         self.__siteAccessD = None
 
@@ -94,7 +96,7 @@ class ConfigInfoSiteAccess(object):
              Returns: d[<site_id>] = ("%Y-%m-%d %H:%M", "%Y-%m-%d %H:%M")
                                            UTC begin        UTC end
         """
-        fp = self.__cI.get("SITE_ACCESS_INFO_FILE_PATH")
+        fp = self.__cICommon.get_site_access_info_file_path()
         try:
             with open(fp, "r") as infile:
                 return json.load(infile)
