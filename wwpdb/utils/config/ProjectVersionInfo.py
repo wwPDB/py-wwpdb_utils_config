@@ -30,22 +30,25 @@ logger = logging.getLogger(__name__)
 
 
 class ProjectVersionInfo(object):
-
     def __init__(self, siteId=None):
         self.__siteId = siteId if siteId is not None else getSiteId(defaultSiteId=None)
         self.__cICommon = ConfigInfoAppCommon(siteId)
         self.__top_webapps_path = self.__cICommon.get_site_web_apps_top_path()
 
-    def getVersionFile(self):
+    def get_version_file(self):
+        """
+        returns the version json file path
+        :return str: version json file path
+        """
         return os.path.join(self.__top_webapps_path, "version.json")
 
     def getVersion(self):
         """Returns version number of system"""
 
         try:
-            fileName = self.getVersionFile()
-            with open(fileName, 'r') as fp:
-                vD = json.load(fp)
-            return vD['Version']
+            file_name = self.get_version_file()
+            with open(file_name, "r") as fp:
+                version_dict = json.load(fp)
+            return version_dict["Version"]
         except Exception as e:
             logger.exception("Failing with %r" % (str(e)))
