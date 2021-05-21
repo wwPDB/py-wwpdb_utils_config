@@ -51,4 +51,4 @@ class ProjectVersionInfo(object):
                 version_dict = json.load(fp)
             return version_dict["Version"]
         except Exception as e:
-            logger.exception("Failing with {}".format(str(e)))
+            logger.exception(e)
