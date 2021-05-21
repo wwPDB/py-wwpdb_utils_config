@@ -34,7 +34,7 @@ class ConfigInfoAppBase(object):
         self._referencedir = None
         self._site_archive_dir = None
         self._site_local_apps_path = None
-        self._top_source_dir = None
+        self._top_webapps_path = None
 
     def _getlegacy(self, key, default=None):
         """Retrieves key from configuration.  If key is found, provide a warning"""
@@ -72,10 +72,9 @@ class ConfigInfoAppBase(object):
             self._site_local_apps_path = self._cI.get("SITE_LOCAL_APPS_PATH")
         return self._site_local_apps_path
 
-    def _get_top_source_path(self):
-        if self._top_source_dir is None:
-            self._top_source_dir = self._cI.get("TOP_SOURCE_PATH")
-        return self._top_source_dir
+    def _get_site_web_apps_top_path(self):
+        if self._top_webapps_path is None:
+            self._top_webapps_path = self._cI.get("SITE_WEB_APPS_TOP_PATH")
 
     def get_site_packages_path(self):
         return self._getlegacy("SITE_PACKAGES_PATH", os.path.join(self._get_site_local_apps(), "packages"))
@@ -116,8 +115,8 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def get_site_local_apps_path(self):
         return self._get_site_local_apps()
 
-    def get_top_source_path(self):
-        return self._get_top_source_path()
+    def get_site_web_apps_top_path(self):
+        return self._get_site_web_apps_top_path()
 
     def get_site_annot_tools_path(self):
         return self._getlegacy("SITE_ANNOT_TOOLS_PATH", os.path.join(self.get_site_packages_path(), "annotation"))
