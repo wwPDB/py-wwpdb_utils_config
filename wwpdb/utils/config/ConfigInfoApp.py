@@ -91,17 +91,17 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
         super(ConfigInfoAppCommon, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
-    def _get_pdbx_dictionary_name_dict(self):
+    def get_pdbx_dictionary_name_dict(self):
         return self._cI.get("PDBX_DICTIONARY_NAME_DICT", {})
 
     def get_mmcif_deposit_dict_filename(self):
-        return self._get_pdbx_dictionary_name_dict().get("DEPOSIT")
+        return self.get_pdbx_dictionary_name_dict().get("DEPOSIT")
 
     def get_mmcif_archive_current_dict_filename(self):
-        return self._get_pdbx_dictionary_name_dict().get("ARCHIVE_CURRENT")
+        return self.get_pdbx_dictionary_name_dict().get("ARCHIVE_CURRENT")
 
     def get_mmcif_archive_next_dict_filename(self):
-        return self._get_pdbx_dictionary_name_dict().get("ARCHIVE_NEXT")
+        return self.get_pdbx_dictionary_name_dict().get("ARCHIVE_NEXT")
 
     def get_mmcif_dict_path(self):
         reference_path = self._getreferencedir()
