@@ -75,7 +75,7 @@ class ConfigInfoAppBase(object):
 
     def _get_site_web_apps_top_path(self):
         if self._top_webapps_path is None:
-            self._top_webapps_path = self._cI.get("TOP_WWPDB_WEBAPPS_DIR")
+            self._top_webapps_path = self._cI.get("SITE_WEB_APPS_TOP_PATH")
         return self._top_webapps_path
 
     def get_site_packages_path(self):
