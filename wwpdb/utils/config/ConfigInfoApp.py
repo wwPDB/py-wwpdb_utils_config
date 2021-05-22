@@ -118,7 +118,8 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._get_site_local_apps()
 
     def get_site_web_apps_top_path(self):
-        return self._getlegacy("SITE_WEB_APPS_TOP_PATH", os.path.join(self._get_top_web_apps_top_path(), "webapps"))
+        # return self._getlegacy("SITE_WEB_APPS_TOP_PATH", os.path.join(self._get_top_web_apps_top_path(), "webapps"))
+        return self._getlegacy("SITE_WEB_APPS_TOP_PATH", self._get_top_web_apps_top_path())
 
     def get_site_annot_tools_path(self):
         return self._getlegacy("SITE_ANNOT_TOOLS_PATH", os.path.join(self.get_site_packages_path(), "annotation"))
