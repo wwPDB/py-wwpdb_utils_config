@@ -148,8 +148,7 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._getlegacy("SITE_CC_BABEL_DIR", os.path.join(self.get_site_openbabel_dir(), "lib"))
 
     def get_site_cc_babel_datadir(self):
-        return self._getlegacy("SITE_CC_BABEL_DATADIR",
-                               os.path.join(self.get_site_openbabel_dir(), "share", "openbabel" "2.2.3"))
+        return self._getlegacy("SITE_CC_BABEL_DATADIR", os.path.join(self.get_site_openbabel_dir(), "share", "openbabel" "2.2.3"))
 
     def get_site_cc_acd_dir(self):
         return self._getlegacy("site_cc_acd_dir", os.path.join(self.get_site_packages_path(), "acd"))
@@ -171,8 +170,7 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._getlegacy("SITE_RCSB_APPS_PATH", os.path.join(self.get_site_annot_tools_path(), "bin", "maxit"))
 
     def get_site_space_group_file_path(self):
-        return self._getlegacy("SITE_SPACE_GROUP_FILE_PATH",
-                               os.path.join(self.get_site_annot_tools_path(), "data", "ascii", "space_group.cif"))
+        return self._getlegacy("SITE_SPACE_GROUP_FILE_PATH", os.path.join(self.get_site_annot_tools_path(), "data", "ascii", "space_group.cif"))
 
     def get_taxdump_path(self):
         reference_path = self._getreferencedir()
@@ -258,23 +256,19 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return os.path.join(self.get_site_cc_dict_path(), "fp_patterns.txt")
 
     def get_site_prdcc_cvs_path(self):
-        site_prdcc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(),
-                                           self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
+        site_prdcc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
         return self._getlegacy("SITE_PRDCC_CVS_PATH", site_prdcc_cvs_path)
 
     def get_site_cc_cvs_path(self):
-        site_cc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(),
-                                        self._getValue("SITE_REFDATA_PROJ_NAME_CC"))
+        site_cc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_CC"))
         return self._getlegacy("SITE_CC_CVS_PATH", site_cc_cvs_path)
 
     def get_site_family_cvs_path(self):
-        site_family_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(),
-                                            self._getValue("SITE_REFDATA_PROJ_NAME_PRD_FAMILY"))
+        site_family_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD_FAMILY"))
         return self._getlegacy("SITE_FAMILY_CVS_PATH", site_family_cvs_path)
 
     def get_site_prd_cvs_path(self):
-        site_prd_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(),
-                                         self._getValue("SITE_REFDATA_PROJ_NAME_PRD"))
+        site_prd_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD"))
         return self._getlegacy("SITE_PRD_CVS_PATH", site_prd_cvs_path)
 
     def get_site_prd_dict_path(self):
@@ -303,16 +297,16 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return os.path.join(self.get_site_prd_dict_path(), "PrdFamilyIDMapping.lst")
 
     def get_node_bin_path(self):
-        return os.path.join(self.get_site_packages_path(), 'node', 'bin', 'node')
+        return os.path.join(self.get_site_packages_path(), "node", "bin", "node")
 
     def get_molstar_packages_path(self):
-        return os.path.join(self.get_site_packages_path(), 'molstar')
+        return os.path.join(self.get_site_packages_path(), "molstar")
 
     def get_volume_server_pack_path(self):
-        return os.path.join(self.get_molstar_packages_path(), 'lib', 'servers', 'pack.js')
+        return os.path.join(self.get_molstar_packages_path(), "lib", "servers", "pack.js")
 
     def get_volume_server_query_path(self):
-        return os.path.join(self.get_molstar_packages_path(), 'lib', 'servers', 'query.js')
+        return os.path.join(self.get_molstar_packages_path(), "lib", "servers", "query.js")
 
 
 class ConfigInfoAppDepUI(ConfigInfoAppBase):

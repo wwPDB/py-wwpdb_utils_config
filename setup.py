@@ -39,7 +39,12 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
     ],
-    entry_points={"console_scripts": ["ConfigInfoFileExec=wwpdb.utils.config.ConfigInfoFileExec:main", "ConfigInfoDataSetExec=wwpdb.utils.config.ConfigInfoDataSetExec:main"]},
+    entry_points={
+        "console_scripts": [
+            "ConfigInfoFileExec=wwpdb.utils.config.ConfigInfoFileExec:main",
+            "ConfigInfoDataSetExec=wwpdb.utils.config.ConfigInfoDataSetExec:main",
+        ]
+    },
     #
     install_requires=["python-dateutil", "oslo.concurrency"],
     packages=find_packages(exclude=["wwpdb.utils.tests-config", "mock-data", "tests.*"]),
@@ -55,7 +60,13 @@ setup(
     # Not configured ...
     extras_require={"dev": ["check-manifest"], "test": ["coverage"]},
     # Added for
-    command_options={"build_sphinx": {"project": ("setup.py", thisPackage), "version": ("setup.py", version), "release": ("setup.py", version)}},
+    command_options={
+        "build_sphinx": {
+            "project": ("setup.py", thisPackage),
+            "version": ("setup.py", version),
+            "release": ("setup.py", version),
+        }
+    },
     # This setting for namespace package support -
     zip_safe=False,
 )
