@@ -1,5 +1,2 @@
 python-dateutil
 oslo.concurrency
-# Needed for testing
-wwpdb.utils.testing
-mock; python_version < '3'

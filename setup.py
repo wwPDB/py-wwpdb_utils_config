@@ -11,6 +11,16 @@ from setuptools import setup
 packages = []
 thisPackage = "wwpdb.utils.config"
 
+# Load packages from requirements*.txt
+with open("requirements.txt", "r") as ifh:
+    packagesRequired = [ln.strip() for ln in ifh.readlines()]
+
+with open("requirements-test.txt", "r") as ifh:
+    packagesTest = [ln.strip() for ln in ifh.readlines()]
+
+with open("README.md", "r") as ifh:
+    longDescription = ifh.read()
+
 with open("wwpdb/utils/config/__init__.py", "r") as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', fd.read(), re.MULTILINE).group(1)
 
@@ -21,7 +31,8 @@ setup(
     name=thisPackage,
     version=version,
     description="wwPDB Python Configuration Parsing",
-    long_description="See:  README.md",
+    long_description=longDescription,
+    long_description_content_type="text/markdown",
     author="Ezra Peisach",
     author_email="ezra.peisach@rcsb.org",
     url="https://github.com/rcsb/py-wwpdb_utils_config",
@@ -46,19 +57,17 @@ setup(
         ]
     },
     #
-    install_requires=["python-dateutil", "oslo.concurrency"],
+    install_requires=packagesRequired,
+    tests_require=packagesTest,
     packages=find_packages(exclude=["wwpdb.utils.tests-config", "mock-data", "tests.*"]),
     package_data={
         # If any package contains *.md or *.rst ...  files, include them:
         "": ["*.md", "*.rst", "*.txt", "*.cfg"],
     },
     #
-    # These basic tests require no database services -
     test_suite="wwpdb.utils.tests-config",
-    tests_require=["tox", "wwpdb.utils.testing"],
     #
-    # Not configured ...
-    extras_require={"dev": ["check-manifest"], "test": ["coverage"]},
+    extras_require={"all": packagesRequired + packagesTest, "test": packagesTest, "dev": ["check-manifest"]},
     # Added for
     command_options={
         "build_sphinx": {
