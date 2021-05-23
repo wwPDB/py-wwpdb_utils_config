@@ -319,6 +319,15 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
 
     def get_volume_server_query_path(self):
         return os.path.join(self.get_molstar_packages_path(), "lib", "servers", "query.js")
+    
+    def get_resources_da_internal_path(self):
+        return os.path.join(self._getresourcedir, 'da_internal')
+    
+    def get_site_da_internal_schema_path(self):
+        return self._getlegacy("SITE_DA_INTERNAL_SCHEMA_PATH", os.path.join(self.get_resources_da_internal_path(), 'status_rcsb_schema_da.cif'))
+    
+    def get_site_da_internal_status_schema_path(self):
+        return self._getlegacy("SITE_DA_INTERNAL_STATUS_SCHEMA_PATH", os.path.join(self.get_resources_da_internal_path(), 'database_status_history_schema.cif'))
 
 
 class ConfigInfoAppDepUI(ConfigInfoAppBase):
