@@ -82,6 +82,7 @@ class ConfigInfoAppBase(object):
     def _get_top_sessions_path(self):
         if self._top_sessions_path is None:
             self._top_sessions_path = self._cI.get("SITE_WEB_APPS_TOP_SESSIONS_PATH")
+        return self._top_sessions_path
 
     def get_site_packages_path(self):
         return self._getlegacy("SITE_PACKAGES_PATH", os.path.join(self._get_site_local_apps(), "packages"))
@@ -130,7 +131,7 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._get_top_sessions_path()
     
     def get_site_web_apps_sessions_path(self):
-        return self._getlegacy("SITE_WEB_APPS_SESSIONS_PATH", os.path.join(self.get_top_sessions_path(), 'sessions'))
+        return self._getlegacy("SITE_WEB_APPS_SESSIONS_PATH", os.path.join(self.get_site_web_apps_top_sessions_path(), 'sessions'))
 
     def get_site_annot_tools_path(self):
         return self._getlegacy("SITE_ANNOT_TOOLS_PATH", os.path.join(self.get_site_packages_path(), "annotation"))
