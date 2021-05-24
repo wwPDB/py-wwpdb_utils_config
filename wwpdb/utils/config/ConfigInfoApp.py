@@ -442,4 +442,7 @@ class ConfigInfoAppValidation(ConfigInfoAppBase):
         return self._getlegacy("PDBMOD", os.path.join(self.get_edssubpath(), "pdb_mod"))
 
     def get_osymdir(self):
-        return self._getlegacy("osymdir", os.path.join(self.get_site_packages_path(), "symm"))
+        return self._getlegacy("OSYMDIR", os.path.join(self.get_site_packages_path(), "symm"))
+
+    def get_chimerax(self):
+        return self._getlegacy("CHIMERAXDIR", os.path.join(self.get_site_packages_path(), "ChimeraX", 'bin'))
