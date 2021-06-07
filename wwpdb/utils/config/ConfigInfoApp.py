@@ -37,12 +37,12 @@ class ConfigInfoAppBase(object):
         self._top_webapps_path = None
         self._top_sessions_path = None
 
-    def _getlegacy(self, key, default=None):
+    def _getlegacy(self, key, default=None, stacklevel=4):
         """Retrieves key from configuration.  If key is found, provide a warning"""
         val = self._cI.get(key)
         if val is not None:
             # logging will repeat with each occurance
-            self.__warndeprecated("Access key %s has been used but is deprecated" % key)
+            self.__warndeprecated("Access key %s has been used but is deprecated" % key, stacklevel=stacklevel)
         else:
             val = default
         return val
@@ -86,10 +86,10 @@ class ConfigInfoAppBase(object):
     def get_site_packages_path(self):
         return self._getlegacy("SITE_PACKAGES_PATH", os.path.join(self._get_site_local_apps(), "packages"))
 
-    def __warndeprecated(self, msg):
+    def __warndeprecated(self, msg, stacklevel=4):
         """Logs warning message"""
         # stacklevel is to get up high enough to get caller
-        warnings.warn(msg, DeprecationWarning, stacklevel=4)
+        warnings.warn(msg, DeprecationWarning, stacklevel=stacklevel)
 
 
 class ConfigInfoAppCommon(ConfigInfoAppBase):
@@ -238,7 +238,7 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def get_site_refdata_top_cvs_sb_path(self):
         reference_path = self._getreferencedir()
         ref_cc_dir = os.path.join(reference_path, "components")
-        return self._getlegacy("SITE_REFDATA_TOP_CVS_SB_PATH", ref_cc_dir)
+        return self._getlegacy("SITE_REFDATA_TOP_CVS_SB_PATH", ref_cc_dir, stacklevel=5)
 
     def get_site_cc_dict_path(self):
         site_cc_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), "cc-dict")
