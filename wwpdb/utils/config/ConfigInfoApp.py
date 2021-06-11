@@ -320,13 +320,16 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return os.path.join(self.get_site_packages_path(), "node", "bin", "node")
 
     def get_molstar_packages_path(self):
-        return os.path.join(self.get_site_packages_path(), "molstar")
+        return os.path.join(self.get_site_packages_path(), "molstar", "node_modules", "molstar")
+
+    def get_volume_server_packages_path(self):
+        return os.path.join(self.get_molstar_packages_path(), "lib", "commonjs", "servers", "volume")
 
     def get_volume_server_pack_path(self):
-        return os.path.join(self.get_molstar_packages_path(), "lib", "servers", "pack.js")
+        return os.path.join(self.get_volume_server_packages_path(), "pack.js")
 
     def get_volume_server_query_path(self):
-        return os.path.join(self.get_molstar_packages_path(), "lib", "servers", "query.js")
+        return os.path.join(self.get_volume_server_packages_path(), "query.js")
 
     def get_resources_da_internal_path(self):
         return os.path.join(self._getresourcedir(), 'da_internal')
