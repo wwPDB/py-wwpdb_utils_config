@@ -35,7 +35,7 @@ class ProjectVersionInfo(object):
         self.__cICommon = ConfigInfoAppCommon(siteId)
         self.__top_webapps_path = self.__cICommon.get_site_web_apps_top_path()
 
-    def get_version_file(self):
+    def getVersionFile(self):
         """
         returns the version json file path
         :return str: version json file path
@@ -43,12 +43,16 @@ class ProjectVersionInfo(object):
         return os.path.join(self.__top_webapps_path, "version.json")
 
     def getVersion(self):
-        """Returns version number of system"""
+        """Returns version number of system or "unknown" """
 
         try:
-            file_name = self.get_version_file()
-            with open(file_name, "r") as fp:
-                version_dict = json.load(fp)
-            return version_dict["Version"]
+            file_name = self.getVersionFile()
+            if os.path.exists(file_name):
+                with open(file_name, "r") as fp:
+                    version_dict = json.load(fp)
+                return version_dict["Version"]
+            else:
+                return "unknown"
         except Exception as e:
             logger.exception(e)
+            return "unknown"

@@ -34,7 +34,7 @@ from wwpdb.utils.testing.CreateRWTree import CreateRWTree  # noqa: E402
 
 # Copy site-config and selected items
 crw = CreateRWTree(mockTopPath, TESTOUTPUT)
-crw.createtree(["site-config", "depuiresources"])
+crw.createtree(["site-config", "depuiresources", "webapps"])
 # Use populate r/w site-config using top mock site-config
 SiteConfigSetup().setupEnvironment(rwMockTopPath, rwMockTopPath)
 
