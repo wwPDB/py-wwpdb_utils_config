@@ -130,9 +130,7 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._get_top_sessions_path()
 
     def get_site_web_apps_sessions_path(self):
-        return self._getlegacy("SITE_WEB_APPS_SESSIONS_PATH", os.path.join(self.get_site_web_apps_top_sessions_path(),
-                                                                           'sessions')
-                               )
+        return self._getlegacy("SITE_WEB_APPS_SESSIONS_PATH", os.path.join(self.get_site_web_apps_top_sessions_path(), "sessions"))
 
     def get_site_annot_tools_path(self):
         return self._getlegacy("SITE_ANNOT_TOOLS_PATH", os.path.join(self.get_site_packages_path(), "annotation"))
@@ -162,8 +160,7 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._getlegacy("SITE_CC_BABEL_DIR", os.path.join(self.get_site_openbabel_dir(), "lib"))
 
     def get_site_cc_babel_datadir(self):
-        return self._getlegacy("SITE_CC_BABEL_DATADIR",
-                               os.path.join(self.get_site_openbabel_dir(), "share", "openbabel" "2.2.3"))
+        return self._getlegacy("SITE_CC_BABEL_DATADIR", os.path.join(self.get_site_openbabel_dir(), "share", "openbabel" "2.2.3"))
 
     def get_site_cc_acd_dir(self):
         return self._getlegacy("site_cc_acd_dir", os.path.join(self.get_site_packages_path(), "acd"))
@@ -185,8 +182,7 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._getlegacy("SITE_RCSB_APPS_PATH", os.path.join(self.get_site_annot_tools_path(), "bin", "maxit"))
 
     def get_site_space_group_file_path(self):
-        return self._getlegacy("SITE_SPACE_GROUP_FILE_PATH",
-                               os.path.join(self.get_site_annot_tools_path(), "data", "ascii", "space_group.cif"))
+        return self._getlegacy("SITE_SPACE_GROUP_FILE_PATH", os.path.join(self.get_site_annot_tools_path(), "data", "ascii", "space_group.cif"))
 
     def get_taxdump_path(self):
         reference_path = self._getreferencedir()
@@ -272,23 +268,19 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return os.path.join(self.get_site_cc_dict_path(), "fp_patterns.txt")
 
     def get_site_prdcc_cvs_path(self):
-        site_prdcc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(),
-                                           self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
+        site_prdcc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
         return self._getlegacy("SITE_PRDCC_CVS_PATH", site_prdcc_cvs_path)
 
     def get_site_cc_cvs_path(self):
-        site_cc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(),
-                                        self._getValue("SITE_REFDATA_PROJ_NAME_CC"))
+        site_cc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_CC"))
         return self._getlegacy("SITE_CC_CVS_PATH", site_cc_cvs_path)
 
     def get_site_family_cvs_path(self):
-        site_family_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(),
-                                            self._getValue("SITE_REFDATA_PROJ_NAME_PRD_FAMILY"))
+        site_family_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD_FAMILY"))
         return self._getlegacy("SITE_FAMILY_CVS_PATH", site_family_cvs_path)
 
     def get_site_prd_cvs_path(self):
-        site_prd_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(),
-                                         self._getValue("SITE_REFDATA_PROJ_NAME_PRD"))
+        site_prd_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD"))
         return self._getlegacy("SITE_PRD_CVS_PATH", site_prd_cvs_path)
 
     def get_site_prd_dict_path(self):
@@ -332,16 +324,13 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return os.path.join(self.get_volume_server_packages_path(), "query.js")
 
     def get_resources_da_internal_path(self):
-        return os.path.join(self._getresourcedir(), 'da_internal')
+        return os.path.join(self._getresourcedir(), "da_internal")
 
     def get_site_da_internal_schema_path(self):
-        return self._getlegacy("SITE_DA_INTERNAL_SCHEMA_PATH",
-                               os.path.join(self.get_resources_da_internal_path(), 'status_rcsb_schema_da.cif'))
+        return self._getlegacy("SITE_DA_INTERNAL_SCHEMA_PATH", os.path.join(self.get_resources_da_internal_path(), "status_rcsb_schema_da.cif"))
 
     def get_site_da_internal_status_schema_path(self):
-        return self._getlegacy("SITE_DA_INTERNAL_STATUS_SCHEMA_PATH",
-                               os.path.join(self.get_resources_da_internal_path(),
-                                            'database_status_history_schema.cif'))
+        return self._getlegacy("SITE_DA_INTERNAL_STATUS_SCHEMA_PATH", os.path.join(self.get_resources_da_internal_path(), "database_status_history_schema.cif"))
 
 
 class ConfigInfoAppDepUI(ConfigInfoAppBase):
@@ -458,4 +447,4 @@ class ConfigInfoAppValidation(ConfigInfoAppBase):
         return self._getlegacy("OSYMDIR", os.path.join(self.get_site_packages_path(), "symm"))
 
     def get_chimerax(self):
-        return self._getlegacy("CHIMERAXDIR", os.path.join(self.get_site_packages_path(), "ChimeraX", 'bin'))
+        return self._getlegacy("CHIMERAXDIR", os.path.join(self.get_site_packages_path(), "ChimeraX", "bin"))

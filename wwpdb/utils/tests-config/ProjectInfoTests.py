@@ -15,6 +15,7 @@ import unittest
 import time
 import platform
 import logging
+
 try:
     from unittest.mock import patch
 except ImportError:
@@ -74,7 +75,7 @@ class ProjectInfoTests(unittest.TestCase):
         versfile = pvi.getVersionFile()
         self.assertIsNotNone(versfile)
 
-    @patch.object(ProjectVersionInfo, 'getVersionFile', return_value="/tmp/non-exsitant-file/one-hopes")
+    @patch.object(ProjectVersionInfo, "getVersionFile", return_value="/tmp/non-exsitant-file/one-hopes")
     def testGetVersionMissing(self, mock_pvi):
         """Test case -  get project version - missing version"""
         pvi = ProjectVersionInfo()
