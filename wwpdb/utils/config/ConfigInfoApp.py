@@ -236,6 +236,14 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         ref_cc_dir = os.path.join(reference_path, "components")
         return self._getlegacy("SITE_REFDATA_TOP_CVS_SB_PATH", ref_cc_dir, stacklevel=5)
 
+    def get_citation_update_path(self):
+        reference_path = self._getreferencedir()
+        return os.path.join(reference_path, "citation_updates")
+
+    def get_citation_finder_path(self):
+        reference_path = self._getreferencedir()
+        return os.path.join(reference_path, "citation_finder")
+
     def get_site_cc_dict_path(self):
         site_cc_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), "cc-dict")
         return self._getlegacy("SITE_CC_DICT_PATH", site_cc_dict_path)
