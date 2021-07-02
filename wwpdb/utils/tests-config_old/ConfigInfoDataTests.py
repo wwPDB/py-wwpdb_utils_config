@@ -112,7 +112,7 @@ class ConfigInfoDataTests(unittest.TestCase):
             self.__lfh.write("%s.%s site %s option dictionary length %d\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, siteDict['SITE_PREFIX'], len(siteDict)))
             #
             daArchiveDir = os.path.join(siteDict['SITE_ARCHIVE_STORAGE_PATH'], 'archive')
-            daDepositDir = os.path.join(siteDict['SITE_DEPOSIT_STORAGE_PATH'], 'deposit')
+            daDepositDir = os.path.join(siteDict['SITE_ARCHIVE_STORAGE_PATH'], 'deposit')
 
             # internal database -
             daInternalDbHostName = siteDict['SITE_DA_INTERNAL_DB_HOST_NAME']
