@@ -30,9 +30,8 @@ class ConfigInfoGroupDataSet(object):
 
     """
 
-    def __init__(self, verbose=False, log=sys.stderr):
+    def __init__(self, verbose=False, log=sys.stderr):  # pylint: disable=unused-argument
         self.__verbose = verbose
-        self.__lfh = log
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
         self.__groupIdAssignments = self.__cI.get("SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY")

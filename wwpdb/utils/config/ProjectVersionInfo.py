@@ -23,7 +23,6 @@ import json
 import logging
 import os
 
-from wwpdb.utils.config.ConfigInfo import getSiteId
 from wwpdb.utils.config.ConfigInfoApp import ConfigInfoAppCommon
 
 logger = logging.getLogger(__name__)
@@ -31,7 +30,6 @@ logger = logging.getLogger(__name__)
 
 class ProjectVersionInfo(object):
     def __init__(self, siteId=None):
-        self.__siteId = siteId if siteId is not None else getSiteId(defaultSiteId=None)
         self.__cICommon = ConfigInfoAppCommon(siteId)
         self.__top_webapps_path = self.__cICommon.get_site_web_apps_top_path()
 

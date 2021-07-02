@@ -29,7 +29,7 @@ import traceback
 if sys.version_info[0] > 2:
     import importlib
 else:
-    import imp
+    import imp  # pylint: disable=deprecated-module
 import ast
 
 try:
@@ -56,9 +56,8 @@ class ConfigInfoShellExec(object):
 
     """
 
-    def __init__(self, topConfigPath=None, hostName=None, siteLoc=None, siteId=None, cacheFlag=True, verbose=True, log=sys.stdout):
+    def __init__(self, topConfigPath=None, hostName=None, siteLoc=None, siteId=None, cacheFlag=True, verbose=True, log=sys.stdout):  # pylint: disable=unused-argument
         self.__lfh = log
-        self.__verbose = verbose
         self.__debug = False
         self.__siteId = None
         self.__siteLoc = None
@@ -180,9 +179,9 @@ class ConfigInfoShellExec(object):
         cfPath = os.path.join(topConfigPath, siteLoc.lower(), siteId.lower(), "ConfigInfoFileCache.py")
         return cfPath
 
-    def __getSiteJsonCachePath(self, topConfigPath, siteLoc, siteId):
-        cfPath = os.path.join(topConfigPath, siteLoc.lower(), siteId.lower(), "ConfigInfoFileCache.json")
-        return cfPath
+    # def __getSiteJsonCachePath(self, topConfigPath, siteLoc, siteId):
+    #     cfPath = os.path.join(topConfigPath, siteLoc.lower(), siteId.lower(), "ConfigInfoFileCache.json")
+    #     return cfPath
 
     def __readConfigTextFile(self, configFilePath):
         """Read the input configuration file and return a dictionary of configuration items

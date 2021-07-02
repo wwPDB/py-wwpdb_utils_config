@@ -40,16 +40,14 @@ class ConfigInfoDataSet(object):
 
     """
 
-    def __init__(self, verbose=False, log=sys.stderr):
+    def __init__(self, verbose=False, log=sys.stderr):  # pylint: disable=unused-argument
         self.__verbose = verbose
-        self.__lfh = log
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
         self.__cIDepUI = ConfigInfoAppDepUI(siteId=getSiteId())
         # Default data set id range assignments
         self.__depIdAssignments = self.__cI.get("SITE_DATASET_ID_ASSIGNMENT_DICTIONARY")
         self.__depTestIdAssignments = self.__cI.get("SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY")
-        self.__groupIdAssignments = self.__cI.get("SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY")
         self.__siteBackupD = self.__cI.get("SITE_BACKUP_DICT", default={})
         self.__dsLocD = None
         #

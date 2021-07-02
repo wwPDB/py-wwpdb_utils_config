@@ -46,9 +46,7 @@ class ConfigInfoFile(object):
     Provides access to site-specific configuration information stored in flat files and cache files.
     """
 
-    def __init__(self, verbose=False, log=sys.stderr, mockTopPath=None):
-        self.__versbose = verbose
-        self.__lfh = log
+    def __init__(self, verbose=False, log=sys.stderr, mockTopPath=None):  # pylint: disable=unused-argument
         self.__debug = True
         if mockTopPath:
             self.__mockdefaults = {"test_mockpath_env": mockTopPath}

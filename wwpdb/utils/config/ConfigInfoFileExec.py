@@ -98,10 +98,6 @@ class ConfigInfoFileExec(object):
 
         return ok
 
-    def __mkdir(self, path):
-        if not os.path.isdir(path):
-            os.makedirs(path, 0o755)
-
     def __getCommonConfigPath(self, sectionName="common", context="common"):
         cfPath = os.path.join(self.__sourceDirPath, "common", "common.cfg")
         return cfPath, sectionName, context

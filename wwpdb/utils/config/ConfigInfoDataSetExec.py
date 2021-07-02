@@ -38,7 +38,6 @@ class ConfigInfoDataSetExec(object):
     def __init__(self, verbose=True, log=sys.stderr):
         self.__lfh = log
         self.__verbose = verbose
-        self.__debug = False
         #
 
     def checkConfig(self):

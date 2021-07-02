@@ -54,9 +54,6 @@ class ProjectInfoTests(unittest.TestCase):
     def setUp(self):
         self.__startTime = time.time()
         logger.debug("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
-
-        self.__lfh = sys.stdout
-        self.__verbose = True
         #
 
     def tearDown(self):
