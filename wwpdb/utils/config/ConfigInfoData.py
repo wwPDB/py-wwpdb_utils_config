@@ -297,6 +297,8 @@ class ConfigInfoData(object):
         "dict-check-report": (["txt"], "dict-check-report"),
         "dict-check-report-r4": (["txt"], "dict-check-report-r4"),
         "dict-check-report-next": (["txt"], "dict-check-report-next"),
+        "upload-report": (["txt"], "upload-report"),
+        "merge-report": (["txt"], "merge-report"),
         "format-check-report": (["txt"], "format-check-report"),
         "misc-check-report": (["txt"], "misc-check-report"),
         "special-position-report": (["txt"], "special-position-report"),
