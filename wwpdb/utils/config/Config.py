@@ -24,9 +24,9 @@ class Config():
 
     def load_configuration(self):
         try:
-            config_info_data = OmegaConf.create(self.other_data)
-            config_from_yaml = OmegaConf.load(f"{self.path}/configuration.yaml")
-            self.conf = OmegaConf.merge(config_info_data, config_from_yaml)
+            self.config_info_data = OmegaConf.create(self.other_data)
+            self.config_from_yaml = OmegaConf.load(f"{self.path}/configuration.yaml")
+            self.conf = OmegaConf.merge(self.config_info_data, self.config_from_yaml)
         except Exception as e:
             logger.error(f"Could not load configuration on path: {self.path}")
             logger.exception(e)
@@ -41,6 +41,6 @@ class Config():
 if __name__ == '__main__':
     single_config_path = os.environ['PATH_ONEDEP_CONFIG']
     print('Fetching YAML from:')
-    conf = Config(single_config, other_data)
+    conf = Config(single_config_path, other_data)
     print('Printing Configuration:')
     conf.print_config_from_yaml()
