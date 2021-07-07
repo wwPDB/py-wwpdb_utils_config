@@ -54,6 +54,15 @@ class ConfigInfo(object):
         self.__verbose = verbose
         self.__lfh = log
 
+        single_config_path = os.getenv('PATH_ONEDEP_CONFIG', None)
+        if single_config:
+            self.__sI = ConfigInfoData(siteId=self.__siteId, verbose=self.__verbose, single_config=True)
+            other_data = self.__sI.getConfigDictionary()
+            conf = Config(single_config_path, other_data)
+            self.__si = None
+            self.__D = conf.get_configuration()
+            return
+
         if self.__siteId is None:
             self.__siteId = str(os.getenv("WWPDB_SITE_ID", None)).upper()
             """The site identification is obtained from the environmental variable `WWPDB_SITE_ID`

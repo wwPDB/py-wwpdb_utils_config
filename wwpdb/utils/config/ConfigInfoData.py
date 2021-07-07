@@ -581,7 +581,7 @@ class ConfigInfoData(object):
     _configSitePackagesDeployPath = os.path.join(_configSiteDeployPath, "tools-centos-6", "packages")
     _configSiteMachineName = "http://localhost:8000"
 
-    def __init__(self, siteId=None, verbose=True, log=sys.stderr, useCache=True):
+    def __init__(self, siteId=None, verbose=True, log=sys.stderr, useCache=True, single_config=False):
         # """The list of configuration key names supported by all sites.
         # """
         self.__D = {}
@@ -590,65 +590,66 @@ class ConfigInfoData(object):
         self.__debug = False
         self.__lfh = log
         #
-        if self.__siteId is None:
-            self.__siteId = str(os.getenv("WWPDB_SITE_ID", None)).upper()
-            """The site identification is obtained from the environmental variable `WWPDB_SITE_ID`
-            """
+        if not single_config:
+            if self.__siteId is None:
+                self.__siteId = str(os.getenv("WWPDB_SITE_ID", None)).upper()
+                """The site identification is obtained from the environmental variable `WWPDB_SITE_ID`
+                """
 
-        if self.__verbose and self.__siteId is None:
-            self.__lfh.write(
-                "%s.%s WARNING - no siteId assigned in constructor or found in the environemt (WWPDB_SITE_ID).\n" % (self.__class__.__name__, sys._getframe().f_code.co_name)
-            )
+            if self.__verbose and self.__siteId is None:
+                self.__lfh.write(
+                    "%s.%s WARNING - no siteId assigned in constructor or found in the environemt (WWPDB_SITE_ID).\n" % (self.__class__.__name__, sys._getframe().f_code.co_name)
+                )
 
-        #
-        # -------------------------------------------------------------------------------------------------------
-        # First, check for externally cached configuration options.  If these not found (i.e. on error), OR
-        # if no cached options are found then use the locally defined fallback options (e.g. self.__setup())
-        #
-        # Note that options defined as class level constants  (e.g. 'FILE_FORMAT_EXTENSION_DICTIONARY',
-        #    'CONTENT_TYPE_DICTIONARY', 'CONTENT_MILESTONE_LIST', 'CONTENT_TYPE_BASE_DICTIONARY', ...) are
-        #     NOT externally CACHED.
-        #
-        if useCache:
-            readCache = False
-            try:
-                cls = ConfigInfoFileCache()
-                cacheD = cls.getConfigDictionary(siteId=self.__siteId)
-                if self.__debug:
-                    self.__lfh.write(
-                        "%s.%s Imported cached configuration dictionary length %d for site %s\n"
-                        % (self.__class__.__name__, sys._getframe().f_code.co_name, len(cacheD), self.__siteId)
-                    )
-                if len(cacheD) > 0:
-                    readCache = True
-                    self.__D = cacheD
-            except:  # noqa: E722 pylint: disable=bare-except
-                if self.__debug:
-                    self.__lfh.write("%s.%s failed importing cache for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
-                    traceback.print_exc(file=self.__lfh)
+            #
+            # -------------------------------------------------------------------------------------------------------
+            # First, check for externally cached configuration options.  If these not found (i.e. on error), OR
+            # if no cached options are found then use the locally defined fallback options (e.g. self.__setup())
+            #
+            # Note that options defined as class level constants  (e.g. 'FILE_FORMAT_EXTENSION_DICTIONARY',
+            #    'CONTENT_TYPE_DICTIONARY', 'CONTENT_MILESTONE_LIST', 'CONTENT_TYPE_BASE_DICTIONARY', ...) are
+            #     NOT externally CACHED.
+            #
+            if useCache:
                 readCache = False
+                try:
+                    cls = ConfigInfoFileCache()
+                    cacheD = cls.getConfigDictionary(siteId=self.__siteId)
+                    if self.__debug:
+                        self.__lfh.write(
+                            "%s.%s Imported cached configuration dictionary length %d for site %s\n"
+                            % (self.__class__.__name__, sys._getframe().f_code.co_name, len(cacheD), self.__siteId)
+                        )
+                    if len(cacheD) > 0:
+                        readCache = True
+                        self.__D = cacheD
+                except:  # noqa: E722 pylint: disable=bare-except
+                    if self.__debug:
+                        self.__lfh.write("%s.%s failed importing cache for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
+                        traceback.print_exc(file=self.__lfh)
+                    readCache = False
 
+                #
+                # Use fall back configuration options for now  -- to be deprecated in the future --
+                #
+                if not readCache and self.__siteId is not None and self.__debug:
+                    self.__lfh.write("%s.%s No configuration for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
+                    # self.__setup(self.__siteId)
+                    # if self.__verbose:
+                    #    self.__lfh.write("%s.%s Cache not used imported fallback configuration dictionary length %d for site %s\n" %
+                    #                     (self.__class__.__name__, sys._getframe().f_code.co_name, len(self.__D), self.__siteId))
+            else:
+                if self.__siteId is not None and self.__debug:
+                    self.__lfh.write("%s.%s No configuration for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
+                    # self.__setup(self.__siteId)
+                    # if self.__verbose:
+                    #    self.__lfh.write("%s.%s Imported fallback configuration dictionary length %d for site %s\n" %
+                    #                     (self.__class__.__name__, sys._getframe().f_code.co_name, len(self.__D), self.__siteId))
             #
-            # Use fall back configuration options for now  -- to be deprecated in the future --
+            # -------------------------------------------------------------------------------------------------------
+            #  Add other class-level - common configuration components - these configuration options are tightly coupled
+            #  to project operation and should remain as static declarations in this class module.
             #
-            if not readCache and self.__siteId is not None and self.__debug:
-                self.__lfh.write("%s.%s No configuration for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
-                # self.__setup(self.__siteId)
-                # if self.__verbose:
-                #    self.__lfh.write("%s.%s Cache not used imported fallback configuration dictionary length %d for site %s\n" %
-                #                     (self.__class__.__name__, sys._getframe().f_code.co_name, len(self.__D), self.__siteId))
-        else:
-            if self.__siteId is not None and self.__debug:
-                self.__lfh.write("%s.%s No configuration for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
-                # self.__setup(self.__siteId)
-                # if self.__verbose:
-                #    self.__lfh.write("%s.%s Imported fallback configuration dictionary length %d for site %s\n" %
-                #                     (self.__class__.__name__, sys._getframe().f_code.co_name, len(self.__D), self.__siteId))
-        #
-        # -------------------------------------------------------------------------------------------------------
-        #  Add other class-level - common configuration components - these configuration options are tightly coupled
-        #  to project operation and should remain as static declarations in this class module.
-        #
         self.__addMilestoneVariants()
         self.__D["FILE_FORMAT_EXTENSION_DICTIONARY"] = ConfigInfoData._fileFormatExtensionD
         self.__D["CONTENT_TYPE_DICTIONARY"] = ConfigInfoData._contentTypeInfoD
