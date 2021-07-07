@@ -1,5 +1,6 @@
 from omegaconf import OmegaConf
 import logging
+import os
 logger = logging.getLogger(__name__)
 
 
@@ -24,7 +25,7 @@ class Config():
     def load_configuration(self):
         try:
             config_info_data = OmegaConf.create(self.other_data)
-            config_from_yaml = OmegaConf.load(f'{self.path}/configuration.yaml')
+            config_from_yaml = OmegaConf.load(f"{self.path}/configuration.yaml")
             self.conf = OmegaConf.merge(config_info_data, config_from_yaml)
         except Exception as e:
             logger.error(f"Could not load configuration on path: {self.path}")
