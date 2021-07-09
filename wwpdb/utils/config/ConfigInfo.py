@@ -27,6 +27,7 @@ import os
 import sys
 
 from wwpdb.utils.config.ConfigInfoData import ConfigInfoData
+from wwpdb.utils.config.Config import Config
 
 
 def getSiteId(defaultSiteId=None):
