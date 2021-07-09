@@ -64,7 +64,7 @@ class ConfigInfo(object):
             return
 
         if self.__siteId is None:
-            self.__siteId = str(os.getenv("WWPDB_SITE_ID", None)).upper()
+            self.__siteId = self.__D.get('site_prefix')
             """The site identification is obtained from the environmental variable `WWPDB_SITE_ID`
             """
         if self.__siteId is None:
