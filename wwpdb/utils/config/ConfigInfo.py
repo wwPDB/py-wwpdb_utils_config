@@ -32,10 +32,9 @@ from wwpdb.utils.config.Config import Config
 
 def getSiteId(defaultSiteId=None):
     """Obtain the site information from the environment or failover to the development site id."""
-    siteId = str(os.getenv("WWPDB_SITE_ID", defaultSiteId))
-    if siteId is None:
-        siteId = "WWPDB_DEPLOY"
-    return siteId
+    cI = ConfigInfo()
+    site_id = cI.get('site_prefix', defaultSiteId)
+    return site_id
 
 
 class ConfigInfo(object):
