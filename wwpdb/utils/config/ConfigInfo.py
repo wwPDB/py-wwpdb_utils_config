@@ -55,7 +55,7 @@ class ConfigInfo(object):
         self.__lfh = log
 
         single_config_path = os.getenv('PATH_ONEDEP_CONFIG', None)
-        if single_config:
+        if single_config_path:
             self.__sI = ConfigInfoData(siteId=self.__siteId, verbose=self.__verbose, single_config=True)
             other_data = self.__sI.getConfigDictionary()
             conf = Config(single_config_path, other_data)

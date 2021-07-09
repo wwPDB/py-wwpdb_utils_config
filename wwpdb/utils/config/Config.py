@@ -1,14 +1,15 @@
 from omegaconf import OmegaConf
 import logging
 import os
+import sys
 logger = logging.getLogger(__name__)
 
 
 
-class Config():
+class Config(object):
     _instance = None
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, path, other_data, *args, **kwargs):
         if cls._instance is None:
             cls._instance = object.__new__(cls, *args, **kwargs)
         return cls._instance
@@ -21,8 +22,11 @@ class Config():
         self.config_from_yaml = None
         self.config_info_data = None
         self.conf = None
+        self.load_configuration()
 
     def load_configuration(self):
+        logger.info("Loading Configuration")
+        logger.info(f"Config path : {self.path}/configuration.yaml")
         try:
             self.config_info_data = OmegaConf.create(self.other_data)
             self.config_from_yaml = OmegaConf.load(f"{self.path}/configuration.yaml")
@@ -39,8 +43,7 @@ class Config():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
     single_config_path = os.environ['PATH_ONEDEP_CONFIG']
-    print('Fetching YAML from:')
-    conf = Config(single_config_path, other_data)
-    print('Printing Configuration:')
+    conf = Config(single_config_path, {})
     conf.print_config_from_yaml()
