@@ -59,6 +59,7 @@ class ConfigInfo(object):
             self.__sI = ConfigInfoData(siteId=self.__siteId, verbose=self.__verbose, single_config=True)
             other_data = self.__sI.getConfigDictionary()
             conf = Config(single_config_path, other_data)
+            conf.load_configuration()
             self.__si = None
             self.__D = conf.get_configuration()
             return
