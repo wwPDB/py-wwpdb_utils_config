@@ -184,6 +184,9 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def get_site_space_group_file_path(self):
         return self._getlegacy("SITE_SPACE_GROUP_FILE_PATH", os.path.join(self.get_site_annot_tools_path(), "data", "ascii", "space_group.cif"))
 
+    def get_sg_center_file_path(self):
+        return os.path.join(self.get_site_annot_tools_path(), "data", "ascii", "sg_center.cif")
+
     def get_taxdump_path(self):
         reference_path = self._getreferencedir()
         site_pdbx_dict_path = os.path.join(reference_path, "taxdump")
