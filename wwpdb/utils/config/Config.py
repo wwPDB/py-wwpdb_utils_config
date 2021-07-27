@@ -32,7 +32,7 @@ class Config(object):
         try:
             self.config_info_data = OmegaConf.create(self.other_data)
 
-            optional_base_file = Path(f"{self.path}/configuration.yaml")
+            optional_base_file = Path(f"{self.path}/base.yaml")
             mandatory_config_file = Path(f"{self.path}/configuration.yaml")
 
             if optional_base_file.exists():
