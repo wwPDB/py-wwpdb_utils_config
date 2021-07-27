@@ -344,18 +344,13 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._getlegacy("SITE_DA_INTERNAL_STATUS_SCHEMA_PATH", os.path.join(self.get_resources_da_internal_path(), "database_status_history_schema.cif"))
 
     def get_resources_wfe_path(self):
-        return os.path.join(self._getresourcedir(), 'wfe')
+        return os.path.join(self._getresourcedir(), "wfe")
 
     def get_wf_defs_path(self):
-        return self._getlegacy("SITE_WF_XML_PATH",
-                               os.path.join(self.get_resources_wfe_path(),
-                                            "wf-defs"))
+        return self._getlegacy("SITE_WF_XML_PATH", os.path.join(self.get_resources_wfe_path(), "wf-defs"))
 
     def get_site_registry_file_path(self):
-        return self._getlegacy("SITE_REGISTRY_FILE_PATH",
-                               os.path.join(self.get_resources_wfe_path(),
-                                            "actionData.xml"))
-
+        return self._getlegacy("SITE_REGISTRY_FILE_PATH", os.path.join(self.get_resources_wfe_path(), "actionData.xml"))
 
 
 class ConfigInfoAppDepUI(ConfigInfoAppBase):
