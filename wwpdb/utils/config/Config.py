@@ -20,8 +20,6 @@ class Config(object):
             path = os.environ['PATH_ONEDEP_CONFIG']
         self.path = path
         self.other_data = other_data
-        self.config_from_yaml = None
-        self.config_info_data = None
         self.conf = None
 
     def load_configuration(self):
@@ -30,17 +28,17 @@ class Config(object):
             return
         logger.info(f"Loading Configuration from path : {self.path}/configuration.yaml")
         try:
-            self.config_info_data = OmegaConf.create(self.other_data)
+            config_info_data = OmegaConf.create(self.other_data)
 
             optional_base_file = Path(f"{self.path}/base.yaml")
             mandatory_config_file = Path(f"{self.path}/configuration.yaml")
 
             if optional_base_file.exists():
                 base_config = OmegaConf.load(optional_base_file)
-                self.conf = OmegaConf.merge(self.config_info_data, base_config)
+                self.conf = OmegaConf.merge(config_info_data, base_config)
 
-            self.config_from_yaml = OmegaConf.load(mandatory_config_file)
-            self.conf = OmegaConf.merge(self.conf, self.config_from_yaml)
+            config_from_yaml = OmegaConf.load(mandatory_config_file)
+            self.conf = OmegaConf.merge(self.conf, config_from_yaml)
             logger.info("Configuration loaded successfully")
 
         except Exception as e:
