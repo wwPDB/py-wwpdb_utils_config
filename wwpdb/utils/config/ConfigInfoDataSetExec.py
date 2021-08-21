@@ -88,7 +88,7 @@ class ConfigInfoDataSetExec(object):
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             return cfds.removeDataSets(dataSetIdList)
         except Exception as e:
-            self.__lfh.write("removeDataSets failing\n" % str(e))
+            self.__lfh.write("removeDataSets failing %s\n" % str(e))
             traceback.print_exc(file=self.__lfh)
 
 
