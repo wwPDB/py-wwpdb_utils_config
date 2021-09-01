@@ -259,7 +259,7 @@ class ConfigInfoData(object):
         "em-mask-volume": (["map", "ccp4", "mrc2000", "bcif"], "em-mask-volume"),
         "em-additional-volume": (["map", "ccp4", "mrc2000", "bcif"], "em-additional-volume"),
         "em-half-volume": (["map", "ccp4", "mrc2000", "bcif"], "em-half-volume"),
-        "em-raw-volume": (["map", "ccp4", "mrc2000", "bcif"], "em-volume"),
+        "em-raw-volume": (["map", "ccp4", "mrc2000", "bcif"], "em-raw-volume"),
         "em-fsc-half-volume-mask": (["map", "ccp4", "mrc2000", "bcif"], "em-fsc-half-volume-mask"),
         "em-fsc-map-model-volume-mask": (["map", "ccp4", "mrc2000", "bcif"], "em-fsc-map-model-volume-mask"),
         "em-alignment-volume-mask": (["map", "ccp4", "mrc2000", "bcif"], "em-alignment-volume-mask"),
