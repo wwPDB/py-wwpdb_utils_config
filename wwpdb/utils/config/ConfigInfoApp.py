@@ -468,3 +468,6 @@ class ConfigInfoAppValidation(ConfigInfoAppBase):
 
     def get_chimerax(self):
         return self._getlegacy("CHIMERAXDIR", os.path.join(self.get_site_packages_path(), "ChimeraX", "bin"))
+
+    def get_density_fitness(self):
+        return os.path.join(self.get_site_packages_path(), "density_fitness", 'bin', 'density-fitness'))
