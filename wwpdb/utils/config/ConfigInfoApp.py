@@ -114,7 +114,7 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._getlegacy("SITE_PDBX_DICT_PATH", site_pdbx_dict_path)
 
     def get_mmcif_next_dictionary_file_path(self):
-        mmcif_dictionary_name = self.get_mmcif_archive_current_dict_filename()
+        mmcif_dictionary_name = self.get_mmcif_deposit_dict_filename()
         mmcif_dictionary_file_name = mmcif_dictionary_name + ".dic"
         newpath = os.path.join(self.get_mmcif_dict_path(), mmcif_dictionary_file_name)
         return self._getlegacy("SITE_MMCIF_DICT_FILE_PATH", newpath)
@@ -475,4 +475,4 @@ class ConfigInfoAppValidation(ConfigInfoAppBase):
         return self._getlegacy("CHIMERAXDIR", os.path.join(self.get_site_packages_path(), "ChimeraX", "bin"))
 
     def get_density_fitness(self):
-        return os.path.join(self.get_site_packages_path(), "density_fitness", 'bin', 'density-fitness')
+        return os.path.join(self.get_site_packages_path(), "density_fitness", "bin", "density-fitness")

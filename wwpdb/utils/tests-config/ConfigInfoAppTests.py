@@ -44,7 +44,7 @@ crw.createtree(["site-config", "depuiresources", "webapps"])
 # Use populate r/w site-config using top mock site-config
 SiteConfigSetup().setupEnvironment(rwMockTopPath, rwMockTopPath)
 
-from wwpdb.utils.config.ConfigInfoApp import ConfigInfoAppEm  # noqa: E402
+from wwpdb.utils.config.ConfigInfoApp import ConfigInfoAppEm, ConfigInfoAppCommon  # noqa: E402
 from wwpdb.utils.config.ConfigInfo import ConfigInfo  # noqa: E402
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -106,6 +106,19 @@ class ConfigInfoAppTests(unittest.TestCase):
             self.assertIn("emd_map_v2.cif", mf)
             # Verify no warning issued
             assert len(w) == 0
+
+
+class ConfigInfoAppComonTests(unittest.TestCase):
+    @staticmethod
+    def testInstantiate():
+        """Test if instantiation of Common class works"""
+        ConfigInfoAppCommon()
+
+    def testDictionaryPaths(self):
+        """Tests that next and archive dictionaries are not mixed up"""
+        cia = ConfigInfoAppCommon()
+        self.assertIn("v5_next.dic", cia.get_mmcif_next_dictionary_file_path())
+        self.assertIn("v50.dic", cia.get_mmcif_archive_dictionary_file_path())
 
 
 if __name__ == "__main__":
