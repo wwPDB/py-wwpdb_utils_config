@@ -195,7 +195,7 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def get_taxdump_path(self):
         reference_path = self._getreferencedir()
         site_pdbx_dict_path = os.path.join(reference_path, "taxdump")
-        return self._getlegacy("SITE_TAXDUMP_PATH", site_pdbx_dict_path)
+        return self._getlegacy("SITE_REFDATA_TAXONOMY_PATH", site_pdbx_dict_path)
 
     def get_idcode_dir(self):
         reference_path = self._getreferencedir()
