@@ -137,6 +137,9 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def get_site_web_apps_sessions_path(self):
         return self._getlegacy("SITE_WEB_APPS_SESSIONS_PATH", os.path.join(self.get_site_web_apps_top_sessions_path(), "sessions"))
 
+    def get_wf_logs_path(self):
+        return os.path.join(self.get_site_web_apps_top_sessions_path(), "wf-logs")
+
     def get_site_annot_tools_path(self):
         return self._getlegacy("SITE_ANNOT_TOOLS_PATH", os.path.join(self.get_site_packages_path(), "annotation"))
 
