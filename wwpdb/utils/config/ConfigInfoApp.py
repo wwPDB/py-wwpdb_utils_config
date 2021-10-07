@@ -345,11 +345,17 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def get_resources_da_internal_path(self):
         return os.path.join(self._getresourcedir(), "da_internal")
 
+    def get_resources_da_internal_all_path(self):
+        return os.path.join(self._getresourcedir(), "da_internal_all")
+
     def get_site_da_internal_schema_path(self):
         return self._getlegacy("SITE_DA_INTERNAL_SCHEMA_PATH", os.path.join(self.get_resources_da_internal_path(), "status_rcsb_schema_da.cif"))
 
     def get_site_da_internal_status_schema_path(self):
         return self._getlegacy("SITE_DA_INTERNAL_STATUS_SCHEMA_PATH", os.path.join(self.get_resources_da_internal_path(), "database_status_history_schema.cif"))
+
+    def get_site_da_internal_public_schema_path(self):
+        return self._getlegacy("SITE_DA_INTERNAL_PUBLIC_SCHEMA_PATH", os.path.join(self.get_resources_da_internal_all_path(), "schema_map_pdbx_v5.cif"))
 
     def get_resources_wfe_path(self):
         return os.path.join(self._getresourcedir(), "wfe")
