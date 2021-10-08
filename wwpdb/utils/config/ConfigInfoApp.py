@@ -343,7 +343,7 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return os.path.join(self.get_volume_server_packages_path(), "query.js")
 
     def get_db_loader_path(self):
-        return os.path.join(self.get_site_packages_path(), 'dbloader', 'bin', 'db-loader')
+        return os.path.join(self.get_site_packages_path(), "dbloader", "bin", "db-loader")
 
     def get_resources_da_internal_path(self):
         return os.path.join(self._getresourcedir(), "da_internal")
