@@ -119,6 +119,16 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         newpath = os.path.join(self.get_mmcif_dict_path(), mmcif_dictionary_file_name)
         return self._getlegacy("SITE_MMCIF_DICT_FILE_PATH", newpath)
 
+    def get_mmcif_next_dictionary_sdb_file_path(self):
+        mmcif_dictionary_name = self.get_mmcif_archive_next_dict_filename()
+        mmcif_dictionary_file_name = mmcif_dictionary_name + ".sdb"
+        return os.path.join(self.get_mmcif_dict_path(), mmcif_dictionary_file_name)
+
+    def get_mmcif_next_dictionary_odb_file_path(self):
+        mmcif_dictionary_name = self.get_mmcif_archive_next_dict_filename()
+        mmcif_dictionary_file_name = mmcif_dictionary_name + ".odb"
+        return os.path.join(self.get_mmcif_dict_path(), mmcif_dictionary_file_name)
+
     def get_mmcif_archive_dictionary_file_path(self):
         mmcif_dictionary_name = self.get_mmcif_archive_current_dict_filename()
         mmcif_dictionary_file_name = mmcif_dictionary_name + ".dic"
