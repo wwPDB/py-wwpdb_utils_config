@@ -458,6 +458,7 @@ class ConfigInfoData(object):
         "PDBE_EMDB": (8212000001, 8213000000),
         "PDBE_VAL": (900000000, 909999999),
         "WWPDB_DEPLOY_PRODUCTION_PDBJ": (1300000001, 1400000000),
+        "WWPDB_DEPLOY_PRODUCTION_PDBC": (1400000001, 1500000000),
         # 'BMRB': (1400000001, 1500000000),
         # 'WWPDB_DEPLOY_TEST_RU': (8000200000, 8100000000),
         "WWPDB_DEPLOY_TEST_RU": (8000210000, 8000215000),
@@ -488,6 +489,7 @@ class ConfigInfoData(object):
         "WWPDB_DEPLOY_PRODUCTION_UCSD": "https://deposit-rcsb-west.wwpdb.org/deposition",
         "WWPDB_DEPLOY_BETA_RU": "https://onedep-beta-dep-1.rcsb.rutgers.edu",
         "WWPDB_DEPLOY_PRODUCTION_PDBJ": "https://deposit-pdbj.wwpdb.org/deposition",
+        "WWPDB_DEPLOY_PRODUCTION_PDBC": "https://deposit-pdbc.wwpdb.org/deposition",
         "PDBE_PROD": "https://deposit-pdbe.wwpdb.org/deposition",
         "PDBE_LEGACY": "https://deposit-pdbe.wwpdb.org/deposition",
         "PDBE_STG": "https://wwwdev.ebi.ac.uk/pdbe-da-staging/deposition",
@@ -506,6 +508,7 @@ class ConfigInfoData(object):
         "WWPDB_DEPLOY_PRODUCTION_UCSD": "https://dna1.rcsb.org/service/messaging/archive_msg",
         "WWPDB_DEPLOY_LEGACY_RU": "https://da-legacy-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg",
         "WWPDB_DEPLOY_PRODUCTION_PDBJ": "https://onedep-ann-1.pdbj.org/service/messaging/archive_msg",
+        "WWPDB_DEPLOY_PRODUCTION_PDBC": "https://onedep-ann-pdbc.pdbj.org/service/messaging/archive_msg",
         "WWPDB_DEPLOY_ALPHA_RU": "https://da-ann-alpha-0.rcsb.rutgers.edu/service/messaging/archive_msg",
         "WWPDB_DEPLOY_BETA_RU": "http://onedep-beta-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg",
         "WWPDB_DEPLOY_DEPGRP1_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/archive_msg",
@@ -522,6 +525,7 @@ class ConfigInfoData(object):
         "WWPDB_DEPLOY_PRODUCTION_UCSD": "https://dna1.rcsb.org/service/messaging/forward_msg",
         "WWPDB_DEPLOY_LEGACY_RU": "https://da-legacy-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg",
         "WWPDB_DEPLOY_PRODUCTION_PDBJ": "https://onedep-ann-1.pdbj.org/service/messaging/forward_msg",
+        "WWPDB_DEPLOY_PRODUCTION_PDBC": "https://onedep-ann-pdbc.pdbj.org/service/messaging/forward_msg",
         "WWPDB_DEPLOY_ALPHA_RU": "https://da-ann-alpha-0.rcsb.rutgers.edu/service/messaging/forward_msg",
         "WWPDB_DEPLOY_BETA_RU": "https://onedep-beta-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg",
         "WWPDB_DEPLOY_DEPGRP1_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/forward_msg",
@@ -536,7 +540,7 @@ class ConfigInfoData(object):
     _regions = {"pdbe": ["europe", "africa", "antarctica"], "pdbj": ["asia", "middle east"], "rcsb": ["north america", "south america", "oceania"]}
     """Dictionary of geographical locations for each site"""
 
-    _production_sites = {"pdbe": "PDBE_PROD", "pdbj": "WWPDB_DEPLOY_PRODUCTION_PDBJ", "rcsb": "WWPDB_DEPLOY_PRODUCTION_RU"}
+    _production_sites = {"pdbe": "PDBE_PROD", "pdbj": "WWPDB_DEPLOY_PRODUCTION_PDBJ", "rcsb": "WWPDB_DEPLOY_PRODUCTION_RU", "pdbc": "WWPDB_DEPLOY_PRODUCTION_PDBC"}
     """names of sites used in production"""
 
     # subjects for messages - used in the depUI and communication
@@ -577,6 +581,7 @@ class ConfigInfoData(object):
         "PDBE_STG": "https://dev.pdbe.org",
         "PDBE_PROD": "https://deposit-pdbe.wwpdb.org",
         "WWPDB_DEPLOY_PRODUCTION_PDBJ": "https://onedep-contentws-pdbj.wwpdb.org",
+        "WWPDB_DEPLOY_PRODUCTION_PDBC": "https://onedep-contentws-pdbc.wwpdb.org",
         "WWPDB_DEPLOY_ALPHA_RU": "https://da-ws-alpha-0.rcsb.rutgers.edu",
         # 'PDBE_LEGACY': 'https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg',
     }
