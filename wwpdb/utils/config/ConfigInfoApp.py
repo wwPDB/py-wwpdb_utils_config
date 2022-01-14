@@ -31,6 +31,7 @@ class ConfigInfoAppBase(object):
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
         self._cI = ConfigInfo(siteId=siteId, verbose=verbose, log=log)
         self._resourcedir = None
+        self._rwresourcedir = None
         self._referencedir = None
         self._site_archive_dir = None
         self._site_local_apps_path = None
@@ -57,6 +58,12 @@ class ConfigInfoAppBase(object):
         if self._resourcedir is None:
             self._resourcedir = self._cI.get("RO_RESOURCE_PATH")
         return self._resourcedir
+
+    def _getrwresourcedir(self):
+        """Returns the RW resource directory if set in site-config"""
+        if self._rwresourcedir is None:
+            self._rwresourcedir = self._cI.get("RW_RESOURCE_PATH")
+        return self._rwresourcedir
 
     def _getreferencedir(self):
         if self._referencedir is None:
@@ -388,6 +395,14 @@ class ConfigInfoAppDepUI(ConfigInfoAppBase):
         """Returns the preferred path to depui subdir of resources_ro"""
         return os.path.join(self._getresourcedir(), "depui")
 
+    def __get_rwdepui_dir(self):
+        """Returns the preferred path to depui subdir of resources_rw if variable set or None"""
+        rwpath = self._getrwresourcedir()
+        if rwpath is not None:
+            return os.path.join(rwpath, "depui")
+        else:
+            return None
+
     def get_depui_resources_ro_dir(self):
         """Performs legacy lookup of depUI subdir referenced through DEPUI_RESOURCE_PATH.
         Returns either legacy or new hardcoded lookup"""
@@ -398,7 +413,27 @@ class ConfigInfoAppDepUI(ConfigInfoAppBase):
         return self._getlegacy("SITE_ACCESS_INFO_FILE_PATH", newpath)
 
     def get_site_dataset_siteloc_file_path(self):
-        newpath = os.path.join(self.__get_depui_dir(), "site_dataset_siteloc_info.json")
+        """
+        Returhs in the following order:
+        site-config variable
+        r/w tree path
+        r/o resources path
+        """
+        fName = "site_dataset_siteloc_info.json"
+        rwdepuipath = self.__get_rwdepui_dir()
+
+        newpath = None
+
+        # Test if rw file exists. else old
+        if rwdepuipath is not None:
+            fpath = os.path.join(rwdepuipath, fName)
+            if os.path.exists(fpath):
+                newpath = fpath
+
+        if newpath is None:
+            newpath = os.path.join(self.__get_depui_dir(), fName)
+
+        # Legacy definition override
         return self._getlegacy("SITE_DATASET_SITELOC_FILE_PATH", newpath)
 
 
