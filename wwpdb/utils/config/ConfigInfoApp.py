@@ -272,36 +272,36 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         reference_path = self._getreferencedir()
         return os.path.join(reference_path, "citation_finder")
 
-    def get_site_cc_dict_path(self):
+    def get_site_cc_dict_path(self, stacklevel=4):
         site_cc_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), "cc-dict")
-        return self._getlegacy("SITE_CC_DICT_PATH", site_cc_dict_path)
+        return self._getlegacy("SITE_CC_DICT_PATH", site_cc_dict_path, stacklevel=stacklevel)
 
     def get_cc_dict(self):
-        return os.path.join(self.get_site_cc_dict_path(), "Components-all-v3.cif")
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "Components-all-v3.cif")
 
     def get_cc_path_list(self):
-        return os.path.join(self.get_site_cc_dict_path(), "PATHLIST-v3")
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "PATHLIST-v3")
 
     def get_cc_id_list(self):
-        return os.path.join(self.get_site_cc_dict_path(), "IDLIST-v3")
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "IDLIST-v3")
 
     def get_cc_dict_serial(self):
-        return os.path.join(self.get_site_cc_dict_path(), "Components-all-v3.sdb")
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "Components-all-v3.sdb")
 
     def get_cc_dict_idx(self):
-        return os.path.join(self.get_site_cc_dict_path(), "Components-all-v3-r4.idx")
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "Components-all-v3-r4.idx")
 
     def get_cc_db(self):
-        return os.path.join(self.get_site_cc_dict_path(), "chemcomp_v3.db")
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "chemcomp_v3.db")
 
     def get_cc_index(self):
-        return os.path.join(self.get_site_cc_dict_path(), "chemcomp-index.pic")
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "chemcomp-index.pic")
 
     def get_cc_parent_index(self):
-        return os.path.join(self.get_site_cc_dict_path(), "chemcomp-parent-index.pic")
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "chemcomp-parent-index.pic")
 
     def get_cc_fp_patterns(self):
-        return os.path.join(self.get_site_cc_dict_path(), "fp_patterns.txt")
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "fp_patterns.txt")
 
     def get_site_prdcc_cvs_path(self):
         site_prdcc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
