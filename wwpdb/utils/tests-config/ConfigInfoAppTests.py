@@ -120,6 +120,12 @@ class ConfigInfoAppComonTests(unittest.TestCase):
         self.assertIn("v5_next.dic", cia.get_mmcif_next_dictionary_file_path())
         self.assertIn("v50.dic", cia.get_mmcif_archive_dictionary_file_path())
 
+    def testinchiPathCorrect(self):
+        """Tests if get_site_cc_inchi_dir returns a packages path or not.  Should be tools/bin"""
+        cia = ConfigInfoAppCommon()
+        ipath = cia.get_site_cc_inchi_dir()
+        self.assertNotIn("packages/", ipath)
+
 
 if __name__ == "__main__":
     unittest.main()

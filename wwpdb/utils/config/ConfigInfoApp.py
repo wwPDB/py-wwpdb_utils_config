@@ -167,7 +167,7 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._getlegacy("SF_VALID", os.path.join(self.get_site_packages_path(), "sf-valid"))
 
     def get_site_cc_inchi_dir(self):
-        return self._getlegacy("SITE_CC_INCHI_DIR", os.path.join(self.get_site_packages_path(), "bin"))
+        return self._getlegacy("SITE_CC_INCHI_DIR", os.path.join(self._get_site_local_apps(), "bin"))
 
     def get_site_cc_corina_dir(self):
         return self._getlegacy("SITE_CC_CORINA_DIR", os.path.join(self.get_site_packages_path(), "corina"))
