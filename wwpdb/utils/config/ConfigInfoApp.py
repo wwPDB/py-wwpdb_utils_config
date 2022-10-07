@@ -167,7 +167,7 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         return self._getlegacy("SF_VALID", os.path.join(self.get_site_packages_path(), "sf-valid"))
 
     def get_site_cc_inchi_dir(self):
-        return self._getlegacy("SITE_CC_INCHI_DIR", os.path.join(self.get_site_packages_path(), "bin"))
+        return self._getlegacy("SITE_CC_INCHI_DIR", os.path.join(self._get_site_local_apps(), "bin"))
 
     def get_site_cc_corina_dir(self):
         return self._getlegacy("SITE_CC_CORINA_DIR", os.path.join(self.get_site_packages_path(), "corina"))
@@ -530,6 +530,9 @@ class ConfigInfoAppValidation(ConfigInfoAppBase):
 
     def get_chimerax(self):
         return self._getlegacy("CHIMERAXDIR", os.path.join(self.get_site_packages_path(), "ChimeraX", "bin"))
+
+    def get_chimera(self):
+        return self._getlegacy("CHIMERADIR", os.path.join(self.get_site_packages_path(), "chimera", "bin"))
 
     def get_density_fitness(self):
         return os.path.join(self.get_site_packages_path(), "density_fitness", "bin", "density-fitness")

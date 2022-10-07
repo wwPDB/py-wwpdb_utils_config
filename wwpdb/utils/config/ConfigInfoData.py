@@ -237,7 +237,10 @@ class ConfigInfoData(object):
         "nmr-data-str": (["nmr-star", "pdbx"], "nmr-data-str"),
         "nmr-data-nef-report": (["json"], "nmr-data-nef-report"),
         "nmr-data-str-report": (["json"], "nmr-data-str-report"),
-        "nmr-restraints": (["any", "nmr-star", "amber", "amber-aux", "biosym", "charmm", "cns", "cyana", "dynamo", "gromacs", "isd", "rosetta", "sybyl", "xplor", "xplor-nih", "pdb-mr", "mr"], "mr"),
+        "nmr-restraints": (
+            ["any", "nmr-star", "amber", "amber-aux", "biosym", "charmm", "cns", "cyana", "dynamo", "gromacs", "isd", "rosetta", "sybyl", "xplor", "xplor-nih", "pdb-mr", "mr"],
+            "mr",
+        ),
         "nmr-chemical-shifts": (["nmr-star", "pdbx", "any"], "cs"),
         "nmr-chemical-shifts-raw": (["nmr-star", "pdbx"], "cs-raw"),
         "nmr-chemical-shifts-auth": (["nmr-star", "pdbx"], "cs-auth"),
