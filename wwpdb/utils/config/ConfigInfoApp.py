@@ -551,9 +551,9 @@ class ConfigInfoAppCommunication(ConfigInfoAppBase):
 
         return noreply_email
 
-    def get_mailserver_address(self):
+    def get_mailserver_name(self):
         """Returns the sendmail local server or relay host"""
         
-        return self._cI.get("SITE_MAILSERVER", "localhost")
+        return self._cI.get("SITE_MAILSERVER_NAME", "localhost")
 
     

@@ -61,7 +61,7 @@ class MyConfigInfo(ConfigInfo):
     def get(self, keyWord, default=None):
         if keyWord == "SITE_NOREPLY_EMAIL":
             val = self._noreply
-        elif keyWord == "SITE_MAILSERVER":
+        elif keyWord == "SITE_MAILSERVER_NAME":
             val = self._server
         else:  # pragma: no cover
             # sys.stderr.write("XXXXX Unknown site config fetching %s\n" % keyWord)
@@ -96,7 +96,7 @@ class ConfigInfoAppCommunicationTests(unittest.TestCase):
             nr = ciac.get_noreply_address()
             self.assertEqual(nr, "noreply@mail.wwpdb.org")
 
-            msa = ciac.get_mailserver_address()
+            msa = ciac.get_mailserver_name()
             self.assertEqual(msa, "localhost")
 
     def testAlteredValues(self):
@@ -106,7 +106,7 @@ class ConfigInfoAppCommunicationTests(unittest.TestCase):
             nr = ciac.get_noreply_address()
             self.assertEqual(nr, "noreply@test.com")
 
-            msa = ciac.get_mailserver_address()
+            msa = ciac.get_mailserver_name()
             self.assertEqual(msa, "relayhost.test.com")
             
 if __name__ == "__main__":  # pragma: no cover
