@@ -536,3 +536,24 @@ class ConfigInfoAppValidation(ConfigInfoAppBase):
 
     def get_density_fitness(self):
         return os.path.join(self.get_site_packages_path(), "density_fitness", "bin", "density-fitness")
+
+
+class ConfigInfoAppCommunication(ConfigInfoAppBase):
+    """Access configuration for sending email"""
+    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+        super(ConfigInfoAppCommunication, self).__init__(siteId=siteId, verbose=verbose, log=log)
+
+    def get_noreply_address(self):
+        """Returns the noreply email address"""
+        
+        noreply_email = self._cI.get("SITE_NOREPLY_EMAIL",
+                                     "noreply@mail.wwpdb.org")
+
+        return noreply_email
+
+    def get_mailserver_name(self):
+        """Returns the sendmail local server or relay host"""
+        
+        return self._cI.get("SITE_MAILSERVER_NAME", "localhost")
+
+    
