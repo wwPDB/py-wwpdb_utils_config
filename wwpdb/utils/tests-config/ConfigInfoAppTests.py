@@ -23,7 +23,7 @@ import sys
 
 try:
     from unittest.mock import patch
-except ImportError:
+except ImportError:  # pragma: no cover
     from mock import patch
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -127,5 +127,5 @@ class ConfigInfoAppComonTests(unittest.TestCase):
         self.assertNotIn("packages/", ipath)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     unittest.main()

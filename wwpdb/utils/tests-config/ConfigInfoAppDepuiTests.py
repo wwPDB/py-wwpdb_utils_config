@@ -23,7 +23,7 @@ import sys
 
 try:
     from unittest.mock import patch
-except ImportError:
+except ImportError:  # pragma: no cover
     from mock import patch
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -117,10 +117,10 @@ class ConfigInfoAppDepUITests(unittest.TestCase):
 
             # RW path to avoid fallbacks tests for destination file
             rwpath = os.path.join(TESTOUTPUT, "depuirw", "depui")
-            if not os.path.exists(rwpath):
+            if not os.path.exists(rwpath):  # pragma: no cover
                 os.makedirs(rwpath)
             testOutPath = os.path.join(rwpath, "site_dataset_siteloc_info.json")
-            if not os.path.exists(testOutPath):
+            if not os.path.exists(testOutPath):  # pragma: no cover
                 with open(testOutPath, "w") as _fout:  # noqa: F841
                     pass
 
@@ -130,5 +130,5 @@ class ConfigInfoAppDepUITests(unittest.TestCase):
                 self.assertEqual(slPath, testOutPath)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     unittest.main()

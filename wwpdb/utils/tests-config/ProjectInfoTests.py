@@ -18,7 +18,7 @@ import logging
 
 try:
     from unittest.mock import patch
-except ImportError:
+except ImportError:  # pragma: no cover
     from mock import patch
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -80,12 +80,30 @@ class ProjectInfoTests(unittest.TestCase):
         self.assertEqual(vers, "unknown")
         self.assertTrue(mock_pvi.called)
 
+    def testGetVersionUnparseable(self):
+        """Test case -  get project version - json file unparseable"""
+        bad_file = os.path.join(TESTOUTPUT, "badversion.json")
+        with open(bad_file, "w") as fout:
+            fout.write('{"Version": "V5.14\n')
+
+        with patch.object(ProjectVersionInfo, "getVersionFile", return_value=bad_file) as mock_pvi:
+            # Disable logging to prevent reporting traceback from json parser
+            logging.disable(logging.ERROR)
+
+            pvi = ProjectVersionInfo()
+            vers = pvi.getVersion()
+            logging.disable(logging.NOTSET)
+            
+            self.assertEqual(vers, "unknown")
+            self.assertTrue(mock_pvi.called)
+            
 
 def suiteProjectVersion():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ProjectInfoTests("testGetVersion"))
     suiteSelect.addTest(ProjectInfoTests("testGetVersionFile"))
     suiteSelect.addTest(ProjectInfoTests("testGetVersionMissing"))
+    suiteSelect.addTest(ProjectInfoTests("testGetVersionUnparseable"))
     return suiteSelect
 
 
