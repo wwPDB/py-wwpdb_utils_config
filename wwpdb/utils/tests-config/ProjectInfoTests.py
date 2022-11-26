@@ -93,10 +93,10 @@ class ProjectInfoTests(unittest.TestCase):
             pvi = ProjectVersionInfo()
             vers = pvi.getVersion()
             logging.disable(logging.NOTSET)
-            
+
             self.assertEqual(vers, "unknown")
             self.assertTrue(mock_pvi.called)
-            
+
 
 def suiteProjectVersion():  # pragma: no cover
     suiteSelect = unittest.TestSuite()

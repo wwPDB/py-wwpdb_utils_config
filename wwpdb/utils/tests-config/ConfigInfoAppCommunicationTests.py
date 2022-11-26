@@ -18,7 +18,6 @@ __version__ = "V0.01"
 import os
 import platform
 import unittest
-import warnings
 import sys
 
 try:
@@ -71,15 +70,15 @@ class MyConfigInfo(ConfigInfo):
 
 
 class StandardConfig(MyConfigInfo):
-     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
-         super(StandardConfig, self).__init__(siteId=siteId, verbose=verbose, log=log)
+    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+        super(StandardConfig, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
 
 class TestConfig(MyConfigInfo):
-     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
-         super(TestConfig, self).__init__(siteId=siteId, verbose=verbose, log=log)
-         self._noreply = "noreply@test.com"
-         self._server = "relayhost.test.com"
+    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+        super(TestConfig, self).__init__(siteId=siteId, verbose=verbose, log=log)
+        self._noreply = "noreply@test.com"
+        self._server = "relayhost.test.com"
 
 
 class ConfigInfoAppCommunicationTests(unittest.TestCase):
@@ -87,7 +86,6 @@ class ConfigInfoAppCommunicationTests(unittest.TestCase):
     def testInstantiate():
         """Test if instantiation of EM class works"""
         ConfigInfoAppCommunication()
-
 
     def testDefaultValues(self):
         """Test default values"""
@@ -108,6 +106,7 @@ class ConfigInfoAppCommunicationTests(unittest.TestCase):
 
             msa = ciac.get_mailserver_name()
             self.assertEqual(msa, "relayhost.test.com")
-            
+
+
 if __name__ == "__main__":  # pragma: no cover
     unittest.main()

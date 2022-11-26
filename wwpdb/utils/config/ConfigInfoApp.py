@@ -545,7 +545,7 @@ class ConfigInfoAppCommunication(ConfigInfoAppBase):
 
     def get_noreply_address(self):
         """Returns the noreply email address"""
-        
+
         noreply_email = self._cI.get("SITE_NOREPLY_EMAIL",
                                      "noreply@mail.wwpdb.org")
 
@@ -553,7 +553,5 @@ class ConfigInfoAppCommunication(ConfigInfoAppBase):
 
     def get_mailserver_name(self):
         """Returns the sendmail local server or relay host"""
-        
-        return self._cI.get("SITE_MAILSERVER_NAME", "localhost")
 
-    
+        return self._cI.get("SITE_MAILSERVER_NAME", "localhost")
