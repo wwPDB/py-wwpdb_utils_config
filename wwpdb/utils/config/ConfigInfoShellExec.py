@@ -522,7 +522,7 @@ def main():  # pragma: no cover
         parser.print_help()
         exit(-1)
 
-        parser.error(usage)
+        # parser.error(usage)
 
     cI = ConfigInfoShellExec(
         topConfigPath=options.topConfigPath,
