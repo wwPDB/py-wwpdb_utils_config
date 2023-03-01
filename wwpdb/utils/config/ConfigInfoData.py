@@ -507,7 +507,7 @@ class ConfigInfoData(object):
         "PDBE_VAL": "https://validate-pdbe.wwpdb.org/validservice",
         # 'PDBE_DEV': 'https://dev.pdbe.org/deposition',
         "WWPDB_DEPLOY_ALPHA_RU": "https://da-dep-alpha-0.rcsb.rutgers.edu/deposition",
-        "WWPDB_DEPLOY_TEST_RU": "https://wwpdb-deploy-test-1.wwpdb.org/deposition",
+        "WWPDB_DEPLOY_TEST_RU": "https://da-test-dep-1.rcsb.rutgers.edu/deposition",
         "WWPDB_DEPLOY_VALSRV2_RU": "https://validate-rcsb-east.wwpdb.org/validservice",
         "WWPDB_DEPLOY_VALSRV2_UCSD": "https://validate-rcsb-west.wwpdb.org/validservice",
     }
