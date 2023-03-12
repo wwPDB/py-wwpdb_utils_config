@@ -99,7 +99,114 @@ class ConfigInfoAppBase(object):
         warnings.warn(msg, DeprecationWarning, stacklevel=stacklevel)
 
 
-class ConfigInfoAppCommon(ConfigInfoAppBase):
+class ConfigInfoAppCc(ConfigInfoAppBase):
+    """Class to handle CCD and PRD locations and access"""
+
+    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+        super(ConfigInfoAppCc, self).__init__(siteId=siteId, verbose=verbose, log=log)
+
+    def get_idcode_dir(self):
+        reference_path = self._getreferencedir()
+        return os.path.join(reference_path, "id_codes")
+
+    def get_extended_ccd_supp(self):
+        """Returns true if extended width CCD support enabled"""
+        val = self._getValue("EXTENDED_CCD_SUPPORT", False)
+        if val in ["True", "On", "true", "on", "1"]:
+            return True
+        return False
+        
+    def get_site_refdata_top_cvs_sb_path(self):
+        reference_path = self._getreferencedir()
+        ref_cc_dir = os.path.join(reference_path, "components")
+        return self._getlegacy("SITE_REFDATA_TOP_CVS_SB_PATH", ref_cc_dir, stacklevel=5)
+
+    def get_site_cc_dict_path(self, stacklevel=4):
+        site_cc_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), "cc-dict")
+        return self._getlegacy("SITE_CC_DICT_PATH", site_cc_dict_path, stacklevel=stacklevel)
+
+    def get_cc_dict(self):
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "Components-all-v3.cif")
+
+    def get_cc_path_list(self):
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "PATHLIST-v3")
+
+    def get_cc_id_list(self):
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "IDLIST-v3")
+
+    def get_cc_dict_serial(self):
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "Components-all-v3.sdb")
+
+    def get_cc_dict_idx(self):
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "Components-all-v3-r4.idx")
+
+    def get_cc_db(self):
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "chemcomp_v3.db")
+
+    def get_cc_index(self):
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "chemcomp-index.pic")
+
+    def get_cc_parent_index(self):
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "chemcomp-parent-index.pic")
+
+    def get_cc_fp_patterns(self):
+        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "fp_patterns.txt")
+
+    def get_site_prdcc_cvs_path(self):
+        site_prdcc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
+        return self._getlegacy("SITE_PRDCC_CVS_PATH", site_prdcc_cvs_path)
+
+    def get_site_cc_cvs_path(self):
+        site_cc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_CC"))
+        return self._getlegacy("SITE_CC_CVS_PATH", site_cc_cvs_path)
+
+    def get_site_family_cvs_path(self):
+        site_family_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD_FAMILY"))
+        return self._getlegacy("SITE_FAMILY_CVS_PATH", site_family_cvs_path)
+
+    def get_site_prd_cvs_path(self):
+        site_prd_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD"))
+        return self._getlegacy("SITE_PRD_CVS_PATH", site_prd_cvs_path)
+
+    def get_site_prd_dict_path(self):
+        site_prd_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), "prd-dict")
+        return self._getlegacy("SITE_PRD_DICT_PATH", site_prd_dict_path)
+
+    def get_prd_summary_sdb(self):
+        return os.path.join(self.get_site_prd_dict_path(), "prd_summary.sdb")
+
+    def get_prd_summary_cif(self):
+        return os.path.join(self.get_site_prd_dict_path(), "prd_summary.cif")
+
+    def get_prd_dict_file(self):
+        return os.path.join(self.get_site_prd_dict_path(), "Prd-all-v3.cif")
+
+    def get_prd_dict_serial(self):
+        return os.path.join(self.get_site_prd_dict_path(), "Prd-all-v3.sdb")
+
+    def get_prd_cc_file(self):
+        return os.path.join(self.get_site_prd_dict_path(), "Prdcc-all-v3.cif")
+
+    def get_prd_cc_serial(self):
+        return os.path.join(self.get_site_prd_dict_path(), "Prdcc-all-v3.sdb")
+
+    def get_prd_family_mapping(self):
+        return os.path.join(self.get_site_prd_dict_path(), "PrdFamilyIDMapping.lst")
+
+    def get_unused_prd_file(self):
+        unused_list_file = os.path.join(self.get_idcode_dir(), "unusedPrdId.lst")
+        return unused_list_file
+
+    def get_unused_ccd_file(self):
+        unused_list_file = os.path.join(self.get_idcode_dir(), "unusedCodes.lst")
+        return unused_list_file
+
+
+class ConfigInfoAppCommon(ConfigInfoAppCc):
+    """Class to provide common site-config lookups.
+    The bases shoould be ConfigInfoAppBase when the rest of the uses have been updated
+    """
+
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
         super(ConfigInfoAppCommon, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
@@ -217,18 +324,6 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         site_pdbx_dict_path = os.path.join(reference_path, "taxdump")
         return self._getlegacy("SITE_REFDATA_TAXONOMY_PATH", site_pdbx_dict_path)
 
-    def get_idcode_dir(self):
-        reference_path = self._getreferencedir()
-        return os.path.join(reference_path, "id_codes")
-
-    def get_unused_prd_file(self):
-        unused_list_file = os.path.join(self.get_idcode_dir(), "unusedPrdId.lst")
-        return unused_list_file
-
-    def get_unused_ccd_file(self):
-        unused_list_file = os.path.join(self.get_idcode_dir(), "unusedCodes.lst")
-        return unused_list_file
-
     def get_for_release_path(self):
         release_path = os.path.join(self._get_site_archive_dir(), "for_release")
         return self._getlegacy("FOR_RELEASE_DATA_PATH", release_path)
@@ -259,11 +354,6 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
         seq_db_path = os.path.join(reference_path, "seq-db")
         return self._getlegacy("SITE_REFDATA_SEQUENCE_DB_PATH", seq_db_path)
 
-    def get_site_refdata_top_cvs_sb_path(self):
-        reference_path = self._getreferencedir()
-        ref_cc_dir = os.path.join(reference_path, "components")
-        return self._getlegacy("SITE_REFDATA_TOP_CVS_SB_PATH", ref_cc_dir, stacklevel=5)
-
     def get_citation_update_path(self):
         reference_path = self._getreferencedir()
         return os.path.join(reference_path, "citation_updates")
@@ -271,78 +361,6 @@ class ConfigInfoAppCommon(ConfigInfoAppBase):
     def get_citation_finder_path(self):
         reference_path = self._getreferencedir()
         return os.path.join(reference_path, "citation_finder")
-
-    def get_site_cc_dict_path(self, stacklevel=4):
-        site_cc_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), "cc-dict")
-        return self._getlegacy("SITE_CC_DICT_PATH", site_cc_dict_path, stacklevel=stacklevel)
-
-    def get_cc_dict(self):
-        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "Components-all-v3.cif")
-
-    def get_cc_path_list(self):
-        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "PATHLIST-v3")
-
-    def get_cc_id_list(self):
-        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "IDLIST-v3")
-
-    def get_cc_dict_serial(self):
-        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "Components-all-v3.sdb")
-
-    def get_cc_dict_idx(self):
-        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "Components-all-v3-r4.idx")
-
-    def get_cc_db(self):
-        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "chemcomp_v3.db")
-
-    def get_cc_index(self):
-        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "chemcomp-index.pic")
-
-    def get_cc_parent_index(self):
-        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "chemcomp-parent-index.pic")
-
-    def get_cc_fp_patterns(self):
-        return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "fp_patterns.txt")
-
-    def get_site_prdcc_cvs_path(self):
-        site_prdcc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
-        return self._getlegacy("SITE_PRDCC_CVS_PATH", site_prdcc_cvs_path)
-
-    def get_site_cc_cvs_path(self):
-        site_cc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_CC"))
-        return self._getlegacy("SITE_CC_CVS_PATH", site_cc_cvs_path)
-
-    def get_site_family_cvs_path(self):
-        site_family_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD_FAMILY"))
-        return self._getlegacy("SITE_FAMILY_CVS_PATH", site_family_cvs_path)
-
-    def get_site_prd_cvs_path(self):
-        site_prd_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD"))
-        return self._getlegacy("SITE_PRD_CVS_PATH", site_prd_cvs_path)
-
-    def get_site_prd_dict_path(self):
-        site_prd_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), "prd-dict")
-        return self._getlegacy("SITE_PRD_DICT_PATH", site_prd_dict_path)
-
-    def get_prd_summary_sdb(self):
-        return os.path.join(self.get_site_prd_dict_path(), "prd_summary.sdb")
-
-    def get_prd_summary_cif(self):
-        return os.path.join(self.get_site_prd_dict_path(), "prd_summary.cif")
-
-    def get_prd_dict_file(self):
-        return os.path.join(self.get_site_prd_dict_path(), "Prd-all-v3.cif")
-
-    def get_prd_dict_serial(self):
-        return os.path.join(self.get_site_prd_dict_path(), "Prd-all-v3.sdb")
-
-    def get_prd_cc_file(self):
-        return os.path.join(self.get_site_prd_dict_path(), "Prdcc-all-v3.cif")
-
-    def get_prd_cc_serial(self):
-        return os.path.join(self.get_site_prd_dict_path(), "Prdcc-all-v3.sdb")
-
-    def get_prd_family_mapping(self):
-        return os.path.join(self.get_site_prd_dict_path(), "PrdFamilyIDMapping.lst")
 
     def get_node_bin_path(self):
         return os.path.join(self.get_site_packages_path(), "node", "bin", "node")
@@ -540,14 +558,14 @@ class ConfigInfoAppValidation(ConfigInfoAppBase):
 
 class ConfigInfoAppCommunication(ConfigInfoAppBase):
     """Access configuration for sending email"""
+
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
         super(ConfigInfoAppCommunication, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
     def get_noreply_address(self):
         """Returns the noreply email address"""
 
-        noreply_email = self._cI.get("SITE_NOREPLY_EMAIL",
-                                     "noreply@mail.wwpdb.org")
+        noreply_email = self._cI.get("SITE_NOREPLY_EMAIL", "noreply@mail.wwpdb.org")
 
         return noreply_email
 

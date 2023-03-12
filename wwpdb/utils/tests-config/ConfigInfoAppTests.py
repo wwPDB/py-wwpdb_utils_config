@@ -44,7 +44,7 @@ crw.createtree(["site-config", "depuiresources", "webapps"])
 # Use populate r/w site-config using top mock site-config
 SiteConfigSetup().setupEnvironment(rwMockTopPath, rwMockTopPath)
 
-from wwpdb.utils.config.ConfigInfoApp import ConfigInfoAppEm, ConfigInfoAppCommon  # noqa: E402
+from wwpdb.utils.config.ConfigInfoApp import ConfigInfoAppEm, ConfigInfoAppCommon, ConfigInfoAppCc  # noqa: E402
 from wwpdb.utils.config.ConfigInfo import ConfigInfo  # noqa: E402
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -60,6 +60,8 @@ class MyConfigInfo(ConfigInfo):
     def get(self, keyWord, default=None):
         if keyWord == "SITE_EXT_DICT_MAP_EMD_FILE_PATH":
             val = "/tmp/emd/emd_map_v2.cif"
+        elif keyWord == "EXTENDED_CCD_SUPPORT":
+            val = "True"
         else:
             # sys.stderr.write("XXXXX Unknown site config fetching %s\n" % keyWord)
             val = super(MyConfigInfo, self).get(keyWord=keyWord, default=default)
@@ -126,6 +128,38 @@ class ConfigInfoAppComonTests(unittest.TestCase):
         ipath = cia.get_site_cc_inchi_dir()
         self.assertNotIn("packages/", ipath)
 
+    def testGetIdCodeDir(self):
+        """Backwards AppsCc compatibility test"""
+        cia = ConfigInfoAppCommon()
+        ipath = cia.get_unused_ccd_file()
+        self.assertIsNotNone(ipath)
 
+
+class ConfigInfoAppCcTests(unittest.TestCase):
+    @staticmethod
+    def testInstantiate():
+        """Test if instantiation of Common class works"""
+        ConfigInfoAppCc()
+
+    def testGetIdCodeDir(self):
+        """Get CC id code directory"""
+        ciac = ConfigInfoAppCc()
+        ipath = ciac.get_unused_ccd_file()
+        self.assertIsNotNone(ipath)
+
+    def testGetExtSupport(self):
+        """Get CC wide support flag"""
+        ciac = ConfigInfoAppCc()
+        flag = ciac.get_extended_ccd_supp()
+        self.assertFalse(flag)
+
+        with patch("wwpdb.utils.config.ConfigInfoApp.ConfigInfo", side_effect=MyConfigInfo):
+            ciac = ConfigInfoAppCc()
+            flag = ciac.get_extended_ccd_supp()
+            self.assertTrue(flag)
+            
+
+        
+    
 if __name__ == "__main__":  # pragma: no cover
     unittest.main()
