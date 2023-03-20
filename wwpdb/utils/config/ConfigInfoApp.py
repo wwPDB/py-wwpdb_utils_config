@@ -115,7 +115,7 @@ class ConfigInfoAppCc(ConfigInfoAppBase):
         if val in ["True", "On", "true", "on", "1"]:
             return True
         return False
-        
+
     def get_site_refdata_top_cvs_sb_path(self):
         reference_path = self._getreferencedir()
         ref_cc_dir = os.path.join(reference_path, "components")

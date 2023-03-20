@@ -157,9 +157,7 @@ class ConfigInfoAppCcTests(unittest.TestCase):
             ciac = ConfigInfoAppCc()
             flag = ciac.get_extended_ccd_supp()
             self.assertTrue(flag)
-            
 
-        
-    
+
 if __name__ == "__main__":  # pragma: no cover
     unittest.main()
