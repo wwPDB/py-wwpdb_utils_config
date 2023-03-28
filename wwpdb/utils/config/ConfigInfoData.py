@@ -237,6 +237,7 @@ class ConfigInfoData(object):
         "nmr-data-str": (["nmr-star", "pdbx"], "nmr-data-str"),
         "nmr-data-nef-report": (["json"], "nmr-data-nef-report"),
         "nmr-data-str-report": (["json"], "nmr-data-str-report"),
+        "nmr-cs-mr-merge-report": (["json"], "nmr-cs-mr-merge-report"),
         "nmr-restraints": (
             ["any", "nmr-star", "amber", "amber-aux", "biosym", "charmm", "cns", "cyana", "dynamo", "gromacs", "isd", "rosetta", "sybyl", "xplor", "xplor-nih", "pdb-mr", "mr"],
             "mr",
@@ -248,14 +249,14 @@ class ConfigInfoData(object):
         "nmr-chemical-shifts-atom-name-report": (["pdbx"], "nmr-chemical-shifts-atom-name-report"),
         "nmr-shift-error-report": (["json"], "nmr-shift-error-report"),
         "nmr-bmrb-entry": (["nmr-star", "pdbx"], "nmr-bmrb-entry"),
-        "nmr-harvest-file": (["tgz"], "nmr-harvest-file"),
         "nmr-peaks": (["any"], "nmr-peaks"),
-        "nmr-nef": (["nmr-star", "pdbx"], "nmr-nef"),  # nmr-nef will be deprecated.
+        # DAOTHER-7407: "nmr-harvest-file" and "nmr-nef" have never been implemented before
+        # "nmr-harvest-file": (["tgz"], "nmr-harvest-file"),
+        # "nmr-nef": (["nmr-star", "pdbx"], "nmr-nef"),
         "nmr-cs-check-report": (["html"], "nmr-cs-check-report"),
         "nmr-cs-xyz-check-report": (["html"], "nmr-cs-xyz-check-report"),
         "nmr-cs-path-list": (["txt"], "nmr-cs-path-list"),
         "nmr-cs-auth-file-name-list": (["txt"], "nmr-cs-auth-file-name-list"),
-        "nmr-str-path": (["json"], "nmr-str-path"),
         "nmr-mr-path-list": (["json"], "nmr-mr-path-list"),
         "component-image": (["jpg", "png", "gif", "svg", "tif", "tiff"], "ccimg"),
         "component-definition": (["pdbx", "sdf"], "ccdef"),
