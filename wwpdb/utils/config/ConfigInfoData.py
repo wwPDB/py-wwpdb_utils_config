@@ -255,6 +255,7 @@ class ConfigInfoData(object):
         "nmr-cs-xyz-check-report": (["html"], "nmr-cs-xyz-check-report"),
         "nmr-cs-path-list": (["txt"], "nmr-cs-path-list"),
         "nmr-cs-auth-file-name-list": (["txt"], "nmr-cs-auth-file-name-list"),
+        "nmr-str-path": (["json"], "nmr-str-path"),
         "nmr-mr-path-list": (["json"], "nmr-mr-path-list"),
         "component-image": (["jpg", "png", "gif", "svg", "tif", "tiff"], "ccimg"),
         "component-definition": (["pdbx", "sdf"], "ccdef"),
