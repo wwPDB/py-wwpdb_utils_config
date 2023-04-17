@@ -306,6 +306,7 @@ class ConfigInfoData(object):
         "interface-assign": (["xml"], "interface-assign"),
         "assembly-model": (["pdb", "pdbx"], "assembly-model"),
         "assembly-model-xyz": (["pdb", "pdbx"], "assembly-model-xyz"),
+        "assembly-suggested" : (["json"], "assembly-suggested"),
         "site-assign": (["pdbx"], "site-assign"),
         "dict-check-report": (["txt"], "dict-check-report"),
         "dict-check-report-r4": (["txt"], "dict-check-report-r4"),
