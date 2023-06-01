@@ -281,6 +281,7 @@ class ConfigInfoData(object):
         "em-model-emd": (["pdbx"], "em-model-emd"),
         "em-structure-factors": (["pdbx", "mtz"], "em-sf"),
         "emd-xml-header-report": (["txt"], "emd-xml-header-report"),
+        "em-map-report": (["json"], "em-map-report"),
         "validation-report-depositor": (["pdf"], "valdep"),
         "seqdb-match": (["pdbx", "pic"], "seqdb-match"),
         "blast-match": (["xml"], "blast-match"),
