@@ -61,7 +61,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
         self.__lfh = sys.stdout
         self.__verbose = True
         #
-        self.__testIdList = ["D_1", "D_1000200000", "D_1000200001", "1001200000", 1000200000, 8000200001, 8000200002, 8000200003, 100, 10002000000]
+        self.__testIdList = ["D_1", "D_1000200000", "D_1000200001", "1001200000", 1000200000, 8000200001, 8000200002, 8000200003, 100, 10002000000, "DEAD", "D_EAD"]
         self.__testIdLoc = {
             "D_1": None,
             "D_1000200000": "WWPDB_DEPLOY_PRODUCTION_RU",
@@ -73,6 +73,8 @@ class ConfigInfoDataSetTests(unittest.TestCase):
             8000200003: None,
             100: None,
             10002000000: None,
+            "DEAD": None,
+            "D_EAD": None,
         }
         self.__siteIdList = [
             "WWPDB_DEPLOY_PRODUCTION_RU",
