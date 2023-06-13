@@ -212,6 +212,11 @@ class ConfigInfoDataSet(object):
                 tId = "D_" + str("%010d" % int(depSetId))
                 if tId in self.__dsLocD:
                     return self.__dsLocD[tId]
+        except ValueError as e:
+            # From trying to take int
+            if self.__debug:
+                logger.error("checking deposition conversion for %r - %s", depSetId, str(e))
+                return None
         except Exception as e:
             if self.__debug:
                 logger.exception("failed checking for exception dictionary for %r - %s", depSetId, str(e))
@@ -226,6 +231,10 @@ class ConfigInfoDataSet(object):
                 idMin, idMax = self.__depIdAssignments[ky]
                 if (idVal >= idMin) and (idVal <= idMax):
                     return ky
+        except ValueError as e:
+            # From trying to take int
+            if self.__debug:
+                logger.error("checking deposition conversion for %r - %s", depSetId, str(e))
         except Exception as e:
             if self.__debug:
                 logger.exception("failed checking deposition range for %r - %s", depSetId, str(e))

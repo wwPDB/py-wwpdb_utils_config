@@ -52,6 +52,7 @@ TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 
 class MyConfigInfo(ConfigInfo):
     """A class to setup tests for DepUI config"""
+
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
         self._noreply = "noreply@mail.wwpdb.org"
         self._server = "localhost"
