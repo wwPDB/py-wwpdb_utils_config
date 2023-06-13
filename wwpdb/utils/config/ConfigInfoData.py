@@ -188,6 +188,7 @@
 # 20-Jun-2019 my   add content type 'nmr-unified-data-nef' and 'nmr-unified-data-str'
 # 27-Jun-2019 my   add content type 'nmr-unified-data-nef-report' and 'nmr-unified-data-str-report'
 # 21-Feb-2020 ep   change 'nmr-unified-data-{nef,str}' to 'nmr-data-{nef,str}'
+# 26-May-2023 zf   add 'xml-check-report' for xml checking report
 ##
 """
 Container for general and site-specific configuration data.
@@ -312,6 +313,8 @@ class ConfigInfoData(object):
         "dict-check-report": (["txt"], "dict-check-report"),
         "dict-check-report-r4": (["txt"], "dict-check-report-r4"),
         "dict-check-report-next": (["txt"], "dict-check-report-next"),
+        "xml-check-report": (["txt"], "xml-check-report"),
+        "em-map-check-report": (["txt"], "em-map-check-report"),
         "tom-complex-report": (["txt"], "tom-upload-report"),
         "tom-merge-report": (["txt"], "tom-merge-report"),
         "format-check-report": (["txt"], "format-check-report"),
