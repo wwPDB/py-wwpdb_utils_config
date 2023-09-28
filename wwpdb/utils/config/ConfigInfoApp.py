@@ -111,8 +111,8 @@ class ConfigInfoAppCc(ConfigInfoAppBase):
 
     def get_extended_ccd_supp(self):
         """Returns true if extended width CCD support enabled"""
-        val = self._getValue("EXTENDED_CCD_SUPPORT", False)
-        if val in ["True", "On", "true", "on", "1"]:
+        val = self._getValue("EXTENDED_CCD_SUPPORT", True)
+        if val in ["True", "On", "true", "on", "1", True]:
             return True
         return False
 

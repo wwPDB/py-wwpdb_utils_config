@@ -61,7 +61,8 @@ class MyConfigInfo(ConfigInfo):
         if keyWord == "SITE_EXT_DICT_MAP_EMD_FILE_PATH":
             val = "/tmp/emd/emd_map_v2.cif"
         elif keyWord == "EXTENDED_CCD_SUPPORT":
-            val = "True"
+            # val = "True"
+            val = "False"
         else:
             # sys.stderr.write("XXXXX Unknown site config fetching %s\n" % keyWord)
             val = super(MyConfigInfo, self).get(keyWord=keyWord, default=default)
@@ -150,13 +151,15 @@ class ConfigInfoAppCcTests(unittest.TestCase):
     def testGetExtSupport(self):
         """Get CC wide support flag"""
         ciac = ConfigInfoAppCc()
+        # Default value
         flag = ciac.get_extended_ccd_supp()
-        self.assertFalse(flag)
+        self.assertTrue(flag)
 
+        # Test when flag set to False in site-config
         with patch("wwpdb.utils.config.ConfigInfoApp.ConfigInfo", side_effect=MyConfigInfo):
             ciac = ConfigInfoAppCc()
             flag = ciac.get_extended_ccd_supp()
-            self.assertTrue(flag)
+            self.assertFalse(flag)
 
 
 if __name__ == "__main__":  # pragma: no cover
