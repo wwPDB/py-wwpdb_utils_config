@@ -230,6 +230,7 @@ class ConfigInfoData(object):
         "model": (["pdbx", "pdb", "pdbml", "cifeps"], "model"),
         "model-emd": (["pdbx", "xml"], "model-emd"),
         "model-aux": (["pdbx"], "model-aux"),
+        "model-temp": (["pdbx"], "model-temp"),  # Temporary model file
         "model-legacy-rcsb": (["pdbx", "pdb"], "model-legacy-rcsb"),
         "structure-factors": (["pdbx", "mtz", "txt"], "sf"),
         "structure-factors-legacy-rcsb": (["pdbx", "mtz"], "sf-legacy-rcsb"),
