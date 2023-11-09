@@ -129,6 +129,16 @@ class ConfigInfoAppDepUITests(unittest.TestCase):
                 slPath = cia.get_site_dataset_siteloc_file_path()
                 self.assertEqual(slPath, testOutPath)
 
+    def testMessageSubjects(self):
+        """Tests the dataset location options"""
+        ci = ConfigInfo()
+        subj = ci.get("MESSAGE_SUBJECTS")
+        self.assertTrue(len(subj) > 5)
+
+        appmess = ci.get("COMMUNICATION_APPROVAL_WITHOUT_CHANGES_MESSAGE_SUBJECTS")
+        self.assertTrue(len(appmess) == 1, appmess)
+        self.assertTrue(appmess == ["Approval without corrections"])
+
 
 if __name__ == "__main__":  # pragma: no cover
     unittest.main()

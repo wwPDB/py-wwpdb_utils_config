@@ -564,7 +564,7 @@ class ConfigInfoData(object):
     # subjects for messages - used in the depUI and communication
     _message_subjects = {
         "general": ["Other"],
-        "approval": ["Approval without corrections", "Approval with corrections"],
+        "approval": ["Approval without corrections", "Approval with corrections"],  # See below for critical ordering
         "meta corrections": ["Other corrections"],
         "unlock": ["Re-upload files"],
         "release": ["Release request"],
@@ -584,6 +584,8 @@ class ConfigInfoData(object):
     _communication_release_message_subjects.extend(_message_subjects.get("release"))
     _communication_release_message_subjects.extend(_message_subjects.get("release_with_citation"))
     _communication_release_message_subjects.extend(_message_subjects.get("citation"))
+
+    _communication_approval_no_correct = [_message_subjects.get("approval")[0]]
 
     # mmCIF dictionary
     _pdbx_dictionary_name_dict = {"ARCHIVE_CURRENT": "mmcif_pdbx_v50", "ARCHIVE_NEXT": "mmcif_pdbx_v50", "DEPOSIT": "mmcif_pdbx_v5_next"}
@@ -702,6 +704,7 @@ class ConfigInfoData(object):
         self.__D["PRODUCTION_SITES"] = ConfigInfoData._production_sites
         self.__D["MESSAGE_SUBJECTS"] = ConfigInfoData._message_subjects
         self.__D["COMMUNICATION_RELEASE_MESSAGE_SUBJECTS"] = ConfigInfoData._communication_release_message_subjects
+        self.__D["COMMUNICATION_APPROVAL_WITHOUT_CHANGES_MESSAGE_SUBJECTS"] = ConfigInfoData._communication_approval_no_correct
         self.__D["PDBX_DICTIONARY_NAME_DICT"] = ConfigInfoData._pdbx_dictionary_name_dict
         self.__D["SITE_REFDATA_CVS_PATH"] = ConfigInfoData._ref_data_proj_names.get("cvs_path")
         self.__D["SITE_REFDATA_PROJ_NAME_CC"] = ConfigInfoData._ref_data_proj_names.get("ccd")
