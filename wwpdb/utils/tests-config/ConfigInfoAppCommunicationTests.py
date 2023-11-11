@@ -56,6 +56,7 @@ class MyConfigInfo(ConfigInfo):
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
         self._noreply = "noreply@mail.wwpdb.org"
         self._server = "localhost"
+        self._err_email = "notification@mail.wwpdb.org"
         super(MyConfigInfo, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
     def get(self, keyWord, default=None):
@@ -63,6 +64,8 @@ class MyConfigInfo(ConfigInfo):
             val = self._noreply
         elif keyWord == "SITE_MAILSERVER_NAME":
             val = self._server
+        elif keyWord == "SITE_ERROR_EMAIL":
+            val = self._err_email
         else:  # pragma: no cover
             # sys.stderr.write("XXXXX Unknown site config fetching %s\n" % keyWord)
             val = super(MyConfigInfo, self).get(keyWord=keyWord, default=default)
@@ -80,6 +83,7 @@ class TestConfig(MyConfigInfo):
         super(TestConfig, self).__init__(siteId=siteId, verbose=verbose, log=log)
         self._noreply = "noreply@test.com"
         self._server = "relayhost.test.com"
+        self._err_email = "error@mail.wwpdb.org"
 
 
 class ConfigInfoAppCommunicationTests(unittest.TestCase):
@@ -98,6 +102,9 @@ class ConfigInfoAppCommunicationTests(unittest.TestCase):
             msa = ciac.get_mailserver_name()
             self.assertEqual(msa, "localhost")
 
+            err_email = ciac.get_system_notification_address()
+            self.assertEqual(err_email, "notification@mail.wwpdb.org")
+
     def testAlteredValues(self):
         """Test override values"""
         with patch("wwpdb.utils.config.ConfigInfoApp.ConfigInfo", side_effect=TestConfig) as _mock_method:  # noqa: F841
@@ -107,6 +114,9 @@ class ConfigInfoAppCommunicationTests(unittest.TestCase):
 
             msa = ciac.get_mailserver_name()
             self.assertEqual(msa, "relayhost.test.com")
+
+            err_email = ciac.get_system_notification_address()
+            self.assertEqual(err_email, "error@mail.wwpdb.org")
 
 
 if __name__ == "__main__":  # pragma: no cover

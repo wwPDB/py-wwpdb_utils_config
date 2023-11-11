@@ -573,3 +573,8 @@ class ConfigInfoAppCommunication(ConfigInfoAppBase):
         """Returns the sendmail local server or relay host"""
 
         return self._cI.get("SITE_MAILSERVER_NAME", "localhost")
+
+    def get_system_notification_address(self):
+        """Returns the email address to notify for errors"""
+
+        return self._cI.get("SITE_ERROR_EMAIL", "deposit-help@mail.wwpdb.org")
