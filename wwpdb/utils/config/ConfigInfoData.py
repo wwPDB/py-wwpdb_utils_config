@@ -249,6 +249,7 @@ class ConfigInfoData(object):
         "nmr-chemical-shifts-auth": (["nmr-star", "pdbx"], "cs-auth"),
         "nmr-chemical-shifts-upload-report": (["pdbx"], "nmr-chemical-shifts-upload-report"),
         "nmr-chemical-shifts-atom-name-report": (["pdbx"], "nmr-chemical-shifts-atom-name-report"),
+        "nmr-data-error-report": (["json"], "nmr-data-error-report"),
         "nmr-shift-error-report": (["json"], "nmr-shift-error-report"),
         "nmr-bmrb-entry": (["nmr-star", "pdbx"], "nmr-bmrb-entry"),
         "nmr-peaks": (["any"], "nmr-peaks"),
