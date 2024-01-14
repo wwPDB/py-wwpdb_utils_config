@@ -295,7 +295,7 @@ class ConfigInfoAppCommon(ConfigInfoAppCc):
         return self._getlegacy("SITE_CC_BABEL_DATADIR", os.path.join(self.get_site_openbabel_dir(), "share", "openbabel", "2.2.3"))
 
     def get_site_cc_acd_dir(self):
-        return self._getlegacy("site_cc_acd_dir", os.path.join(self.get_site_packages_path(), "acd"))
+        return self._getlegacy("SITE_CC_ACD_DIR", os.path.join(self.get_site_packages_path(), "acd"))
 
     def get_site_pisa_top_path(self):
         return self._getlegacy("SITE_PISA_TOP_PATH", os.path.join(self.get_site_packages_path(), "pisa"))
