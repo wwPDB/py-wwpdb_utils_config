@@ -241,7 +241,7 @@ class ConfigInfoData(object):
         "nmr-data-str-report": (["json"], "nmr-data-str-report"),
         "nmr-cs-mr-merge-report": (["json"], "nmr-cs-mr-merge-report"),
         "nmr-restraints": (
-            ["any", "nmr-star", "amber", "amber-aux", "biosym", "charmm", "cns", "cyana", "dynamo", "gromacs", "isd", "rosetta", "sybyl", "xplor", "xplor-nih", "pdb-mr", "mr"],
+            ["any", "nmr-star", "amber", "amber-aux", "aria", "biosym", "charmm", "cns", "cyana", "dynamo", "gromacs", "isd", "rosetta", "sybyl", "xplor", "xplor-nih", "pdb-mr", "mr"],
             "mr",
         ),
         "nmr-chemical-shifts": (["nmr-star", "pdbx", "any"], "cs"),
@@ -437,6 +437,7 @@ class ConfigInfoData(object):
         "bcif": "bcif",
         "amber": "amber",
         "amber-aux": "amber-aux",
+        "aria": "aria",
         "biosym": "biosym",
         "charmm": "charmm",
         "cns": "cns",
