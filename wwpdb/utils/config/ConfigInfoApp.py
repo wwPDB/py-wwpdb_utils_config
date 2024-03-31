@@ -91,7 +91,10 @@ class ConfigInfoAppBase(object):
         return self._top_sessions_path
 
     def get_site_packages_path(self):
-        return self._getlegacy("SITE_PACKAGES_PATH", os.path.join(self._get_site_local_apps(), "packages"))
+        lapps = self._get_site_local_apps()
+        if lapps is None:
+            lapps = ""
+        return self._getlegacy("SITE_PACKAGES_PATH", os.path.join(lapps, "packages"))
 
     def __warndeprecated(self, msg, stacklevel=4):
         """Logs warning message"""
@@ -107,6 +110,8 @@ class ConfigInfoAppCc(ConfigInfoAppBase):
 
     def get_idcode_dir(self):
         reference_path = self._getreferencedir()
+        if reference_path is None:
+            reference_path = ""
         return os.path.join(reference_path, "id_codes")
 
     def get_extended_ccd_supp(self):
@@ -118,11 +123,16 @@ class ConfigInfoAppCc(ConfigInfoAppBase):
 
     def get_site_refdata_top_cvs_sb_path(self):
         reference_path = self._getreferencedir()
+        if reference_path is None:
+            reference_path = ""
         ref_cc_dir = os.path.join(reference_path, "components")
         return self._getlegacy("SITE_REFDATA_TOP_CVS_SB_PATH", ref_cc_dir, stacklevel=5)
 
     def get_site_cc_dict_path(self, stacklevel=4):
-        site_cc_dict_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), "cc-dict")
+        rpath = self.get_site_refdata_top_cvs_sb_path()
+        if rpath is None:
+            rpath = ""
+        site_cc_dict_path = os.path.join(rpath, "cc-dict")
         return self._getlegacy("SITE_CC_DICT_PATH", site_cc_dict_path, stacklevel=stacklevel)
 
     def get_cc_dict(self):
@@ -153,7 +163,10 @@ class ConfigInfoAppCc(ConfigInfoAppBase):
         return os.path.join(self.get_site_cc_dict_path(stacklevel=5), "fp_patterns.txt")
 
     def get_site_prdcc_cvs_path(self):
-        site_prdcc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
+        rpath = self.get_site_refdata_top_cvs_sb_path()
+        if rpath is None:
+            rpath = ""
+        site_prdcc_cvs_path = os.path.join(rpath, self._getValue("SITE_REFDATA_PROJ_NAME_PRDCC"))
         return self._getlegacy("SITE_PRDCC_CVS_PATH", site_prdcc_cvs_path)
 
     def get_site_cc_cvs_path(self):
