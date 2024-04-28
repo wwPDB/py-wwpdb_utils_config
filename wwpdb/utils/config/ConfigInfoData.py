@@ -375,6 +375,8 @@ class ConfigInfoData(object):
         "deposition-info": (["pdbx", "json"], "deposition-info"),
         "deposition-store": (["tar"], "deposition-store"),
         #
+        "complexity-report": (["pdbx"], "complexity-report"),
+        #
         "bundle-session-archive": (["tar", "tgz"], "bundle-session-archive"),
         "bundle-session-deposit": (["tar", "tgz"], "bundle-session-deposit"),
         "bundle-session-upload": (["tar", "tgz"], "bundle-session-upload"),
