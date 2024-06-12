@@ -241,7 +241,26 @@ class ConfigInfoData(object):
         "nmr-data-str-report": (["json"], "nmr-data-str-report"),
         "nmr-cs-mr-merge-report": (["json"], "nmr-cs-mr-merge-report"),
         "nmr-restraints": (
-            ["any", "nmr-star", "amber", "amber-aux", "aria", "biosym", "charmm", "cns", "cyana", "dynamo", "gromacs", "isd", "rosetta", "sybyl", "xplor", "xplor-nih", "pdb-mr", "mr"],
+            [
+                "any",
+                "nmr-star",
+                "amber",
+                "amber-aux",
+                "aria",
+                "biosym",
+                "charmm",
+                "cns",
+                "cyana",
+                "dynamo",
+                "gromacs",
+                "isd",
+                "rosetta",
+                "sybyl",
+                "xplor",
+                "xplor-nih",
+                "pdb-mr",
+                "mr",
+            ],
             "mr",
         ),
         "nmr-chemical-shifts": (["nmr-star", "pdbx", "any"], "cs"),
@@ -284,8 +303,8 @@ class ConfigInfoData(object):
         "em-model-emd": (["pdbx"], "em-model-emd"),
         "em-structure-factors": (["pdbx", "mtz"], "em-sf"),
         "emd-xml-header-report": (["txt"], "emd-xml-header-report"),
-        "em-check-input": (["json"], "em-check-input"), # DAOTHER-9336 - added em-check-input content type
-        "em-map-report": (["json"], "em-map-report"), # TODO: rename to em-check-output
+        "em-check-input": (["json"], "em-check-input"),  # DAOTHER-9336 - added em-check-input content type
+        "em-map-report": (["json"], "em-map-report"),  # rename to em-check-output at some out
         # "em-check-output": (["json"], "em-check-output"), # NOTE: tried to rename to em-check-output, but it broke the workflow
         "validation-report-depositor": (["pdf"], "valdep"),
         "seqdb-match": (["pdbx", "pic"], "seqdb-match"),
