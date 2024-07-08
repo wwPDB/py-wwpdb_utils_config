@@ -565,6 +565,9 @@ class ConfigInfoAppValidation(ConfigInfoAppBase):
     def get_chimera(self):
         return self._getlegacy("CHIMERADIR", os.path.join(self.get_site_packages_path(), "chimera", "bin"))
 
+    def get_chimera_dir(self):
+        return self._getlegacy("CHIMERADIR", os.path.join(self.get_site_packages_path(), "chimera"))
+
     def get_density_fitness(self):
         return os.path.join(self.get_site_packages_path(), "density_fitness", "bin", "density-fitness")
 
