@@ -44,7 +44,7 @@ crw.createtree(["site-config", "depuiresources", "webapps"])
 # Use populate r/w site-config using top mock site-config
 SiteConfigSetup().setupEnvironment(rwMockTopPath, rwMockTopPath)
 
-from wwpdb.utils.config.ConfigInfoApp import ConfigInfoAppEm, ConfigInfoAppCommon, ConfigInfoAppCc  # noqa: E402
+from wwpdb.utils.config.ConfigInfoApp import ConfigInfoAppEm, ConfigInfoAppCommon, ConfigInfoAppCc, ConfigInfoAppValidation  # noqa: E402
 from wwpdb.utils.config.ConfigInfo import ConfigInfo  # noqa: E402
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -160,6 +160,18 @@ class ConfigInfoAppCcTests(unittest.TestCase):
             ciac = ConfigInfoAppCc()
             flag = ciac.get_extended_ccd_supp()
             self.assertFalse(flag)
+
+class ConfigInfoAppValidationTests(unittest.TestCase):
+    @staticmethod
+    def testInstantiate():
+        """Test if instantiation of Common class works"""
+        ConfigInfoAppValidation()
+
+    def testGetDensityFitness(self):
+        """Get CC id code directory"""
+        ciaval = ConfigInfoAppValidation()
+        ipath = ciaval.get_density_fitness()
+        self.assertIn("/ccp4/", ipath)
 
 
 if __name__ == "__main__":  # pragma: no cover
