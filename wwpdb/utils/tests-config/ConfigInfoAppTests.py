@@ -135,6 +135,12 @@ class ConfigInfoAppComonTests(unittest.TestCase):
         ipath = cia.get_unused_ccd_file()
         self.assertIsNotNone(ipath)
 
+    def testGetVrptDict(self):
+        """Test finding path to vrpt dictionary"""
+        cia = ConfigInfoAppCommon()
+        ipath = cia.get_mmcif_vrpt_dictionary_file_path()
+        self.assertIn("mmcif_pdbx_vrpt", ipath)
+
 
 class ConfigInfoAppCcTests(unittest.TestCase):
     @staticmethod
@@ -160,6 +166,7 @@ class ConfigInfoAppCcTests(unittest.TestCase):
             ciac = ConfigInfoAppCc()
             flag = ciac.get_extended_ccd_supp()
             self.assertFalse(flag)
+
 
 class ConfigInfoAppValidationTests(unittest.TestCase):
     @staticmethod
