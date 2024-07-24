@@ -613,7 +613,7 @@ class ConfigInfoData(object):
     _communication_approval_no_correct = [_message_subjects.get("approval")[0]]
 
     # mmCIF dictionary
-    _pdbx_dictionary_name_dict = {"ARCHIVE_CURRENT": "mmcif_pdbx_v50", "ARCHIVE_NEXT": "mmcif_pdbx_v50", "DEPOSIT": "mmcif_pdbx_v5_next"}
+    _pdbx_dictionary_name_dict = {"ARCHIVE_CURRENT": "mmcif_pdbx_v50", "ARCHIVE_NEXT": "mmcif_pdbx_v50", "DEPOSIT": "mmcif_pdbx_v5_next", "VRPT": "mmcif_pdbx_vrpt"}
 
     # CCD and PRD variables
     _ref_data_proj_names = {"cvs_path": "/cvs-ligands", "ccd": "ligand-dict-v3", "prd": "prd-v3", "prdcc": "prdcc-v3", "prd_family": "family-v3"}
