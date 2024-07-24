@@ -261,6 +261,12 @@ class ConfigInfoAppCommon(ConfigInfoAppCc):
         mmcif_dictionary_file_name = mmcif_dictionary_name + ".dic"
         return os.path.join(self.get_mmcif_dict_path(), mmcif_dictionary_file_name)
 
+    def get_mmcif_vrpt_dictionary_file_path(self):
+        base_name = self.get_pdbx_dictionary_name_dict().get("VRPT")
+        fname = base_name + ".dic"
+        rpath = os.path.join(self.get_mmcif_dict_path(), fname)
+        return rpath
+
     def get_site_local_apps_path(self):
         return self._get_site_local_apps()
 
