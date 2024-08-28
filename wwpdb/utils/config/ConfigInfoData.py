@@ -189,6 +189,7 @@
 # 27-Jun-2019 my   add content type 'nmr-unified-data-nef-report' and 'nmr-unified-data-str-report'
 # 21-Feb-2020 ep   change 'nmr-unified-data-{nef,str}' to 'nmr-data-{nef,str}'
 # 26-May-2023 zf   add 'xml-check-report' for xml checking report
+# 26-Aug-2024 zf   add 'pcm-missing-data' content type and 'csv' format
 ##
 """
 Container for general and site-specific configuration data.
@@ -408,6 +409,7 @@ class ConfigInfoData(object):
         #
         "manifest-session": (["json"], "manifest-session"),
         "manifest-session-bundle": (["json"], "manifest-session-bundle"),
+        "pcm-missing-data": (["csv"], "pcm-missing-data"),
         "any": (["any"], "any"),
     }
     """Base dictionary of supported file formats for each recognized content type.
@@ -480,6 +482,7 @@ class ConfigInfoData(object):
         "any": "dat",
         "mdl": "mdl",
         "tar": "tar",
+        "csv": "csv",
     }
     """Dictionary of recognized file formats and file name extensions"""
 
