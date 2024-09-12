@@ -195,7 +195,7 @@ class ConfigInfoShellExec(object):
                 # Python 3.2 deprecates SafeConfigParser()
                 config = ConfigParser.ConfigParser()
             else:
-                config = ConfigParser.SafeConfigParser()
+                config = ConfigParser.SafeConfigParser()  # pylint: disable=no-member
             # print configFilePath
             config.read(configFilePath)
             sectionL = config.sections()
