@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools >= 69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wwpdb.utils.config"
+authors = [
+    {name = "Ezra Peisach", email="ezra.peisach@rcsb.org"}
+]
+description = "wwPDB Python Configuration Parsing"
+readme = "README.md"
+requires-python = ">=3.6"
+license = {text = "Apache 2.0"}
+classifiers = [
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "Natural Language :: English",
+        "License :: OSI Approved :: Apache Software License",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",		
+]
+dynamic = ["version", "dependencies"]
+
+[project.urls]
+"Homepage" = "https://github.com/wwpdb/py-wwpdb_utils_config"
+
+[project.scripts]
+ConfigInfoFileExec = "wwpdb.utils.config.ConfigInfoFileExec:main"
+ConfigInfoDataSetExec = "wwpdb.utils.config.ConfigInfoDataSetExec:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["wwpdb.utils.tests-*"]
+namespaces = true
+
+[tool.setuptools.dynamic]
+version = {attr = "wwpdb.utils.config.__version__"}
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools]
+# We turn off the default to not include
+# MANIFEST.in files in wheel - but keep in sdist
+include-package-data = false
+
+# The following is experimental.  Use setup.cfg
+#[tool.distutils.bdist_wheel]
+#universal = true

@@ -19,10 +19,6 @@ git clone --recurse-submodules https://github.com/wwpdb/py-wwpdb_utils_config.gi
 Optionally, run test suite using the Tox test runner
 
 ```bash
-python setup.py test
-
-or simply run
-
 tox
 
 Installation is via the program [pip](https://pypi.python.org/pypi/pip).
