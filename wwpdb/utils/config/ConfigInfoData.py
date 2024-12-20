@@ -576,7 +576,7 @@ class ConfigInfoData(object):
         "WWPDB_DEPLOY_BETA_RU": "https://onedep-beta-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg",
         "WWPDB_DEPLOY_DEPGRP1_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/forward_msg",
         "WWPDB_DEPLOY_DEPGRP2_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/forward_msg",
-        "WWPDB_DEPLOY_TEST_RU": "https://da-test-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg",
+        "WWPDB_DEPLOY_TEST_RU": "https://da-test-ann.rcsb.rutgers.edu/service/messaging/forward_msg",
         "PDBE_PROD": "https://deposit-pdbe.wwpdb.org/service/messaging/forward_msg",
         "PDBE_LEGACY": "https://deposit-pdbe.wwpdb.org/service/messaging/forward_msg",
         "PDBE_DEV": "https://wwwdev.ebi.ac.uk/pdbe-da/service/messaging/forward_msg",
@@ -624,7 +624,7 @@ class ConfigInfoData(object):
     _projectContentWSiteServiceD = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://onedep-contentws-rcsb.wwpdb.org",
         "WWPDB_DEPLOY_LEGACY_RU": "https://onedep-contentws-rcsb.wwpdb.org",
-        "WWPDB_DEPLOY_TEST_RU": "https://da-test-1-dep.rcsb.rutgers.edu",
+        "WWPDB_DEPLOY_TEST_RU": "https://da-test-dep.rcsb.rutgers.edu",
         "PDBE_DEV": "https://dev.pdbe.org",
         "PDBE_STG": "https://dev.pdbe.org",
         "PDBE_PROD": "https://deposit-pdbe.wwpdb.org",
