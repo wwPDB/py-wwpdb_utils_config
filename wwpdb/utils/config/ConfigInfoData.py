@@ -543,7 +543,7 @@ class ConfigInfoData(object):
         "PDBE_VAL": "https://validate-pdbe.wwpdb.org/validservice",
         # 'PDBE_DEV': 'https://dev.pdbe.org/deposition',
         "WWPDB_DEPLOY_ALPHA_RU": "https://da-dep-alpha-0.rcsb.rutgers.edu/deposition",
-        "WWPDB_DEPLOY_TEST_RU": "https://da-test-dep-1.rcsb.rutgers.edu/deposition",
+        "WWPDB_DEPLOY_TEST_RU": "https://da-test-dep.rcsb.rutgers.edu/deposition",
         "WWPDB_DEPLOY_VALSRV2_RU": "https://validate-rcsb-east.wwpdb.org/validservice",
         "WWPDB_DEPLOY_VALSRV2_UCSD": "https://validate-rcsb-west.wwpdb.org/validservice",
     }
@@ -559,7 +559,7 @@ class ConfigInfoData(object):
         "WWPDB_DEPLOY_BETA_RU": "http://onedep-beta-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg",
         "WWPDB_DEPLOY_DEPGRP1_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/archive_msg",
         "WWPDB_DEPLOY_DEPGRP2_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/archive_msg",
-        "WWPDB_DEPLOY_TEST_RU": "https://da-test-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg",
+        "WWPDB_DEPLOY_TEST_RU": "https://da-test-ann.rcsb.rutgers.edu/service/messaging/archive_msg",
         "PDBE_PROD": "https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg",
         "PDBE_LEGACY": "https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg",
         "PDBE_DEV": "https://wwwdev.ebi.ac.uk/pdbe-da/service/messaging/archive_msg",
