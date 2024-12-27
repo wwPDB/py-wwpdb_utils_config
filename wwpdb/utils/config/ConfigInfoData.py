@@ -190,6 +190,7 @@
 # 21-Feb-2020 ep   change 'nmr-unified-data-{nef,str}' to 'nmr-data-{nef,str}'
 # 26-May-2023 zf   add 'xml-check-report' for xml checking report
 # 26-Aug-2024 zf   add 'pcm-missing-data' content type and 'csv' format
+# 19-Dec-2024 my   add 'nmrif' content type, NMRIF/NMR-STAR file containing NMR DepUI metadata (DAOTHER-8905)
 ##
 """
 Container for general and site-specific configuration data.
@@ -281,6 +282,7 @@ class ConfigInfoData(object):
         "nmr-cs-path-list": (["txt"], "nmr-cs-path-list"),
         "nmr-cs-auth-file-name-list": (["txt"], "nmr-cs-auth-file-name-list"),
         "nmr-mr-path-list": (["json"], "nmr-mr-path-list"),
+        "nmrif": (["pdbx"], "nmrif"),
         "component-image": (["jpg", "png", "gif", "svg", "tif", "tiff"], "ccimg"),
         "component-definition": (["pdbx", "sdf"], "ccdef"),
         "em-volume": (["map", "ccp4", "mrc2000", "bcif"], "em-volume"),
