@@ -9,6 +9,7 @@
 Test cases for generation of configuration and use
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "Ezra Peisach"
 __email__ = "peisach@rcsb.rutgers.edu"
@@ -21,7 +22,7 @@ import unittest
 from datetime import datetime
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
+TOPDIR = os.path.dirname(HERE)
 TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
 if not os.path.exists(TESTOUTPUT):  # pragma: no cover
     os.makedirs(TESTOUTPUT)
@@ -29,8 +30,8 @@ mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 rwMockTopPath = os.path.join(TESTOUTPUT)
 
 # Must create config file before importing ConfigInfo
-from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 from wwpdb.utils.testing.CreateRWTree import CreateRWTree  # noqa: E402
+from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 
 # Copy site-config and selected items
 crw = CreateRWTree(mockTopPath, TESTOUTPUT)
@@ -41,7 +42,7 @@ SiteConfigSetup().setupEnvironment(rwMockTopPath, rwMockTopPath)
 from wwpdb.utils.config.ConfigInfo import ConfigInfo, getSiteId  # noqa: E402
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
+TOPDIR = os.path.dirname(HERE)
 
 
 class ConfigInfoFileTests(unittest.TestCase):
@@ -71,10 +72,10 @@ class ConfigInfoFileTests(unittest.TestCase):
         self.assertIsNone(cI.get("PROJECT_RANDOM"))
 
     def _parseTime(self, timestr):
-        weeknum = datetime.today().strftime("%U")
-        this_year = datetime.today().strftime("%G")
-        mytime = "{}:{}:{}".format(this_year, weeknum, timestr)
-        time_t = datetime.strptime(mytime, "%Y:%U:%a:%H:%M:%S")
+        weeknum = datetime.today().strftime("%U")  # noqa: DTZ002
+        this_year = datetime.today().strftime("%G")  # noqa: DTZ002
+        mytime = f"{this_year}:{weeknum}:{timestr}"
+        time_t = datetime.strptime(mytime, "%Y:%U:%a:%H:%M:%S")  # noqa: DTZ007
         return time_t
 
     def testParseCutoff(self):

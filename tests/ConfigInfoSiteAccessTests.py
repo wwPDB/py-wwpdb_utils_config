@@ -11,21 +11,22 @@
 """
 Test cases for checking site access status.
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-import os
-import sys
-import unittest
-import time
-import platform
 import logging
+import os
+import platform
+import sys
+import time
+import unittest
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
+TOPDIR = os.path.dirname(HERE)
 TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
 if not os.path.exists(TESTOUTPUT):  # pragma: no cover
     os.makedirs(TESTOUTPUT)
@@ -33,8 +34,8 @@ mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 rwMockTopPath = os.path.join(TESTOUTPUT)
 
 # Must create config file before importing ConfigInfo
-from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 from wwpdb.utils.testing.CreateRWTree import CreateRWTree  # noqa: E402
+from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 
 # Copy site-config and selected items
 crw = CreateRWTree(mockTopPath, TESTOUTPUT)
@@ -60,12 +61,24 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
 
         self.__lfh = sys.stdout
         self.__verbose = False
-        #
-        self.__siteIdList = ["WWPDB_DEPLOY_PRODUCTION_RU", "WWPDB_DEPLOY_PRODUCTION_UCSD", "PDBE_PROD", "WWPDB_DEPLOY_PRODUCTION_PDBJ", "BMRB", "WWPDB_DEPLOY_TEST_RU", "SILLYSITE"]
+        self.__siteIdList = [
+            "WWPDB_DEPLOY_PRODUCTION_RU",
+            "WWPDB_DEPLOY_PRODUCTION_UCSD",
+            "PDBE_PROD",
+            "WWPDB_DEPLOY_PRODUCTION_PDBJ",
+            "BMRB",
+            "WWPDB_DEPLOY_TEST_RU",
+            "SILLYSITE",
+        ]
 
     def tearDown(self):
         endTime = time.time()
-        logger.info("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
+        logger.info(
+            "Completed %s at %s (%.4f seconds)",
+            self.id(),
+            time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            endTime - self.__startTime,
+        )
 
     def testSiteAvailable(self):
         """Test case -  return site access status."""
@@ -73,7 +86,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
             cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
             for siteId in self.__siteIdList:
                 status = cfsa.isSiteAvailable(siteId)
-                if siteId in ["WWPDB_DEPLOY_PRODUCTION_UCSD"]:
+                if siteId == "WWPDB_DEPLOY_PRODUCTION_UCSD":
                     should = False
                 else:
                     should = True

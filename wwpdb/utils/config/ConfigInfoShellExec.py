@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python  # noqa: EXE001
 ##
 # File:    ConfigInfoShellExec.py
 # Author:  jdw
@@ -22,8 +22,8 @@ __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.001"
 
-import sys
 import os
+import sys
 import traceback
 
 if sys.version_info[0] > 2:
@@ -33,13 +33,13 @@ else:
 import ast
 
 try:
-    import ConfigParser
+    import ConfigParser  # type: ignore[import-not-found]
 except ImportError:
-    import configparser as ConfigParser
+    import configparser as ConfigParser  # noqa: N812
 from optparse import OptionParser  # pylint: disable=deprecated-module
 
 
-class ConfigInfoShellExec(object):
+class ConfigInfoShellExec:
     """
     Execuction wrapper for shell configuration using project configuration files.
 
@@ -56,7 +56,9 @@ class ConfigInfoShellExec(object):
 
     """
 
-    def __init__(self, topConfigPath=None, hostName=None, siteLoc=None, siteId=None, cacheFlag=True, verbose=True, log=sys.stdout):  # pylint: disable=unused-argument
+    def __init__(
+        self, topConfigPath=None, hostName=None, siteLoc=None, siteId=None, cacheFlag=True, verbose=True, log=sys.stdout
+    ):  # noqa: ARG002 pylint: disable=unused-argument
         self.__lfh = log
         self.__debug = False
         self.__siteId = None
@@ -65,12 +67,17 @@ class ConfigInfoShellExec(object):
         self.__cD = {}
         #
         # Complete list of sections maintained as private namespaces
-        self.__privateSectionNameList = ["os_environment", "httpd_services", "install_environment", "database_services", "validation_services"]
+        self.__privateSectionNameList = [
+            "os_environment",
+            "httpd_services",
+            "install_environment",
+            "database_services",
+            "validation_services",
+        ]
         #
         # additional configuration sections added to the common namespace
         self.__extraCommonSectionNameList = ["database_services", "validation_services"]
 
-        #
         if topConfigPath is None:
             topConfigPath = os.getenv("TOP_WWPDB_SITE_CONFIG_DIR", default=None)
         ok = self.__testConfigPath(topConfigPath)
@@ -87,7 +94,6 @@ class ConfigInfoShellExec(object):
         """ """
         siteLoc = None
         siteId = None
-        #
         if topConfigPath is None:
             self.__lfh.write("FAILING - missing configuration file path\n")
         elif inpSiteLoc is not None and inpSiteId is not None:
@@ -107,7 +113,6 @@ class ConfigInfoShellExec(object):
                     siteId = tL[1]
         else:
             self.__lfh.write("FAILING configuration could not be resolved\n")
-        #
         if self.__debug:
             self.__lfh.write("_setup returns siteLoc %r siteId %r\n" % (siteLoc, siteId))
         return siteLoc, siteId
@@ -122,7 +127,6 @@ class ConfigInfoShellExec(object):
         """Load the current python cache configuration data for the input location/site
         and return a dictionary of this data.
         """
-        #
         tD = {}
         try:
             fp = self.__getSitePythonCachePath(topConfigPath, siteLoc, siteId)
@@ -132,19 +136,18 @@ class ConfigInfoShellExec(object):
                 spec = importlib.util.spec_from_file_location("ConfigInfoFileCache", fp)
                 oD = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(oD)
-                cD = oD.ConfigInfoFileCache._configD  # pylint: disable=protected-access
+                cD = oD.ConfigInfoFileCache._configD  # noqa: SLF001 # pylint: disable=protected-access
             else:
                 oD = imp.load_source("ConfigInfoFileCache", fp)
-                cD = oD.ConfigInfoFileCache._configD  # pylint: disable=protected-access
+                cD = oD.ConfigInfoFileCache._configD  # noqa: SLF001 # pylint: disable=protected-access
             tD = cD[siteId]
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             self.__lfh.write("failing %s\n" % str(e))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
         return tD
 
     def __testConfigPath(self, topConfigPath, accessType="read"):
-        #
         ok = True
         try:
             if topConfigPath is None:
@@ -156,26 +159,30 @@ class ConfigInfoShellExec(object):
             elif accessType == "read" and not os.access(topConfigPath, os.R_OK):
                 ok = False
                 self.__lfh.write("WARNING - %s lacks read access\n" % topConfigPath)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             self.__lfh.write("__testConfigPath failing %r\n" % str(e))
             traceback.print_exc(file=self.__lfh)
             ok = False
 
         return ok
 
-    def __getCommonConfigPath(self, topConfigPath, sectionName="common", context="common"):
+    @staticmethod
+    def __getCommonConfigPath(topConfigPath, sectionName="common", context="common"):
         cfPath = os.path.join(topConfigPath, "common", "common.cfg")
         return cfPath, sectionName, context
 
-    def __getSiteCommonConfigPath(self, topConfigPath, siteLoc, sectionName="site_common", context="common"):
+    @staticmethod
+    def __getSiteCommonConfigPath(topConfigPath, siteLoc, sectionName="site_common", context="common"):
         cfPath = os.path.join(topConfigPath, siteLoc.lower(), "site_common", "common.cfg")
         return cfPath, sectionName, context
 
-    def __getSiteConfigPath(self, topConfigPath, siteLoc, siteId, sectionName, context="common"):
+    @staticmethod
+    def __getSiteConfigPath(topConfigPath, siteLoc, siteId, sectionName, context="common"):
         cfPath = os.path.join(topConfigPath, siteLoc.lower(), siteId.lower(), "site.cfg")
         return cfPath, sectionName, context
 
-    def __getSitePythonCachePath(self, topConfigPath, siteLoc, siteId):
+    @staticmethod
+    def __getSitePythonCachePath(topConfigPath, siteLoc, siteId):
         cfPath = os.path.join(topConfigPath, siteLoc.lower(), siteId.lower(), "ConfigInfoFileCache.py")
         return cfPath
 
@@ -204,17 +211,19 @@ class ConfigInfoShellExec(object):
                 kvTupL = config.items(section)
                 sKyU = section.upper()
                 d = {}
-                for (k, v) in kvTupL:
+                for k, v in kvTupL:
                     d[k.upper()] = v
                 retD[sKyU] = d
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             self.__lfh.write("FAILED reading %s - %s\n" % (configFilePath, str(e)))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
 
         return retD
 
-    def __getConfigPathSectionList(self, topConfigPath, siteLoc, siteId, extraCommonSectionNameList, privateSectionNameList):
+    def __getConfigPathSectionList(
+        self, topConfigPath, siteLoc, siteId, extraCommonSectionNameList, privateSectionNameList
+    ):
         """Returns the search path of sections and configuration file paths for the input location and site.
         The site specific configuration file path is always included.   The site-common or project common
         configuration files are included only if these exist.
@@ -225,12 +234,16 @@ class ConfigInfoShellExec(object):
         """
         cfPathSectionList = []
         if self.__topConfigPath is not None and siteId is not None and siteLoc is not None:
-            (p, s, c) = self.__getSiteConfigPath(topConfigPath=topConfigPath, siteLoc=siteLoc, siteId=siteId, sectionName=siteId.lower())
+            (p, s, c) = self.__getSiteConfigPath(
+                topConfigPath=topConfigPath, siteLoc=siteLoc, siteId=siteId, sectionName=siteId.lower()
+            )
             if p is not None and os.access(p, os.R_OK):
                 cfPathSectionList.append((p, s, c))
                 for cSec in extraCommonSectionNameList:
                     cfPathSectionList.append((p, cSec, "common"))
-            (p, s, c) = self.__getSiteCommonConfigPath(topConfigPath=topConfigPath, siteLoc=siteLoc, sectionName="site_common")
+            (p, s, c) = self.__getSiteCommonConfigPath(
+                topConfigPath=topConfigPath, siteLoc=siteLoc, sectionName="site_common"
+            )
             if p is not None and os.access(p, os.R_OK):
                 cfPathSectionList.append((p, s, c))
                 for cSec in extraCommonSectionNameList:
@@ -244,7 +257,13 @@ class ConfigInfoShellExec(object):
             # Additional context specific (private) configuration sections - stored in the site specific path
             #
             for sectionName in privateSectionNameList:
-                (p, s, c) = self.__getSiteConfigPath(topConfigPath=topConfigPath, siteLoc=siteLoc, siteId=siteId, sectionName=sectionName, context="private")
+                (p, s, c) = self.__getSiteConfigPath(
+                    topConfigPath=topConfigPath,
+                    siteLoc=siteLoc,
+                    siteId=siteId,
+                    sectionName=sectionName,
+                    context="private",
+                )
                 if p is not None and os.access(p, os.R_OK):
                     cfPathSectionList.append((p, s, c))
 
@@ -256,18 +275,21 @@ class ConfigInfoShellExec(object):
         try:
             privateSectionNameList = self.__getPrivateSectionNames()
             extraCommonSectionNameList = self.__getExtraCommonSectionNames()
-            pathSectList = self.__getConfigPathSectionList(topConfigPath, siteLoc, siteId, extraCommonSectionNameList, privateSectionNameList)
+            pathSectList = self.__getConfigPathSectionList(
+                topConfigPath, siteLoc, siteId, extraCommonSectionNameList, privateSectionNameList
+            )
             if self.__debug:
-                self.__lfh.write("__getSiteConfigRaw location %r site %r path list %r \n" % (siteLoc, siteId, pathSectList))
+                self.__lfh.write(
+                    "__getSiteConfigRaw location %r site %r path list %r \n" % (siteLoc, siteId, pathSectList)
+                )
             cD = self.__readConfigFileList(configPathSectionList=pathSectList)
             if deserialize:
-                #
                 cD = self.__deserializeConfig(cD, optionD=cD)
                 for sectionName in privateSectionNameList:
                     sU = sectionName.upper()
                     if sU in cD:
                         cD[sU] = self.__deserializeConfig(cD[sU], optionD=cD[sU])
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             self.__lfh.write("__getSiteConfigRaw failing for location %r site %r - %s\n" % (siteLoc, siteId, str(e)))
             traceback.print_exc(file=self.__lfh)
         return cD
@@ -299,26 +321,28 @@ class ConfigInfoShellExec(object):
                         # for k, v in kvTupL:
                         #    defaultD[k] = v
                         if self.__debug:
-                            self.__lfh.write("__readConfigFileList fetching section %s length %d\n" % (sectionName, len(kvTupL)))
-                        if context in ["common"]:
-                            for (k, v) in kvTupL:
+                            self.__lfh.write(
+                                "__readConfigFileList fetching section %s length %d\n" % (sectionName, len(kvTupL))
+                            )
+                        if context == "common":
+                            for k, v in kvTupL:
                                 # Respect existing values in the order of config files -
                                 if k not in saveD:
                                     try:
                                         saveD[k] = v % defaultD
-                                    except BaseException as e:
+                                    except BaseException as e:  # noqa: BLE001
                                         self.__lfh.write("substitution failed for %r %r %r\n" % (k, v, str(e)))
                                         continue
                                     # update substitution defaults ...
                                     defaultD[k] = saveD[k]
-                        elif context in ["private"]:
+                        elif context == "private":
                             pD = {}
                             pDU = {}
-                            for (k, v) in kvTupL:
+                            for k, v in kvTupL:
                                 if k not in pD:
                                     try:
                                         pD[k] = v % defaultD
-                                    except BaseException as e:
+                                    except BaseException as e:  # noqa: BLE001
                                         self.__lfh.write("substitution failed for %r %r %r\n" % (k, v, str(e)))
                                         continue
                                     # update substitution defaults ...
@@ -331,7 +355,7 @@ class ConfigInfoShellExec(object):
             # Copy the accumulated saved items for return with upper-cased keys --
             for k, v in saveD.items():
                 retD[k.upper()] = v
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             self.__lfh.write("failed reading configuration file list %r %r\n" % (configPathSectionList, str(e)))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -373,22 +397,32 @@ class ConfigInfoShellExec(object):
         iLstD = {}
         try:
             if optionD is not None:
-                optD = dict((k.lower(), v) for k, v in optionD.items())
+                optD = dict((k.lower(), v) for k, v in optionD.items())  # noqa: C402
                 if "config_as_object" in optD:
-                    objD = dict.fromkeys([t.strip().upper() for t in optD["config_as_object"].split(",") if len(t.strip()) > 0])
+                    objD = dict.fromkeys(
+                        [t.strip().upper() for t in optD["config_as_object"].split(",") if len(t.strip()) > 0]
+                    )
                 if "config_csv_as_list" in optD:
-                    lstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_list"].split(",") if len(t.strip()) > 0])
+                    lstD = dict.fromkeys(
+                        [t.strip().upper() for t in optD["config_csv_as_list"].split(",") if len(t.strip()) > 0]
+                    )
                 if "config_as_int" in optD:
-                    intD = dict.fromkeys([t.strip().upper() for t in optD["config_as_int"].split(",") if len(t.strip()) > 0])
+                    intD = dict.fromkeys(
+                        [t.strip().upper() for t in optD["config_as_int"].split(",") if len(t.strip()) > 0]
+                    )
                 if "config_as_float" in optD:
-                    fltD = dict.fromkeys([t.strip().upper() for t in optD["config_as_float"].split(",") if len(t.strip()) > 0])
+                    fltD = dict.fromkeys(
+                        [t.strip().upper() for t in optD["config_as_float"].split(",") if len(t.strip()) > 0]
+                    )
                 if "config_csv_as_int_list" in optD:
-                    iLstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_int_list"].split(",") if len(t.strip()) > 0])
+                    iLstD = dict.fromkeys(
+                        [t.strip().upper() for t in optD["config_csv_as_int_list"].split(",") if len(t.strip()) > 0]
+                    )
             #
             # if self.__debug:
             #   print "Filter as object", objD
             #
-            for (k, v) in configD.items():
+            for k, v in configD.items():
                 retD[k] = v
                 if v == "None":
                     retD[k] = None
@@ -404,15 +438,14 @@ class ConfigInfoShellExec(object):
                         retD[k] = [t.strip() for t in v.split(",")]
                     if k in iLstD:
                         retD[k] = [int(t.strip()) for t in v.split(",")]
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     self.__lfh.write("failed csv list filter %r %r %r\n" % (k, v, str(e)))
-                #
                 try:
                     if k in objD:
                         retD[k] = ast.literal_eval(v)
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     self.__lfh.write("failed eval filter %r %r %r\n" % (k, v, str(e)))
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             self.__lfh.write("failed configuration filter %r\n" % str(e))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
@@ -428,31 +461,41 @@ class ConfigInfoShellExec(object):
             self.__lfh.write("read %d options for location %r site %r\n" % (len(cD), siteLoc, siteId))
             for k in sorted(cD.keys()):
                 v = cD[k]
-                if type(v) in [dict]:
+                if type(v) == dict:  # noqa: E721
                     self.__lfh.write(" +++ %-45s  %r\n" % (k, "private context"))
                     for k1 in sorted(v.keys()):
                         self.__lfh.write(" ---  --- +++ %-45s  %r\n" % (k1, v[k1]))
                 else:
                     self.__lfh.write(" +++ %-45s  %r\n" % (k, v))
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             self.__lfh.write("failing for location %r site %r %r\n" % (siteLoc, siteId, str(e)))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
 
     def shellConfig(self, shellType="bash"):
-        return self.__exportConfig(self.__siteLoc, self.__siteId, self.__cD, expKey="OS_ENVIRONMENT", shellType=shellType)
+        return self.__exportConfig(
+            self.__siteLoc, self.__siteId, self.__cD, expKey="OS_ENVIRONMENT", shellType=shellType
+        )
 
     def httpdConfig(self, shellType="bash"):
-        return self.__exportConfig(self.__siteLoc, self.__siteId, self.__cD, expKey="HTTPD_SERVICES", shellType=shellType)
+        return self.__exportConfig(
+            self.__siteLoc, self.__siteId, self.__cD, expKey="HTTPD_SERVICES", shellType=shellType
+        )
 
     def installConfig(self, shellType="bash"):
-        return self.__exportConfig(self.__siteLoc, self.__siteId, self.__cD, expKey="INSTALL_ENVIRONMENT", shellType=shellType)
+        return self.__exportConfig(
+            self.__siteLoc, self.__siteId, self.__cD, expKey="INSTALL_ENVIRONMENT", shellType=shellType
+        )
 
     def validationConfig(self, shellType="bash"):
-        return self.__exportConfig(self.__siteLoc, self.__siteId, self.__cD, expKey="VALIDATION_SERVICES", shellType=shellType)
+        return self.__exportConfig(
+            self.__siteLoc, self.__siteId, self.__cD, expKey="VALIDATION_SERVICES", shellType=shellType
+        )
 
     def databaseConfig(self, shellType="bash"):
-        return self.__exportConfig(self.__siteLoc, self.__siteId, self.__cD, expKey="DATABASE_SERVICES", shellType=shellType)
+        return self.__exportConfig(
+            self.__siteLoc, self.__siteId, self.__cD, expKey="DATABASE_SERVICES", shellType=shellType
+        )
 
     def __exportConfig(self, siteLoc, siteId, cD, expKey="OS_ENVIRONMENT", shellType="bash"):
         """Print the configuration options for the input location and site."""
@@ -465,7 +508,7 @@ class ConfigInfoShellExec(object):
                         self.__lfh.write('export %s="%s"\n' % (k, v))
                     elif shellType in ["csh", "tcsh"]:
                         self.__lfh.write('setenv %s "%s"\n' % (k, v))
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             if self.__debug:
                 self.__lfh.write("__exportConfig failing for location %r site %r - %r\n" % (siteLoc, siteId, str(e)))
                 traceback.print_exc(file=self.__lfh)
@@ -491,36 +534,72 @@ def main():  # pragma: no cover
 
     """
     parser = OptionParser(usage)
-    parser.add_option("--print", dest="printConfig", action="store_true", default=False, help="Print the configuration options for site (--siteid) at location (--locid)")
+    parser.add_option(
+        "--print",
+        dest="printConfig",
+        action="store_true",
+        default=False,
+        help="Print the configuration options for site (--siteid) at location (--locid)",
+    )
     parser.add_option("--hostname", dest="hostName", default=None, help="Fully qualified host name")
     parser.add_option("--siteid", dest="siteId", default=None, help="wwPDB site ID (e.g. WWPDB_DEPLOY_TEST_RU)")
-    parser.add_option("--locid", dest="siteLoc", default=None, help="wwPDB location ID (e.g. pdbe, pdbj, rcsb-east, ... )")
-    parser.add_option("--configpath", dest="topConfigPath", default=None, help="Configuration path (e.g. /wwpdb_da/site-config)")
-
-    parser.add_option("--shell", dest="shellConfig", action="store_true", default=False, help="Export shell environment for (--siteid) at location (--locid) or host")
-    parser.add_option("--shelltype", dest="shellType", default="bash", help="Export shell type ('bash', 'csh')")
-    parser.add_option("--httpd", dest="httpdConfig", action="store_true", default=False, help="Export httpd environment for (--siteid) at location (--locid) or host")
-    parser.add_option("--install", dest="installConfig", action="store_true", default=False, help="Export installation environment for (--siteid) at location (--locid) or host")
     parser.add_option(
-        "--validation", dest="validationConfig", action="store_true", default=False, help="Export validation service environment for (--siteid) at location (--locid) or host"
+        "--locid", dest="siteLoc", default=None, help="wwPDB location ID (e.g. pdbe, pdbj, rcsb-east, ... )"
     )
     parser.add_option(
-        "--database", dest="databaseConfig", action="store_true", default=False, help="Export database services environment for (--siteid) at location (--locid) or host"
+        "--configpath", dest="topConfigPath", default=None, help="Configuration path (e.g. /wwpdb_da/site-config)"
+    )
+
+    parser.add_option(
+        "--shell",
+        dest="shellConfig",
+        action="store_true",
+        default=False,
+        help="Export shell environment for (--siteid) at location (--locid) or host",
+    )
+    parser.add_option("--shelltype", dest="shellType", default="bash", help="Export shell type ('bash', 'csh')")
+    parser.add_option(
+        "--httpd",
+        dest="httpdConfig",
+        action="store_true",
+        default=False,
+        help="Export httpd environment for (--siteid) at location (--locid) or host",
+    )
+    parser.add_option(
+        "--install",
+        dest="installConfig",
+        action="store_true",
+        default=False,
+        help="Export installation environment for (--siteid) at location (--locid) or host",
+    )
+    parser.add_option(
+        "--validation",
+        dest="validationConfig",
+        action="store_true",
+        default=False,
+        help="Export validation service environment for (--siteid) at location (--locid) or host",
+    )
+    parser.add_option(
+        "--database",
+        dest="databaseConfig",
+        action="store_true",
+        default=False,
+        help="Export database services environment for (--siteid) at location (--locid) or host",
     )
     parser.add_option("-v", "--verbose", default=True, action="store_true", dest="verbose")
     parser.add_option("--nocache", default=False, action="store_true", dest="nocacheFlag")
 
-    (options, args) = parser.parse_args()  # pylint: disable=unused-variable
+    (options, _args) = parser.parse_args()  # pylint: disable=unused-variable
 
     if options.topConfigPath is None:
-        print("Configuration path must be specified (--configpath)")
+        print("Configuration path must be specified (--configpath)")  # noqa: T201
         parser.print_help()
-        exit(-1)
+        sys.exit(-1)
 
     if options.hostName is None and (options.siteLoc is None or options.siteId is None):
-        print("Either hostname or the combination of siteLoc and siteId must be specified")
+        print("Either hostname or the combination of siteLoc and siteId must be specified")  # noqa: T201
         parser.print_help()
-        exit(-1)
+        sys.exit(-1)
 
         # parser.error(usage)
 

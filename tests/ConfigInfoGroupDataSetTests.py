@@ -11,21 +11,22 @@
 """
 Test cases for mapping group data sets ids to server sites ids.
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-import sys
-import unittest
-import time
+import logging
 import os
 import platform
-import logging
+import sys
+import time
+import unittest
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
+TOPDIR = os.path.dirname(HERE)
 TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
 if not os.path.exists(TESTOUTPUT):  # pragma: no cover
     os.makedirs(TESTOUTPUT)
@@ -33,8 +34,8 @@ mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 rwMockTopPath = os.path.join(TESTOUTPUT)
 
 # Must create config file before importing ConfigInfo
-from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 from wwpdb.utils.testing.CreateRWTree import CreateRWTree  # noqa: E402
+from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 
 # Copy site-config and selected items
 crw = CreateRWTree(mockTopPath, TESTOUTPUT)
@@ -42,9 +43,8 @@ crw.createtree(["site-config", "depuiresources"])
 # Use populate r/w site-config using top mock site-config
 SiteConfigSetup().setupEnvironment(rwMockTopPath, rwMockTopPath)
 
-from wwpdb.utils.config.ConfigInfoGroupDataSet import ConfigInfoGroupDataSet  # noqa: E402
 from wwpdb.utils.config.ConfigInfo import ConfigInfo  # noqa: E402
-
+from wwpdb.utils.config.ConfigInfoGroupDataSet import ConfigInfoGroupDataSet  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]-%(module)s.%(funcName)s: %(message)s")
 logger = logging.getLogger()
@@ -62,13 +62,32 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
 
         self.__lfh = sys.stdout
         self.__verbose = True
-        #
-        self.__groupIdList = ["G_1", "G_1002001", "G_1002003", "G_1002005", "G_1002007", "G_1002009", "G_1002011", "G_1002013"]
-        self.__siteIdList = ["WWPDB_DEPLOY_DEPGRP1_RU", "WWPDB_DEPLOY_DEPGRP1_RU", "WWPDB_DEPLOY_TEST_RU", "UNASSIGNED", "SILLYSITE"]
+        self.__groupIdList = [
+            "G_1",
+            "G_1002001",
+            "G_1002003",
+            "G_1002005",
+            "G_1002007",
+            "G_1002009",
+            "G_1002011",
+            "G_1002013",
+        ]
+        self.__siteIdList = [
+            "WWPDB_DEPLOY_DEPGRP1_RU",
+            "WWPDB_DEPLOY_DEPGRP1_RU",
+            "WWPDB_DEPLOY_TEST_RU",
+            "UNASSIGNED",
+            "SILLYSITE",
+        ]
 
     def tearDown(self):
         endTime = time.time()
-        logger.info("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
+        logger.info(
+            "Completed %s at %s (%.4f seconds)",
+            self.id(),
+            time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            endTime - self.__startTime,
+        )
 
     def testGetSiteLocation(self):
         """Test case -  return site location"""

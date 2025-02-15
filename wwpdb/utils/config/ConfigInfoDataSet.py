@@ -15,16 +15,18 @@ Provides accessors for the correspondence between deposition data identifiers an
 deposition and annotation sites (e.g. wwpdb_site_id).
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-import sys
-import json
 import datetime
+import json
 import logging
+import sys
+
 from oslo_concurrency import lockutils
 
 from wwpdb.utils.config.ConfigInfo import ConfigInfo, getSiteId
@@ -33,14 +35,14 @@ from wwpdb.utils.config.ConfigInfoApp import ConfigInfoAppDepUI
 logger = logging.getLogger(__name__)
 
 
-class ConfigInfoDataSet(object):
+class ConfigInfoDataSet:
     """
     Provides accessors for the correspondence between deposition data identifiers and
     deposition and annotation sites (e.g. wwpdb_site_id).
 
     """
 
-    def __init__(self, verbose=False, log=sys.stderr):  # pylint: disable=unused-argument
+    def __init__(self, verbose=False, log=sys.stderr):  # noqa: ARG002 pylint: disable=unused-argument
         self.__verbose = verbose
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
@@ -50,8 +52,7 @@ class ConfigInfoDataSet(object):
         self.__depTestIdAssignments = self.__cI.get("SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY")
         self.__siteBackupD = self.__cI.get("SITE_BACKUP_DICT", default={})
         self.__dsLocD = None
-        #
-        self.__lockDirPath = self.__cI.get("SITE_SERVICE_REGISTRATION_LOCKDIR_PATH", "/tmp")
+        self.__lockDirPath = self.__cI.get("SITE_SERVICE_REGISTRATION_LOCKDIR_PATH", "/tmp")  # noqa: S108
         lockutils.set_defaults(self.__lockDirPath)
 
     def getSiteId(self, depSetId):
@@ -61,7 +62,6 @@ class ConfigInfoDataSet(object):
         """
         siteId = self.__getSiteId(depSetId)
         mySiteId = self.__cI.get("SITE_PREFIX", default=None)
-        #
         if mySiteId and siteId:
             # is mySiteId a backup for siteId?
             if siteId in self.__siteBackupD and mySiteId in self.__siteBackupD[siteId]:
@@ -128,7 +128,7 @@ class ConfigInfoDataSet(object):
         """
         fp = self.__cIDepUI.get_site_dataset_siteloc_file_path()
         try:
-            with open(fp, "r") as infile:
+            with open(fp) as infile:
                 return json.load(infile)
         except Exception as e:
             logger.error("failed reading json resource file %s - %s", fp, str(e))
@@ -146,11 +146,10 @@ class ConfigInfoDataSet(object):
 
         try:
             if backup:
-                bp = fp + datetime.datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
+                bp = fp + datetime.datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")  # noqa: DTZ005
                 d = self.__readLocationDictionary()
                 with open(bp, "w") as outfile:
                     json.dump(d, outfile, indent=4)
-            #
             with open(fp, "w") as outfile:
                 json.dump(dsLocD, outfile, indent=4)
             return True
@@ -227,7 +226,7 @@ class ConfigInfoDataSet(object):
                 idVal = int(str(depSetId)[2:])
             else:
                 idVal = int(str(depSetId))
-            for ky in self.__depIdAssignments.keys():
+            for ky in self.__depIdAssignments:
                 idMin, idMax = self.__depIdAssignments[ky]
                 if (idVal >= idMin) and (idVal <= idMax):
                     return ky

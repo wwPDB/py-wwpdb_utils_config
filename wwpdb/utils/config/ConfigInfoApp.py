@@ -9,6 +9,7 @@
 """
 Provides common access patterns for application configuration locations to minimize verbose site-config files
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
@@ -25,7 +26,7 @@ from wwpdb.utils.config.ConfigInfo import ConfigInfo
 logger = logging.getLogger(__name__)
 
 
-class ConfigInfoAppBase(object):
+class ConfigInfoAppBase:
     """Base class to provide common application lookups"""
 
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
@@ -96,7 +97,7 @@ class ConfigInfoAppBase(object):
             lapps = ""
         return self._getlegacy("SITE_PACKAGES_PATH", os.path.join(lapps, "packages"))
 
-    def __warndeprecated(self, msg, stacklevel=4):
+    def __warndeprecated(self, msg, stacklevel=4):  # noqa: PLR6301
         """Logs warning message"""
         # stacklevel is to get up high enough to get caller
         warnings.warn(msg, DeprecationWarning, stacklevel=stacklevel)
@@ -170,15 +171,21 @@ class ConfigInfoAppCc(ConfigInfoAppBase):
         return self._getlegacy("SITE_PRDCC_CVS_PATH", site_prdcc_cvs_path)
 
     def get_site_cc_cvs_path(self):
-        site_cc_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_CC"))
+        site_cc_cvs_path = os.path.join(
+            self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_CC")
+        )
         return self._getlegacy("SITE_CC_CVS_PATH", site_cc_cvs_path)
 
     def get_site_family_cvs_path(self):
-        site_family_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD_FAMILY"))
+        site_family_cvs_path = os.path.join(
+            self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD_FAMILY")
+        )
         return self._getlegacy("SITE_FAMILY_CVS_PATH", site_family_cvs_path)
 
     def get_site_prd_cvs_path(self):
-        site_prd_cvs_path = os.path.join(self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD"))
+        site_prd_cvs_path = os.path.join(
+            self.get_site_refdata_top_cvs_sb_path(), self._getValue("SITE_REFDATA_PROJ_NAME_PRD")
+        )
         return self._getlegacy("SITE_PRD_CVS_PATH", site_prd_cvs_path)
 
     def get_site_prd_dict_path(self):
@@ -278,7 +285,9 @@ class ConfigInfoAppCommon(ConfigInfoAppCc):
         return self._get_top_sessions_path()
 
     def get_site_web_apps_sessions_path(self):
-        return self._getlegacy("SITE_WEB_APPS_SESSIONS_PATH", os.path.join(self.get_site_web_apps_top_sessions_path(), "sessions"))
+        return self._getlegacy(
+            "SITE_WEB_APPS_SESSIONS_PATH", os.path.join(self.get_site_web_apps_top_sessions_path(), "sessions")
+        )
 
     def get_wf_logs_path(self):
         return os.path.join(self.get_site_web_apps_top_sessions_path(), "wf-logs")
@@ -311,7 +320,9 @@ class ConfigInfoAppCommon(ConfigInfoAppCc):
         return self._getlegacy("SITE_CC_BABEL_DIR", os.path.join(self.get_site_openbabel_dir(), "lib"))
 
     def get_site_cc_babel_datadir(self):
-        return self._getlegacy("SITE_CC_BABEL_DATADIR", os.path.join(self.get_site_openbabel_dir(), "share", "openbabel", "2.2.3"))
+        return self._getlegacy(
+            "SITE_CC_BABEL_DATADIR", os.path.join(self.get_site_openbabel_dir(), "share", "openbabel", "2.2.3")
+        )
 
     def get_site_cc_acd_dir(self):
         return self._getlegacy("SITE_CC_ACD_DIR", os.path.join(self.get_site_packages_path(), "acd"))
@@ -333,7 +344,10 @@ class ConfigInfoAppCommon(ConfigInfoAppCc):
         return self._getlegacy("SITE_RCSB_APPS_PATH", os.path.join(self.get_site_annot_tools_path(), "bin", "maxit"))
 
     def get_site_space_group_file_path(self):
-        return self._getlegacy("SITE_SPACE_GROUP_FILE_PATH", os.path.join(self.get_site_annot_tools_path(), "data", "ascii", "space_group.cif"))
+        return self._getlegacy(
+            "SITE_SPACE_GROUP_FILE_PATH",
+            os.path.join(self.get_site_annot_tools_path(), "data", "ascii", "space_group.cif"),
+        )
 
     def get_sg_center_file_path(self):
         return os.path.join(self.get_site_annot_tools_path(), "data", "ascii", "sg_center.cif")
@@ -406,13 +420,22 @@ class ConfigInfoAppCommon(ConfigInfoAppCc):
         return os.path.join(self._getresourcedir(), "da_internal_all")
 
     def get_site_da_internal_schema_path(self):
-        return self._getlegacy("SITE_DA_INTERNAL_SCHEMA_PATH", os.path.join(self.get_resources_da_internal_path(), "status_rcsb_schema_da.cif"))
+        return self._getlegacy(
+            "SITE_DA_INTERNAL_SCHEMA_PATH",
+            os.path.join(self.get_resources_da_internal_path(), "status_rcsb_schema_da.cif"),
+        )
 
     def get_site_da_internal_status_schema_path(self):
-        return self._getlegacy("SITE_DA_INTERNAL_STATUS_SCHEMA_PATH", os.path.join(self.get_resources_da_internal_path(), "database_status_history_schema.cif"))
+        return self._getlegacy(
+            "SITE_DA_INTERNAL_STATUS_SCHEMA_PATH",
+            os.path.join(self.get_resources_da_internal_path(), "database_status_history_schema.cif"),
+        )
 
     def get_site_da_internal_public_schema_path(self):
-        return self._getlegacy("SITE_DA_INTERNAL_PUBLIC_SCHEMA_PATH", os.path.join(self.get_resources_da_internal_all_path(), "schema_map_pdbx_v5.cif"))
+        return self._getlegacy(
+            "SITE_DA_INTERNAL_PUBLIC_SCHEMA_PATH",
+            os.path.join(self.get_resources_da_internal_all_path(), "schema_map_pdbx_v5.cif"),
+        )
 
     def get_resources_wfe_path(self):
         return os.path.join(self._getresourcedir(), "wfe")
@@ -437,8 +460,7 @@ class ConfigInfoAppDepUI(ConfigInfoAppBase):
         rwpath = self._getrwresourcedir()
         if rwpath is not None:
             return os.path.join(rwpath, "depui")
-        else:
-            return None
+        return None
 
     def get_depui_resources_ro_dir(self):
         """Performs legacy lookup of depUI subdir referenced through DEPUI_RESOURCE_PATH.

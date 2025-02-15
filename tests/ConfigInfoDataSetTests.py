@@ -11,21 +11,22 @@
 """
 Test cases for mapping data sets ids to server sites ids.
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-import os
-import sys
-import unittest
-import time
-import platform
 import logging
+import os
+import platform
+import sys
+import time
+import unittest
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
+TOPDIR = os.path.dirname(HERE)
 TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
 if not os.path.exists(TESTOUTPUT):  # pragma: no cover
     os.makedirs(TESTOUTPUT)
@@ -33,8 +34,8 @@ mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 rwMockTopPath = os.path.join(TESTOUTPUT)
 
 # Must create config file before importing ConfigInfo
-from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 from wwpdb.utils.testing.CreateRWTree import CreateRWTree  # noqa: E402
+from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 
 # Copy site-config and selected items
 crw = CreateRWTree(mockTopPath, TESTOUTPUT)
@@ -60,8 +61,20 @@ class ConfigInfoDataSetTests(unittest.TestCase):
 
         self.__lfh = sys.stdout
         self.__verbose = True
-        #
-        self.__testIdList = ["D_1", "D_1000200000", "D_1000200001", "1001200000", 1000200000, 8000200001, 8000200002, 8000200003, 100, 10002000000, "DEAD", "D_EAD"]
+        self.__testIdList = [
+            "D_1",
+            "D_1000200000",
+            "D_1000200001",
+            "1001200000",
+            1000200000,
+            8000200001,
+            8000200002,
+            8000200003,
+            100,
+            10002000000,
+            "DEAD",
+            "D_EAD",
+        ]
         self.__testIdLoc = {
             "D_1": None,
             "D_1000200000": "WWPDB_DEPLOY_PRODUCTION_RU",
@@ -100,11 +113,20 @@ class ConfigInfoDataSetTests(unittest.TestCase):
             "UNASSIGNED": (800000, 999999),
             "SILLYSITE": (800000, 999999),
         }
-        self.__siteIdTestRanges = {"WWPDB_DEPLOY_LCLTEST_RU": (8000231000, 8000232000), "SILLYSITE": (-1, -1), "WWPDB_DEPLOY_PRODUCTION_RU": (-1, -1)}
+        self.__siteIdTestRanges = {
+            "WWPDB_DEPLOY_LCLTEST_RU": (8000231000, 8000232000),
+            "SILLYSITE": (-1, -1),
+            "WWPDB_DEPLOY_PRODUCTION_RU": (-1, -1),
+        }
 
     def tearDown(self):
         endTime = time.time()
-        logger.debug("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
+        logger.debug(
+            "Completed %s at %s (%.4f seconds)",
+            self.id(),
+            time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            endTime - self.__startTime,
+        )
 
     def testGetSiteIdRange(self):
         """Test case -  return default id ranges selected sites."""
@@ -168,7 +190,6 @@ def suiteGetIdRange():  # pragma: no cover
 
 
 if __name__ == "__main__":  # pragma: no cover
-    #
     mySuite = suiteGetSiteId()
     siteRes = unittest.TextTestRunner(verbosity=2).run(mySuite).wasSuccessful()
 

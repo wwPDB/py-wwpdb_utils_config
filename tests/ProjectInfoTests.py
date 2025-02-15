@@ -3,26 +3,27 @@
 """
 Test cases for retrieving ProjectVersionInfo..
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "Ezra Peisach"
 __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-import os
-import sys
-import unittest
-import time
-import platform
 import logging
+import os
+import platform
+import sys
+import time
+import unittest
 
 try:
     from unittest.mock import patch
 except ImportError:  # pragma: no cover
-    from mock import patch
+    from unittest.mock import patch
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
+TOPDIR = os.path.dirname(HERE)
 TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
 if not os.path.exists(TESTOUTPUT):  # pragma: no cover
     os.makedirs(TESTOUTPUT)
@@ -30,8 +31,8 @@ mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 rwMockTopPath = os.path.join(TESTOUTPUT)
 
 # Must create config file before importing ConfigInfo
-from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 from wwpdb.utils.testing.CreateRWTree import CreateRWTree  # noqa: E402
+from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 
 # Copy site-config and selected items
 crw = CreateRWTree(mockTopPath, TESTOUTPUT)
@@ -54,11 +55,15 @@ class ProjectInfoTests(unittest.TestCase):
     def setUp(self):
         self.__startTime = time.time()
         logger.debug("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
-        #
 
     def tearDown(self):
         endTime = time.time()
-        logger.debug("Completed %s at %s (%.4f seconds)", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - self.__startTime)
+        logger.debug(
+            "Completed %s at %s (%.4f seconds)",
+            self.id(),
+            time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            endTime - self.__startTime,
+        )
 
     def testGetVersion(self):
         """Test case -  get project version"""
@@ -72,7 +77,7 @@ class ProjectInfoTests(unittest.TestCase):
         versfile = pvi.getVersionFile()
         self.assertIsNotNone(versfile)
 
-    @patch.object(ProjectVersionInfo, "getVersionFile", return_value="/tmp/non-exsitant-file/one-hopes")
+    @patch.object(ProjectVersionInfo, "getVersionFile", return_value="/tmp/non-exsitant-file/one-hopes")  # noqa: S108
     def testGetVersionMissing(self, mock_pvi):
         """Test case -  get project version - missing version"""
         pvi = ProjectVersionInfo()
@@ -108,7 +113,6 @@ def suiteProjectVersion():  # pragma: no cover
 
 
 if __name__ == "__main__":  # pragma: no cover
-    #
     mySuite = suiteProjectVersion()
     idRes = unittest.TextTestRunner(verbosity=2).run(mySuite).wasSuccessful()
 

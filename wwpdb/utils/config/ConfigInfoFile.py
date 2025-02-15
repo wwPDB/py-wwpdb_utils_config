@@ -16,6 +16,7 @@
 Provides access to site-specific configuration information stored in flat files and cache files.
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
@@ -23,36 +24,34 @@ __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
 
-import os
-import sys
-import datetime
-import shutil
-
 import ast
+import datetime
 import json
-from fnmatch import fnmatchcase
 import logging
+import os
+import shutil
+import sys
+from fnmatch import fnmatchcase
 
 try:
-    import ConfigParser
+    import ConfigParser  # type: ignore[import-not-found]
 except ImportError:
-    import configparser as ConfigParser
+    import configparser as ConfigParser  # noqa: N812
 
 logger = logging.getLogger(__name__)
 
 
-class ConfigInfoFile(object):
+class ConfigInfoFile:
     """
     Provides access to site-specific configuration information stored in flat files and cache files.
     """
 
-    def __init__(self, verbose=False, log=sys.stderr, mockTopPath=None):  # pylint: disable=unused-argument
+    def __init__(self, verbose=False, log=sys.stderr, mockTopPath=None):  # noqa: ARG002 pylint: disable=unused-argument
         self.__debug = True
         if mockTopPath:
             self.__mockdefaults = {"test_mockpath_env": mockTopPath}
         else:
             self.__mockdefaults = {}
-        #
 
     def readSiteConfig(self, siteId, configFilePath):
         """Read the input configuration file and return a configuration dictionary for
@@ -64,8 +63,7 @@ class ConfigInfoFile(object):
         d = self.readConfig(configFilePath)
         if siteId in d:
             return d[siteId]
-        else:
-            return {}
+        return {}
 
     def readConfig(self, configFilePath):
         """Read the input configuration file and return a dictionary of configuration items
@@ -86,10 +84,10 @@ class ConfigInfoFile(object):
                 kvTupL = config.items(section)
                 sKyU = section.upper()
                 d = {}
-                for (k, v) in kvTupL:
+                for k, v in kvTupL:
                     d[k.upper()] = v
                 retD[sKyU] = d
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.error("failed reading %s", configFilePath)
             if self.__debug:
                 logger.exception("failed reading %s - %s", configFilePath, str(e))
@@ -127,25 +125,25 @@ class ConfigInfoFile(object):
                             #    defaultD[k] = v
                             if self.__debug:
                                 logger.info("fetching section %s length %d", tsn, len(kvTupL))
-                            if context in ["common"]:
-                                for (k, v) in kvTupL:
+                            if context == "common":
+                                for k, v in kvTupL:
                                     # Respect existing values in the order of config files -
                                     if k not in saveD:
                                         try:
                                             saveD[k] = v % defaultD
-                                        except BaseException as e:
+                                        except BaseException as e:  # noqa: BLE001
                                             logger.error("substitution failed for %r %r %r", k, v, str(e))
                                             continue
                                         # update substitution defaults ...
                                         defaultD[k] = saveD[k]
-                            elif context in ["private"]:
+                            elif context == "private":
                                 pD = {}
                                 pDU = {}
-                                for (k, v) in kvTupL:
+                                for k, v in kvTupL:
                                     if k not in pD:
                                         try:
                                             pD[k] = v % defaultD
-                                        except BaseException as e:
+                                        except BaseException as e:  # noqa: BLE001
                                             logger.error("substitution failed for %r %r %r", k, v, str(e))
                                             continue
                                         # update substitution defaults ...
@@ -158,7 +156,7 @@ class ConfigInfoFile(object):
             # Copy the accumulated saved items for return with upper-cased keys --
             for k, v in saveD.items():
                 retD[k.upper()] = v
-        except Exception as e:  # noqa: E722
+        except Exception as e:  # noqa: E722,BLE001
             logger.error("failed reading configuration file list %r", configPathSectionList)
             if self.__debug:
                 logger.exception("failed reading file - error %s", str(e))
@@ -180,7 +178,6 @@ class ConfigInfoFile(object):
                 opD = sectionD[sectionKey]
                 sectionName = str(sectionKey).lower()
                 config.add_section(sectionName)
-                #
                 if sortKeys:
                     for ky in sorted(opD.keys()):
                         v = opD[ky]
@@ -190,8 +187,6 @@ class ConfigInfoFile(object):
                     for ky, v in opD.items():
                         kyDsp = str(ky).lower()
                         config.set(sectionName, kyDsp, v)
-                #
-                #
             ok = self.__copyWithTimeStamp(configFilePath)
             if not ok and requireBackup:
                 logger.error("failed writing backup config file for %s", configFilePath)
@@ -199,7 +194,7 @@ class ConfigInfoFile(object):
             with open(configFilePath, "w") as configfile:
                 config.write(configfile)
             return True
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.info("failing")
             if self.__debug:
                 logger.exception("failing %s", str(e))
@@ -242,20 +237,30 @@ class ConfigInfoFile(object):
             if optionD is not None:
                 optD = dict((k.lower(), v) for k, v in optionD.items())
                 if "config_as_object" in optD:
-                    objD = dict.fromkeys([t.strip().upper() for t in optD["config_as_object"].split(",") if len(t.strip()) > 0])
+                    objD = dict.fromkeys(
+                        [t.strip().upper() for t in optD["config_as_object"].split(",") if len(t.strip()) > 0]
+                    )
                 if "config_csv_as_list" in optD:
-                    lstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_list"].split(",") if len(t.strip()) > 0])
+                    lstD = dict.fromkeys(
+                        [t.strip().upper() for t in optD["config_csv_as_list"].split(",") if len(t.strip()) > 0]
+                    )
                 if "config_as_int" in optD:
-                    intD = dict.fromkeys([t.strip().upper() for t in optD["config_as_int"].split(",") if len(t.strip()) > 0])
+                    intD = dict.fromkeys(
+                        [t.strip().upper() for t in optD["config_as_int"].split(",") if len(t.strip()) > 0]
+                    )
                 if "config_as_float" in optD:
-                    fltD = dict.fromkeys([t.strip().upper() for t in optD["config_as_float"].split(",") if len(t.strip()) > 0])
+                    fltD = dict.fromkeys(
+                        [t.strip().upper() for t in optD["config_as_float"].split(",") if len(t.strip()) > 0]
+                    )
                 if "config_csv_as_int_list" in optD:
-                    iLstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_int_list"].split(",") if len(t.strip()) > 0])
+                    iLstD = dict.fromkeys(
+                        [t.strip().upper() for t in optD["config_csv_as_int_list"].split(",") if len(t.strip()) > 0]
+                    )
             #
             # if self.__debug:
             #   print "Filter as object", objD
             #
-            for (k, v) in configD.items():
+            for k, v in configD.items():
                 retD[k] = v
                 if v == "None":
                     retD[k] = None
@@ -271,15 +276,14 @@ class ConfigInfoFile(object):
                         retD[k] = [t.strip() for t in v.split(",")]
                     if k in iLstD:
                         retD[k] = [int(t.strip()) for t in v.split(",")]
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.error("failed csv filter %r %r - %s", k, v, str(e))
-                #
                 try:
                     if k in objD:
                         retD[k] = ast.literal_eval(v)
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.error("failed eval filter %r %r - %s", k, v, str(e))
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.info("failed configuration filter")
             if self.__debug:
                 logger.exception("failed configuration filter %s", str(e))
@@ -324,8 +328,7 @@ class ConfigInfoFile(object):
                     lstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_list"].split(",")])
                 if "config_csv_as_int_list" in optD:
                     iLstD = dict.fromkeys([t.strip().upper() for t in optD["config_csv_as_int_list"].split(",")])
-            #
-            for (k, v) in configD.items():
+            for k, v in configD.items():
                 retD[k] = v
                 if v is None:
                     retD[k] = "None"
@@ -333,27 +336,27 @@ class ConfigInfoFile(object):
                     if k in lstD or k in iLstD:
                         if isinstance(v, list):
                             retD[k] = ",".join(str(x) for x in v)
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.error("failed list join %r %r - %s", k, v, str(e))
-                #
                 try:
                     if k in objD:
                         retD[k] = "%r" % v
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.error("failed __repr__ %r %r - %s", k, v, str(e))
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.info("failed configuration filter\n")
             if self.__debug:
                 logger.exception("failed configuration filter %s", str(e))
 
         return retD
 
-    def __copyWithTimeStamp(self, filePath):
+    @staticmethod
+    def __copyWithTimeStamp(filePath):
         try:
-            bckupPath = filePath + datetime.datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")
+            bckupPath = filePath + datetime.datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")  # noqa: DTZ005
             shutil.copyfile(filePath, bckupPath)
             return True
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.info("Could not write backup file %s - %s", bckupPath, str(e))
 
         return False
@@ -454,7 +457,7 @@ class ConfigInfoFileCache(object):
     def readJsonConfigCache(self, cacheFilePath):
         """Read a JSON cache file and return a dictionary containing configuration option data."""
         try:
-            with open(cacheFilePath, "r") as infile:
+            with open(cacheFilePath) as infile:
                 return json.load(infile)
         except Exception as e:
             logger.info("failed reading %s - %s", cacheFilePath, str(e))
