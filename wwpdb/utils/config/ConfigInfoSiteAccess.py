@@ -11,31 +11,33 @@
 Provides accessors for deposition site availability/unavailability information.
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-import sys
-import json
 import datetime
+import json
 import logging
+import sys
 
 try:
-    from urllib.request import urlopen
     from urllib.error import HTTPError, URLError
+    from urllib.request import urlopen
 except ImportError:  # pragma: no cover
-    from urllib2 import urlopen, HTTPError, URLError
+    from urllib2 import HTTPError, URLError, urlopen  # type: ignore[import-not-found,no-redef]
 import ssl
 import traceback
+
 from wwpdb.utils.config.ConfigInfo import ConfigInfo
 from wwpdb.utils.config.ConfigInfoApp import ConfigInfoAppDepUI
 
 logger = logging.getLogger(__name__)
 
 
-class ConfigInfoSiteAccess(object):
+class ConfigInfoSiteAccess:
     """
     Provides accessors for service endpoints and deposition site availability/unavailability information.
 
@@ -70,8 +72,7 @@ class ConfigInfoSiteAccess(object):
 
         if siteId in serviceD:
             return serviceD[siteId]
-        else:
-            return None
+        return None
 
     def getForwardingService(self, siteId):
         """Get the message forwarding service end point for the input site -
@@ -85,8 +86,7 @@ class ConfigInfoSiteAccess(object):
 
         if siteId in serviceD:
             return serviceD[siteId]
-        else:
-            return None
+        return None
 
     def __getAccessDictionary(self):
         """Fetch the dictionary cotaining exceptional access information for each site
@@ -98,18 +98,21 @@ class ConfigInfoSiteAccess(object):
         """
         fp = self.__cICommon.get_site_access_info_file_path()
         try:
-            with open(fp, "r") as infile:
+            with open(fp) as infile:
                 return json.load(infile)
         except Exception as e:
             if self.__verbose:
-                logger.error("failed reading json resource file %s %s", fp, str(e))
+                logger.error("failed reading json resource file %s %s", fp, str(e))  # noqa: TRY400
             if self.__debug:
                 logger.exception("failed in parsing file %s", fp)
         return {}
 
     def isServiceReachable(self, siteId, timeout=2):
         # This restores the same behavior as before.
-        context = ssl._create_unverified_context()  # pylint: disable=protected-access
+        context = ssl.create_default_context()
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
+
         url = None
         if siteId in self.__serviceD:
             url = self.__serviceD[siteId]
@@ -117,7 +120,6 @@ class ConfigInfoSiteAccess(object):
             if self.__verbose:
                 logger.info("no service url defined for site %s", siteId)
             return False
-        #
         scode = -1
         try:
             scode = urlopen(url, context=context, timeout=timeout).getcode()
@@ -131,7 +133,7 @@ class ConfigInfoSiteAccess(object):
                 logger.info("site %s url %s error %s", siteId, url, str(e.reason))
         except Exception as e:  # pragma: no cover
             if self.__verbose:
-                logger.error("site %s scode %r url %s\n", siteId, scode, url)
+                logger.error("site %s scode %r url %s\n", siteId, scode, url)  # noqa: TRY400
             if self.__debug:
                 logger.exception("Detecting service available %s", str(e))
                 traceback.print_exc(file=self.__lfh)
@@ -154,7 +156,7 @@ class ConfigInfoSiteAccess(object):
             if sys.version_info[0] > 2:
                 dtNow = datetime.datetime.now(datetime.timezone.utc)
             else:
-                dtNow = datetime.datetime.utcnow()  # .replace(tzinfo=tz.tzutc())
+                dtNow = datetime.datetime.utcnow()  # noqa: DTZ003
             if self.__debug:
                 logger.debug("site %s time begin %s  seconds %r", siteId, tBegin, dtBegin.strftime("%s"))
                 logger.debug("site %s time end   %s  seconds %r", siteId, tBegin, dtBegin.strftime("%s"))
@@ -177,12 +179,12 @@ class ConfigInfoSiteAccess(object):
             if self.__debug:
                 logger.debug("site %s time begin %s  time end %s\n", siteId, tBegin, tEnd)
             return (tBegin, tEnd)
-        else:
-            return (None, None)
+        return (None, None)
 
-    def __getDateTimeUTC(self, dateTimeStamp):
+    @staticmethod
+    def __getDateTimeUTC(dateTimeStamp):
         # Converts datetie to UTC
-        dt = datetime.datetime.strptime(dateTimeStamp, "%Y-%m-%d %H:%M:%S")
+        dt = datetime.datetime.strptime(dateTimeStamp, "%Y-%m-%d %H:%M:%S")  # noqa: DTZ007
         if sys.version_info[0] > 2:
             tz = datetime.timezone.utc
             dt = dt.replace(tzinfo=tz)

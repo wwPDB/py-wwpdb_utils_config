@@ -9,28 +9,29 @@ Provides accessors for the correspondence between deposition data identifiers an
 deposition and annotation sites (e.g. wwpdb_site_id).
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-import sys
 import logging
+import sys
 
 from wwpdb.utils.config.ConfigInfo import ConfigInfo
 
 logger = logging.getLogger(__name__)
 
 
-class ConfigInfoGroupDataSet(object):
+class ConfigInfoGroupDataSet:
     """
     Provides accessors for the correspondence between group deposition data identifiers and
     deposition and annotation sites (e.g. wwpdb_site_id).
 
     """
 
-    def __init__(self, verbose=False, log=sys.stderr):  # pylint: disable=unused-argument
+    def __init__(self, verbose=False, log=sys.stderr):  # noqa: ARG002 pylint: disable=unused-argument
         self.__verbose = verbose
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
@@ -69,8 +70,7 @@ class ConfigInfoGroupDataSet(object):
                 idVal = int(str(groupId)[2:])
             else:
                 idVal = int(str(groupId))
-            #
-            for ky in self.__groupIdAssignments.keys():
+            for ky in self.__groupIdAssignments:
                 idMin, idMax = self.__groupIdAssignments[ky]
                 if (idVal >= idMin) and (idVal <= idMax):
                     return ky

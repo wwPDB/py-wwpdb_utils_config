@@ -196,6 +196,7 @@
 Container for general and site-specific configuration data.
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
@@ -206,15 +207,18 @@ import os
 import sys
 import traceback
 
+if sys.version_info[0] > 2:
+    from typing import Dict, List, Tuple  # noqa: F401
+
 # ----------------------------------------------------------------------------------------------
 #  Try to import externally cached configuration options.  Gracefully ignore any errors.
-try:
-    from ConfigInfoFileCache import ConfigInfoFileCache  # pylint: disable=import-error
+try:  # noqa: SIM105
+    from ConfigInfoFileCache import ConfigInfoFileCache  # type: ignore[import-not-found] # pylint: disable=import-error
 except:  # noqa: E722 pylint: disable=bare-except
     pass
 
 
-class ConfigInfoData(object):
+class ConfigInfoData:
     """Provides access to shared and site-specific configuration information for the common
     deposition and annotation system.
 
@@ -226,8 +230,7 @@ class ConfigInfoData(object):
 
     """
 
-    #
-    _contentTypeInfoD = {}
+    _contentTypeInfoD = {}  # type: dict
     _contentTypeInfoBaseD = {
         "model": (["pdbx", "pdb", "pdbml", "cifeps"], "model"),
         "model-emd": (["pdbx", "xml"], "model-emd"),
@@ -294,8 +297,14 @@ class ConfigInfoData(object):
         "em-fsc-map-model-mask-volume": (["map", "ccp4", "mrc2000", "bcif"], "em-fsc-map-model-mask-volume"),
         "em-alignment-mask-volume": (["map", "ccp4", "mrc2000", "bcif"], "em-alignment-mask-volume"),
         "em-focused-refinement-mask-volume": (["map", "ccp4", "mrc2000", "bcif"], "em-focused-refinement-mask-volume"),
-        "em-3d-classification-additional-volume": (["map", "ccp4", "mrc2000", "bcif"], "em-3d-classification-additional-volume"),
-        "em-focus-refinement-additional-volume": (["map", "ccp4", "mrc2000", "bcif"], "em-focus-refinement-additional-volume"),
+        "em-3d-classification-additional-volume": (
+            ["map", "ccp4", "mrc2000", "bcif"],
+            "em-3d-classification-additional-volume",
+        ),
+        "em-focus-refinement-additional-volume": (
+            ["map", "ccp4", "mrc2000", "bcif"],
+            "em-focus-refinement-additional-volume",
+        ),
         "em-segmentation-volume": (["map", "ccp4", "mrc2000", "bcif"], "em-segmentation-volume"),
         "em-volume-wfcfg": (["json"], "em-volume-wfcfg"),
         "em-mask-volume-wfcfg": (["json"], "em-mask-volume-wfcfg"),
@@ -393,14 +402,12 @@ class ConfigInfoData(object):
         "structure-def-file": (["any"], "struct"),
         "topology-file": (["any"], "topo"),
         "cmd-line-args": (["txt"], "cmd-line-args"),
-        "sd-dat": (["any", "sd-dat"]),
-        "sx-pr": (["any", "sx-pr"]),
-        "sm-fit": (["any", "sm-fit"]),
+        "sd-dat": (["any"], "sd-dat"),
+        "sx-pr": (["any"], "sx-pr"),
+        "sm-fit": (["any"], "sm-fit"),
         "deposition-info": (["pdbx", "json"], "deposition-info"),
         "deposition-store": (["tar"], "deposition-store"),
-        #
         "complexity-report": (["pdbx"], "complexity-report"),
-        #
         "bundle-session-archive": (["tar", "tgz"], "bundle-session-archive"),
         "bundle-session-deposit": (["tar", "tgz"], "bundle-session-deposit"),
         "bundle-session-upload": (["tar", "tgz"], "bundle-session-upload"),
@@ -408,12 +415,11 @@ class ConfigInfoData(object):
         "bundle-session-uitemp": (["tar", "tgz"], "bundle-session-uitemp"),
         "bundle-session-workflow": (["tar", "tgz"], "bundle-session-workflow"),
         "session-backup": (["tar", "tgz"], "bundle-session-workflow"),
-        #
         "manifest-session": (["json"], "manifest-session"),
         "manifest-session-bundle": (["json"], "manifest-session-bundle"),
         "pcm-missing-data": (["csv"], "pcm-missing-data"),
         "any": (["any"], "any"),
-    }
+    }  # type: Dict[str, Tuple[List[str], str]]
     """Base dictionary of supported file formats for each recognized content type.
        An acronym for each content type is included.  The acronym is used in the
        filename template.
@@ -434,9 +440,7 @@ class ConfigInfoData(object):
        the content type (e.g. content type  model will have milestones model-upload, model-deposit,
        model-annotate, model-review, and model-release).
     """
-    #
     _contentMilestoneL = ["upload", "upload-convert", "deposit", "annotate", "release", "review"]
-    #
     _fileFormatExtensionD = {
         "pdbx": "cif",
         "pdb": "pdb",
@@ -518,18 +522,19 @@ class ConfigInfoData(object):
         "UNASSIGNED": (800000, 999999),
     }
     """Dictionary of site-level deposition data set identifier assignment ranges"""
-    #
-    _siteGroupDataSetIdAssignmentD = {"WWPDB_DEPLOY_DEPGRP1_RU": (1000000, 2000000), "WWPDB_DEPLOY_DEPGRP2_RU": (1000000, 2000000), "UNASSIGNED": (0000000, 1000000)}
+    _siteGroupDataSetIdAssignmentD = {
+        "WWPDB_DEPLOY_DEPGRP1_RU": (1000000, 2000000),
+        "WWPDB_DEPLOY_DEPGRP2_RU": (1000000, 2000000),
+        "UNASSIGNED": (0000000, 1000000),
+    }
     """Dictionary of site-level group deposition data set identifier assignment ranges"""
 
-    #
     _siteDataSetTestIdAssignmentD = {
         "WWPDB_DEPLOY_LCLTEST_RU": (8000231000, 8000232000),
         "WWPDB_DEPLOY_TEST_RU": (8000215000, 8000220000),
     }
     """Dictionary of site-level IDs that can be used for creating test sessions. Do not add for production servers"""
 
-    #
     _projectDepositSiteServiceD = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://deposit.wwpdb.org/deposition",
         "WWPDB_DEPLOY_NEXT_RU": "https://deposit.wwpdb.org/deposition",
@@ -585,10 +590,19 @@ class ConfigInfoData(object):
     }
     """Dictionary of well known project message forwarding service end points"""
 
-    _regions = {"pdbe": ["europe", "africa", "antarctica"], "pdbj": ["asia", "middle east"], "rcsb": ["north america", "south america", "oceania"]}
+    _regions = {
+        "pdbe": ["europe", "africa", "antarctica"],
+        "pdbj": ["asia", "middle east"],
+        "rcsb": ["north america", "south america", "oceania"],
+    }
     """Dictionary of geographical locations for each site"""
 
-    _production_sites = {"pdbe": "PDBE_PROD", "pdbj": "WWPDB_DEPLOY_PRODUCTION_PDBJ", "rcsb": "WWPDB_DEPLOY_PRODUCTION_RU", "pdbc": "WWPDB_DEPLOY_PRODUCTION_PDBC"}
+    _production_sites = {
+        "pdbe": "PDBE_PROD",
+        "pdbj": "WWPDB_DEPLOY_PRODUCTION_PDBJ",
+        "rcsb": "WWPDB_DEPLOY_PRODUCTION_RU",
+        "pdbc": "WWPDB_DEPLOY_PRODUCTION_PDBC",
+    }
     """names of sites used in production"""
 
     # subjects for messages - used in the depUI and communication
@@ -608,20 +622,31 @@ class ConfigInfoData(object):
         "withdrawal": ["Withdrawal"],
         "hold extension": ["Hold expiration"],
         "major issues": ["Response to issues"],
-    }
+    }  # type: Dict[str, List[str]]
 
-    _communication_release_message_subjects = []
-    _communication_release_message_subjects.extend(_message_subjects.get("release"))
-    _communication_release_message_subjects.extend(_message_subjects.get("release_with_citation"))
-    _communication_release_message_subjects.extend(_message_subjects.get("citation"))
+    _communication_release_message_subjects = []  # type: List[str]
+    _communication_release_message_subjects.extend(_message_subjects.get("release", "??"))
+    _communication_release_message_subjects.extend(_message_subjects.get("release_with_citation", "???"))
+    _communication_release_message_subjects.extend(_message_subjects.get("citation", "???"))
 
-    _communication_approval_no_correct = [_message_subjects.get("approval")[0]]
+    _communication_approval_no_correct = [_message_subjects.get("approval", ["???"])[0]]
 
     # mmCIF dictionary
-    _pdbx_dictionary_name_dict = {"ARCHIVE_CURRENT": "mmcif_pdbx_v50", "ARCHIVE_NEXT": "mmcif_pdbx_v50", "DEPOSIT": "mmcif_pdbx_v5_next", "VRPT": "mmcif_pdbx_vrpt"}
+    _pdbx_dictionary_name_dict = {
+        "ARCHIVE_CURRENT": "mmcif_pdbx_v50",
+        "ARCHIVE_NEXT": "mmcif_pdbx_v50",
+        "DEPOSIT": "mmcif_pdbx_v5_next",
+        "VRPT": "mmcif_pdbx_vrpt",
+    }
 
     # CCD and PRD variables
-    _ref_data_proj_names = {"cvs_path": "/cvs-ligands", "ccd": "ligand-dict-v3", "prd": "prd-v3", "prdcc": "prdcc-v3", "prd_family": "family-v3"}
+    _ref_data_proj_names = {
+        "cvs_path": "/cvs-ligands",
+        "ccd": "ligand-dict-v3",
+        "prd": "prd-v3",
+        "prdcc": "prdcc-v3",
+        "prd_family": "family-v3",
+    }
 
     _projectContentWSiteServiceD = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://onedep-contentws-rcsb.wwpdb.org",
@@ -656,7 +681,6 @@ class ConfigInfoData(object):
         self.__verbose = verbose
         self.__debug = False
         self.__lfh = log
-        #
         if self.__siteId is None:
             self.__siteId = str(os.getenv("WWPDB_SITE_ID", None)).upper()
             """The site identification is obtained from the environmental variable `WWPDB_SITE_ID`
@@ -664,7 +688,8 @@ class ConfigInfoData(object):
 
         if self.__verbose and self.__siteId is None:
             self.__lfh.write(
-                "%s.%s WARNING - no siteId assigned in constructor or found in the environemt (WWPDB_SITE_ID).\n" % (self.__class__.__name__, sys._getframe().f_code.co_name)
+                "%s.%s WARNING - no siteId assigned in constructor or found in the environemt (WWPDB_SITE_ID).\n"
+                % (self.__class__.__name__, sys._getframe().f_code.co_name)  # noqa: SLF001
             )
 
         #
@@ -684,14 +709,17 @@ class ConfigInfoData(object):
                 if self.__debug:
                     self.__lfh.write(
                         "%s.%s Imported cached configuration dictionary length %d for site %s\n"
-                        % (self.__class__.__name__, sys._getframe().f_code.co_name, len(cacheD), self.__siteId)
+                        % (self.__class__.__name__, sys._getframe().f_code.co_name, len(cacheD), self.__siteId)  # noqa: SLF001
                     )
                 if len(cacheD) > 0:
                     readCache = True
                     self.__D = cacheD
             except:  # noqa: E722 pylint: disable=bare-except
                 if self.__debug:
-                    self.__lfh.write("%s.%s failed importing cache for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
+                    self.__lfh.write(
+                        "%s.%s failed importing cache for site %s\n"
+                        % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId)
+                    )  # noqa: SLF001
                     traceback.print_exc(file=self.__lfh)
                 readCache = False
 
@@ -699,18 +727,23 @@ class ConfigInfoData(object):
             # Use fall back configuration options for now  -- to be deprecated in the future --
             #
             if not readCache and self.__siteId is not None and self.__debug:
-                self.__lfh.write("%s.%s No configuration for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
+                self.__lfh.write(
+                    "%s.%s No configuration for site %s\n"
+                    % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId)
+                )  # noqa: SLF001
                 # self.__setup(self.__siteId)
                 # if self.__verbose:
                 #    self.__lfh.write("%s.%s Cache not used imported fallback configuration dictionary length %d for site %s\n" %
                 #                     (self.__class__.__name__, sys._getframe().f_code.co_name, len(self.__D), self.__siteId))
-        else:
-            if self.__siteId is not None and self.__debug:
-                self.__lfh.write("%s.%s No configuration for site %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId))
-                # self.__setup(self.__siteId)
-                # if self.__verbose:
-                #    self.__lfh.write("%s.%s Imported fallback configuration dictionary length %d for site %s\n" %
-                #                     (self.__class__.__name__, sys._getframe().f_code.co_name, len(self.__D), self.__siteId))
+        elif self.__siteId is not None and self.__debug:
+            self.__lfh.write(
+                "%s.%s No configuration for site %s\n"
+                % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId)
+            )  # noqa: SLF001
+            # self.__setup(self.__siteId)
+            # if self.__verbose:
+            #    self.__lfh.write("%s.%s Imported fallback configuration dictionary length %d for site %s\n" %
+            #                     (self.__class__.__name__, sys._getframe().f_code.co_name, len(self.__D), self.__siteId))
         #
         # -------------------------------------------------------------------------------------------------------
         #  Add other class-level - common configuration components - these configuration options are tightly coupled
@@ -720,7 +753,9 @@ class ConfigInfoData(object):
         self.__D["FILE_FORMAT_EXTENSION_DICTIONARY"] = ConfigInfoData._fileFormatExtensionD
         self.__D["CONTENT_TYPE_DICTIONARY"] = ConfigInfoData._contentTypeInfoD
         self.__D["CONTENT_MILESTONE_LIST"] = ConfigInfoData._contentMilestoneL
-        self.__D["CONTENT_MILESTONE_ARCHIVE_LIST"] = [t for t in ConfigInfoData._contentMilestoneL if t != "upload-convert"]
+        self.__D["CONTENT_MILESTONE_ARCHIVE_LIST"] = [
+            t for t in ConfigInfoData._contentMilestoneL if t != "upload-convert"
+        ]
         self.__D["CONTENT_TYPE_BASE_DICTIONARY"] = ConfigInfoData._contentTypeInfoBaseD
         self.__D["SITE_DATASET_ID_ASSIGNMENT_DICTIONARY"] = ConfigInfoData._siteDataSetIdAssignmentD
         self.__D["SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY"] = ConfigInfoData._siteDataSetTestIdAssignmentD
@@ -734,7 +769,9 @@ class ConfigInfoData(object):
         self.__D["PRODUCTION_SITES"] = ConfigInfoData._production_sites
         self.__D["MESSAGE_SUBJECTS"] = ConfigInfoData._message_subjects
         self.__D["COMMUNICATION_RELEASE_MESSAGE_SUBJECTS"] = ConfigInfoData._communication_release_message_subjects
-        self.__D["COMMUNICATION_APPROVAL_WITHOUT_CHANGES_MESSAGE_SUBJECTS"] = ConfigInfoData._communication_approval_no_correct
+        self.__D["COMMUNICATION_APPROVAL_WITHOUT_CHANGES_MESSAGE_SUBJECTS"] = (
+            ConfigInfoData._communication_approval_no_correct
+        )
         self.__D["PDBX_DICTIONARY_NAME_DICT"] = ConfigInfoData._pdbx_dictionary_name_dict
         self.__D["SITE_REFDATA_CVS_PATH"] = ConfigInfoData._ref_data_proj_names.get("cvs_path")
         self.__D["SITE_REFDATA_PROJ_NAME_CC"] = ConfigInfoData._ref_data_proj_names.get("ccd")
@@ -745,7 +782,7 @@ class ConfigInfoData(object):
     def getConfigDictionary(self):
         return self.__D
 
-    def __addMilestoneVariants(self):
+    def __addMilestoneVariants(self):  # noqa: PLR6301
         """Update base content dictionary with content milestone variants."""
         ConfigInfoData._contentTypeInfoD = {}
         for k, v in ConfigInfoData._contentTypeInfoBaseD.items():

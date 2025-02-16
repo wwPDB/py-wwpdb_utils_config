@@ -9,6 +9,7 @@
 Test cases for generation of configuration and use
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "Ezra Peisach"
 __email__ = "peisach@rcsb.rutgers.edu"
@@ -20,7 +21,7 @@ import platform
 import unittest
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
+TOPDIR = os.path.dirname(HERE)
 TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
 if not os.path.exists(TESTOUTPUT):
     os.makedirs(TESTOUTPUT)  # pragma: no cover
@@ -28,8 +29,8 @@ mockTopPath = os.path.join(TOPDIR, "wwpdb", "mock-data")
 rwMockTopPath = os.path.join(TESTOUTPUT)
 
 # Must create config file before importing ConfigInfo
-from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 from wwpdb.utils.testing.CreateRWTree import CreateRWTree  # noqa: E402
+from wwpdb.utils.testing.SiteConfigSetup import SiteConfigSetup  # noqa: E402
 
 # Copy site-config and selected items
 crw = CreateRWTree(mockTopPath, TESTOUTPUT)
@@ -40,7 +41,7 @@ SiteConfigSetup().setupEnvironment(rwMockTopPath, rwMockTopPath)
 from wwpdb.utils.config.ConfigInfoFileExec import ConfigInfoFileExec  # noqa: E402
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
+TOPDIR = os.path.dirname(HERE)
 
 
 class ConfigInfoFileExecTests(unittest.TestCase):
@@ -76,7 +77,7 @@ class ConfigInfoFileExecTests(unittest.TestCase):
             os.environ["TOP_WWPDB_SITE_CONFIG_DIR"] = os.path.join(subtestdir, "site-config")
             cif = ConfigInfoFileExec(mockTopPath=subtestdir)
             cif.writeConfigCache(siteLoc="rcsb-east", siteId="WWPDB_DEPLOY_TEST")
-        except Exception as e:  # pragma: no cover
+        except Exception as e:  # noqa: BLE001 pragma: no cover
             self.fail("Error testing writing config %s" % str(e))
 
         os.environ["TOP_WWPDB_SITE_CONFIG_DIR"] = saveconf
@@ -96,7 +97,7 @@ class ConfigInfoFileExecTests(unittest.TestCase):
             os.environ["TOP_WWPDB_SITE_CONFIG_DIR"] = os.path.join(subtestdir, "site-config")
             cif = ConfigInfoFileExec(mockTopPath=subtestdir)
             cif.writeLocationConfigCache(siteLoc="rcsb-east")
-        except Exception as e:  # pragma: no cover
+        except Exception as e:  # noqa: BLE001 pragma: no cover
             self.fail("Error testing writing config %s" % str(e))
 
         os.environ["TOP_WWPDB_SITE_CONFIG_DIR"] = saveconf

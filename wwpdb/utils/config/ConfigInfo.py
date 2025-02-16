@@ -17,6 +17,7 @@ Provides access to shared and site-specific configuration information for the co
 system.
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
@@ -37,7 +38,7 @@ def getSiteId(defaultSiteId=None):
     return siteId
 
 
-class ConfigInfo(object):
+class ConfigInfo:
     """Provides access to site-specific configuration information for the common
     deposition and annotation system.
 
@@ -59,7 +60,9 @@ class ConfigInfo(object):
             """The site identification is obtained from the environmental variable `WWPDB_SITE_ID`
             """
         if self.__siteId is None:
-            self.__lfh.write("++ERROR - ConfigInfo()  no site identifier in constructor or WWPDB_SITE_ID in environment.\n")
+            self.__lfh.write(
+                "++ERROR - ConfigInfo()  no site identifier in constructor or WWPDB_SITE_ID in environment.\n"
+            )
 
         self.__sI = ConfigInfoData(siteId=self.__siteId, verbose=self.__verbose)
         self.__D = self.__sI.getConfigDictionary()
@@ -68,8 +71,7 @@ class ConfigInfo(object):
         """Returns the site-specific value assigned to the input keyword or the default value -"""
         if keyWord is not None and keyWord in self.__D:
             return self.__D[keyWord]
-        else:
-            return default
+        return default
 
     def dump(self, ofh):
         """Print the current configuration dictionary ."""

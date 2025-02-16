@@ -108,7 +108,7 @@ venv.bak/
 .vscode
 
 # Tests output
-wwpdb/utils/tests-config/test-output
+tests/test-output
 
 # emacs autosave file
 *~
