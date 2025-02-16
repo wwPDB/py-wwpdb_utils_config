@@ -207,6 +207,9 @@ import os
 import sys
 import traceback
 
+if sys.version_info[0] > 2:
+    from typing import Dict, List, Tuple  # noqa: F401
+
 # ----------------------------------------------------------------------------------------------
 #  Try to import externally cached configuration options.  Gracefully ignore any errors.
 try:  # noqa: SIM105
@@ -227,7 +230,7 @@ class ConfigInfoData:
 
     """
 
-    _contentTypeInfoD = {}
+    _contentTypeInfoD = {}  # type: dict
     _contentTypeInfoBaseD = {
         "model": (["pdbx", "pdb", "pdbml", "cifeps"], "model"),
         "model-emd": (["pdbx", "xml"], "model-emd"),
@@ -399,9 +402,9 @@ class ConfigInfoData:
         "structure-def-file": (["any"], "struct"),
         "topology-file": (["any"], "topo"),
         "cmd-line-args": (["txt"], "cmd-line-args"),
-        "sd-dat": (["any", "sd-dat"]),
-        "sx-pr": (["any", "sx-pr"]),
-        "sm-fit": (["any", "sm-fit"]),
+        "sd-dat": (["any"], "sd-dat"),
+        "sx-pr": (["any"], "sx-pr"),
+        "sm-fit": (["any"], "sm-fit"),
         "deposition-info": (["pdbx", "json"], "deposition-info"),
         "deposition-store": (["tar"], "deposition-store"),
         "complexity-report": (["pdbx"], "complexity-report"),
@@ -416,7 +419,7 @@ class ConfigInfoData:
         "manifest-session-bundle": (["json"], "manifest-session-bundle"),
         "pcm-missing-data": (["csv"], "pcm-missing-data"),
         "any": (["any"], "any"),
-    }
+    }  # type: Dict[str, Tuple[List[str], str]]
     """Base dictionary of supported file formats for each recognized content type.
        An acronym for each content type is included.  The acronym is used in the
        filename template.
@@ -619,14 +622,14 @@ class ConfigInfoData:
         "withdrawal": ["Withdrawal"],
         "hold extension": ["Hold expiration"],
         "major issues": ["Response to issues"],
-    }
+    }  # type: Dict[str, List[str]]
 
-    _communication_release_message_subjects = []
-    _communication_release_message_subjects.extend(_message_subjects.get("release"))
-    _communication_release_message_subjects.extend(_message_subjects.get("release_with_citation"))
-    _communication_release_message_subjects.extend(_message_subjects.get("citation"))
+    _communication_release_message_subjects = []  # type: List[str]
+    _communication_release_message_subjects.extend(_message_subjects.get("release", "??"))
+    _communication_release_message_subjects.extend(_message_subjects.get("release_with_citation", "???"))
+    _communication_release_message_subjects.extend(_message_subjects.get("citation", "???"))
 
-    _communication_approval_no_correct = [_message_subjects.get("approval")[0]]
+    _communication_approval_no_correct = [_message_subjects.get("approval", ["???"])[0]]
 
     # mmCIF dictionary
     _pdbx_dictionary_name_dict = {

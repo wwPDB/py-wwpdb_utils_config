@@ -66,7 +66,11 @@ class ConfigDataSetExecTests(unittest.TestCase):
     def testBrokenConfig(self):
         """Tests error handling"""
         ConfigInfoShellExec(
-            topConfigPath="/tmp/ab12s", siteId="WWPDB_DEPLOY_TEST", siteLoc="rcsb-east", verbose=True, log=sys.stdout
+            topConfigPath="/tmp/ab12s",
+            siteId="WWPDB_DEPLOY_TEST",
+            siteLoc="rcsb-east",
+            verbose=True,
+            log=sys.stdout,  # noqa: S108
         )  # noqa: S108
 
     def testHostnameLookup(self):

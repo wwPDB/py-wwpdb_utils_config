@@ -74,6 +74,7 @@ ignore = [
   "C402",     #  Unnecessary generator (rewrite as a `dict` comprehension)
   "EXE001",   # Shebang is present but file is not executabl
   "FBT002",   # Boolean default positional argument in function definition
+  "FBT001",   # Boolean-typed positional argument in function definition
   "FURB113",  # Use `stPL.extend(...)` instead of repeatedly calling `stPL.append()`
   "INP001",   # File `xx` is part of an implicit namespace package. Add an `__init__.py
   "N801",     # Class name `markdownTests` should use CapWords convention
@@ -147,6 +148,13 @@ run = ["tox"]
 module = ["oslo_concurrency.*"]
 ignore_missing_imports = true
 
+[tool.mypy]
+exclude = [
+	"test-output",
+]
+
 # ------------------------ ruff disable until typing added
 [tool.ruff.lint.per-file-ignores]
-"wwpdb/utils/config/ConfigInfoData.py" = ["RUF012"]  # typing.ClassVar
+"awwpdb/utils/config/ConfigInfoData.py" = ["RUF012"]  # typing.ClassVar
+"wwpdb/utils/config/ConfigInfoData.py" = ["SLF001", "RUF012", "F401"]  # Private member access, should use typing.ClassVar, do not remove unused imports
+

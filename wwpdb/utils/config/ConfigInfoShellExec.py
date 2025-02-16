@@ -57,7 +57,14 @@ class ConfigInfoShellExec:
     """
 
     def __init__(
-        self, topConfigPath=None, hostName=None, siteLoc=None, siteId=None, cacheFlag=True, verbose=True, log=sys.stdout
+        self,
+        topConfigPath=None,
+        hostName=None,
+        siteLoc=None,
+        siteId=None,
+        cacheFlag=True,
+        verbose=True,
+        log=sys.stdout,  # noqa: ARG002
     ):  # noqa: ARG002 pylint: disable=unused-argument
         self.__lfh = log
         self.__debug = False
