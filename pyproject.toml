@@ -145,7 +145,7 @@ run = ["tox"]
 
 # -------------------------  Mypy disable ---------
 [[tool.mypy.overrides]]
-module = ["oslo_concurrency.*"]
+module = ["oslo_concurrency.*", "wwpdb.*"]
 ignore_missing_imports = true
 
 [tool.mypy]
