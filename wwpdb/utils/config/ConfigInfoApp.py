@@ -446,6 +446,13 @@ class ConfigInfoAppCommon(ConfigInfoAppCc):
     def get_site_registry_file_path(self):
         return self._getlegacy("SITE_REGISTRY_FILE_PATH", os.path.join(self.get_resources_wfe_path(), "actionData.xml"))
 
+    def get_file_activity_db_support(self):
+        """Returns true if file activity database support enabled"""
+        val = self._getValue("FILE_ACTIVITY_DB_SUPPORT", False)
+        if val in ["True", "On", "true", "on", "1", True]:
+            return True
+        return False
+
 
 class ConfigInfoAppDepUI(ConfigInfoAppBase):
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
