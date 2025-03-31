@@ -502,6 +502,11 @@ class ConfigInfoAppDepUI(ConfigInfoAppBase):
         # Legacy definition override
         return self._getlegacy("SITE_DATASET_SITELOC_FILE_PATH", newpath)
 
+    def get_deposit_ui_support(self):
+        """Returns True if deposit_ui environment is in place on this site."""
+        val = self._getValue("SITE_ARCHIVE_UI_STORAGE_PATH")
+        return bool(val)
+
 
 class ConfigInfoAppEm(ConfigInfoAppBase):
     """Access configuration for EM schema, resources, etc."""
