@@ -59,6 +59,7 @@ class MyConfigInfo(ConfigInfo):
         self._resources_ro = "/tmp/resources"  # noqa: S108
         self._resources_rw = None
         self._ds_loc_path = None
+        self._archive_ui_path = None
         super(MyConfigInfo, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
     def get(self, keyWord, default=None):
@@ -68,6 +69,8 @@ class MyConfigInfo(ConfigInfo):
             val = self._resources_ro
         elif keyWord == "RW_RESOURCE_PATH":
             val = self._resources_rw
+        elif keyWord == "SITE_ARCHIVE_UI_STORAGE_PATH":
+            val = self._archive_ui_path
         else:
             # sys.stderr.write("XXXXX Unknown site config fetching %s\n" % keyWord)
             val = super(MyConfigInfo, self).get(keyWord=keyWord, default=default)
@@ -94,6 +97,14 @@ class RwConfig(MyConfigInfo):
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
         super(RwConfig, self).__init__(siteId=siteId, verbose=verbose, log=log)
         self._resources_rw = os.path.join(TESTOUTPUT, "depuirw")
+
+
+class SplitDepositUIConfig(MyConfigInfo):
+    """deposit-ui configuration"""
+
+    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+        super(SplitDepositUIConfig, self).__init__(siteId=siteId, verbose=verbose, log=log)
+        self._archive_ui_path = "/tmp/pathsomewhere"  # noqa: S108
 
 
 class ConfigInfoAppDepUITests(unittest.TestCase):
@@ -139,6 +150,15 @@ class ConfigInfoAppDepUITests(unittest.TestCase):
         appmess = ci.get("COMMUNICATION_APPROVAL_WITHOUT_CHANGES_MESSAGE_SUBJECTS")
         self.assertTrue(len(appmess) == 1, appmess)
         self.assertTrue(appmess == ["Approval without corrections"])
+
+    def testDepositUiSupport(self):
+        """Tests the deposit-ui support"""
+        cia = ConfigInfoAppDepUI()
+        self.assertFalse(cia.get_deposit_ui_support())
+
+        with patch("wwpdb.utils.config.ConfigInfoApp.ConfigInfo", side_effect=SplitDepositUIConfig) as _mock_method:  # noqa: F841
+            cia = ConfigInfoAppDepUI()
+            self.assertTrue(cia.get_deposit_ui_support())
 
 
 if __name__ == "__main__":  # pragma: no cover

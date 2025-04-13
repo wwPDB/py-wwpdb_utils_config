@@ -410,6 +410,7 @@ class ConfigInfoData:
         "complexity-report": (["pdbx"], "complexity-report"),
         "bundle-session-archive": (["tar", "tgz"], "bundle-session-archive"),
         "bundle-session-deposit": (["tar", "tgz"], "bundle-session-deposit"),
+        "bundle-session-deposit-ui": (["tar", "tgz"], "bundle-session-deposit-ui"),
         "bundle-session-upload": (["tar", "tgz"], "bundle-session-upload"),
         "bundle-session-tempdep": (["tar", "tgz"], "bundle-session-tempdep"),
         "bundle-session-uitemp": (["tar", "tgz"], "bundle-session-uitemp"),
