@@ -419,6 +419,7 @@ class ConfigInfoData:
         "manifest-session": (["json"], "manifest-session"),
         "manifest-session-bundle": (["json"], "manifest-session-bundle"),
         "pcm-missing-data": (["csv"], "pcm-missing-data"),
+        "deposit-to-archive-wfcfg": (["json"], "deposit-to-archive-wfcfg"),
         "any": (["any"], "any"),
     }  # type: Dict[str, Tuple[List[str], str]]
     """Base dictionary of supported file formats for each recognized content type.
