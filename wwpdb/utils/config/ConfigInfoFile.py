@@ -77,7 +77,7 @@ class ConfigInfoFile:
                 # Python 3.2 deprecated
                 config = ConfigParser.ConfigParser(defaults=self.__mockdefaults)
             else:
-                config = ConfigParser.SafeConfigParser(defaults=self.__mockdefaults)
+                config = ConfigParser.SafeConfigParser(defaults=self.__mockdefaults)  # pylint: disable=no-member
             config.read(configFilePath)
             sectionL = config.sections()
             for section in sectionL:
