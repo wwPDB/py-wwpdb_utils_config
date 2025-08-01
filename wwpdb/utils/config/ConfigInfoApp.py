@@ -230,10 +230,13 @@ class ConfigInfoAppCommon(ConfigInfoAppCc):
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
         super(ConfigInfoAppCommon, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
-    def get_pdbx_dictionary_name_dict(self):
+    def get_pdbx_dictionary_name_dict(self) -> dict[str, str]:
+        """ Returns a dict of PDBx/mmCIF dictionaries. Keys include
+        ARCHIVE_CURRENT, ARCHIV_NEXT, DEPOSIT, VRPT"""
         return self._cI.get("PDBX_DICTIONARY_NAME_DICT", {})
 
-    def get_mmcif_deposit_dict_filename(self):
+    def get_mmcif_deposit_dict_filename(self) -> str:
+        """Returns the name of the dictionary used by the deposition system. Currently `mmcif_pdbx_v5_next`."""
         return self.get_pdbx_dictionary_name_dict().get("DEPOSIT")
 
     def get_mmcif_archive_current_dict_filename(self):

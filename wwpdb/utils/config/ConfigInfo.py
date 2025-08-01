@@ -27,6 +27,7 @@ __version__ = "V0.01"
 import os
 import sys
 
+from typing import Any
 from wwpdb.utils.config.ConfigInfoData import ConfigInfoData
 
 
@@ -51,6 +52,13 @@ class ConfigInfo:
     """
 
     def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+        """
+        Args:
+            siteId (str): Default site id, or uses system default
+            verbose (bool):  boolean flag to activate verbose logging.
+            log: stream for logging.
+        """
+
         self.__siteId = siteId
         self.__verbose = verbose
         self.__lfh = log
@@ -67,8 +75,13 @@ class ConfigInfo:
         self.__sI = ConfigInfoData(siteId=self.__siteId, verbose=self.__verbose)
         self.__D = self.__sI.getConfigDictionary()
 
-    def get(self, keyWord, default=None):
-        """Returns the site-specific value assigned to the input keyword or the default value -"""
+    def get(self, keyWord: str, default: Any=None) -> Any:
+        """Returns the site-specific value assigned to the input keyword or the default value.
+
+        Args:
+           keyWord: Key to lookup
+        
+        """
         if keyWord is not None and keyWord in self.__D:
             return self.__D[keyWord]
         return default
