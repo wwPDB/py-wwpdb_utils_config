@@ -612,6 +612,18 @@ class ConfigInfoAppValidation(ConfigInfoAppBase):
         return os.path.join(self.get_ccp4root(), "bin", "density-fitness")
 
 
+class ConfigInfoAppMessaging(ConfigInfoAppBase):
+    """A class for messaging related configuration"""
+
+    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+        super(ConfigInfoAppMessaging, self).__init__(siteId=siteId, verbose=verbose, log=log)
+
+    def get_msgdb_support(self):
+        """Returns true if site is using database for communication"""
+        status = bool(self._cI.get("SITE_MESSAGE_DB_NAME"))
+        return status
+
+
 class ConfigInfoAppCommunication(ConfigInfoAppBase):
     """Access configuration for sending email"""
 
