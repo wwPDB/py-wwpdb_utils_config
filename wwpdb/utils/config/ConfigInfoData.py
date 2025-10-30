@@ -567,7 +567,7 @@ class ConfigInfoData:
         "WWPDB_DEPLOY_PRODUCTION_PDBJ": "https://onedep-ann-1.pdbj.org/service/messaging/archive_msg",
         "WWPDB_DEPLOY_PRODUCTION_PDBC": "https://onedep-ann-pdbc.pdbj.org/service/messaging/archive_msg",
         "WWPDB_DEPLOY_ALPHA_RU": "https://da-ann-alpha-0.rcsb.rutgers.edu/service/messaging/archive_msg",
-        "WWPDB_DEPLOY_BETA_RU": "http://onedep-beta-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg",
+        "WWPDB_DEPLOY_BETA_RU": "https://onedep-beta-ann.rcsb.rutgers.edu/service/messaging/archive_msg",
         "WWPDB_DEPLOY_DEPGRP1_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/archive_msg",
         "WWPDB_DEPLOY_DEPGRP2_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/archive_msg",
         "WWPDB_DEPLOY_TEST_RU": "https://da-test-ann.rcsb.rutgers.edu/service/messaging/archive_msg",
