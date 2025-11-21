@@ -266,6 +266,10 @@ class AliasedSiteId(str):
         """Hash based on canonical ID so it works as dict key."""
         return hash(self._canonical)
     
+    def __str__(self):
+        """String representation - returns the canonical ID."""
+        return self._canonical
+    
     def __repr__(self):
         """String representation for debugging."""
         if self._aliases:
