@@ -275,6 +275,68 @@ class AliasedSiteId(str):
         if self._aliases:
             return f"AliasedSiteId('{self._canonical}', aliases={self._aliases})"
         return f"AliasedSiteId('{self._canonical}')"
+    
+    def __contains__(self, item):
+        """Check if item is contained in any of the IDs."""
+        return any(item in site_id for site_id in self._all_ids)
+    
+    def __add__(self, other):
+        """Concatenate with another string, returning regular string."""
+        return str(self) + str(other)
+    
+    def __radd__(self, other):
+        """Right-side concatenation."""
+        return str(other) + str(self)
+    
+    def __lt__(self, other):
+        """Less than comparison based on lexicographically smallest ID."""
+        self_min = min(self._all_ids)
+        if isinstance(other, AliasedSiteId):
+            other_min = min(other._all_ids)
+            return self_min < other_min
+        return self_min < str(other)
+    
+    def __le__(self, other):
+        """Less than or equal comparison based on lexicographically smallest ID."""
+        self_min = min(self._all_ids)
+        if isinstance(other, AliasedSiteId):
+            other_min = min(other._all_ids)
+            return self_min <= other_min
+        return self_min <= str(other)
+    
+    def __gt__(self, other):
+        """Greater than comparison based on lexicographically smallest ID."""
+        self_min = min(self._all_ids)
+        if isinstance(other, AliasedSiteId):
+            other_min = min(other._all_ids)
+            return self_min > other_min
+        return self_min > str(other)
+    
+    def __ge__(self, other):
+        """Greater than or equal comparison based on lexicographically smallest ID."""
+        self_min = min(self._all_ids)
+        if isinstance(other, AliasedSiteId):
+            other_min = min(other._all_ids)
+            return self_min >= other_min
+        return self_min >= str(other)
+    
+    def __copy__(self):
+        """Create a copy of this AliasedSiteId instance."""
+        return AliasedSiteId(self._canonical, *self._aliases)
+    
+    def copy(self):
+        """Create a copy of this AliasedSiteId instance."""
+        return self.__copy__()
+    
+    @property
+    def canonical(self):
+        """Return the canonical site ID."""
+        return self._canonical
+    
+    @property
+    def aliases(self):
+        """Return set of all alias IDs (excluding canonical)."""
+        return self._aliases.copy()
 
 
 class ConfigInfoData:
