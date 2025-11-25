@@ -218,7 +218,7 @@ except:  # noqa: E722 pylint: disable=bare-except
     pass
 
 
-class AliasedSiteId(str):
+class AliasedSiteId(str):  # noqa: SLOT000
     """
     A string subclass that can equal multiple site IDs.
 
@@ -326,7 +326,7 @@ class AliasedSiteId(str):
 
     def copy(self):
         """Create a copy of this AliasedSiteId instance."""
-        return self.__copy__()
+        return self.__copy__()  # noqa: PLC2801
 
     @property
     def canonical(self):
