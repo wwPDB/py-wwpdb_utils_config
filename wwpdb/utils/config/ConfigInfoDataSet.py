@@ -229,7 +229,8 @@ class ConfigInfoDataSet:
             for ky in self.__depIdAssignments:
                 idMin, idMax = self.__depIdAssignments[ky]
                 if (idVal >= idMin) and (idVal <= idMax):
-                    return ky
+                    # This is to ensure a strings is returned for PDBE_PROD
+                    return str(ky)
         except ValueError as e:
             # From trying to take int
             if self.__debug:
