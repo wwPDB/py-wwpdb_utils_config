@@ -50,8 +50,8 @@ class ConfigInfoDataSetExec:
                 if d[ky] not in sD:
                     sD[d[ky]] = 0
                 sD[d[ky]] += 1
-            for ky in sD:
-                self.__lfh.write("  Site %-40r   count %8d\n" % (ky, sD[ky]))
+            for ky, val in sD.values():
+                self.__lfh.write("  Site %-40r   count %8d\n" % (ky, val))
         except Exception as e:  # noqa: BLE001
             self.__lfh.write("checkConfig failing %r\n" % str(e))
             traceback.print_exc(file=self.__lfh)

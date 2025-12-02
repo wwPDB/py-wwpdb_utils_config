@@ -207,7 +207,7 @@ import os
 import sys
 import traceback
 
-if sys.version_info[0] > 2:
+if sys.version_info[0] > 2:  # noqa: UP036
     from typing import Dict, List, Tuple  # noqa: F401
 
 # ----------------------------------------------------------------------------------------------
@@ -508,7 +508,7 @@ class ConfigInfoData:
         "WWPDB_DEPLOY_DEPGRP2_RU": (1001400001, 1001500000),
         # 'PDBE_LEGACY': (1290000001, 1300000000), #PDBE legacy are incorporated into PDBE_PROD
         "PDBE_PROD": (1200000001, 1300000000),
-        'PDBE_PROD_EXTERNAL': (1200000001, 1300000000),
+        "PDBE_PROD_EXTERNAL": (1200000001, 1300000000),
         "PDBE_STG": (8211000001, 8212000000),
         "PDBE_DEV": (8233000001, 8234000000),
         "PDBE_EMDB": (8212000001, 8213000000),

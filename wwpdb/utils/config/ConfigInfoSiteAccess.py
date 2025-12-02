@@ -153,7 +153,7 @@ class ConfigInfoSiteAccess:
             tBegin, tEnd = self.__siteAccessD[siteId]
             dtBegin = self.__getDateTimeUTC(tBegin)
             dtEnd = self.__getDateTimeUTC(tEnd)
-            if sys.version_info[0] > 2:
+            if sys.version_info[0] > 2:  # noqa: UP036
                 dtNow = datetime.datetime.now(datetime.timezone.utc)
             else:
                 dtNow = datetime.datetime.utcnow()  # noqa: DTZ003
@@ -185,7 +185,7 @@ class ConfigInfoSiteAccess:
     def __getDateTimeUTC(dateTimeStamp):
         # Converts datetie to UTC
         dt = datetime.datetime.strptime(dateTimeStamp, "%Y-%m-%d %H:%M:%S")  # noqa: DTZ007
-        if sys.version_info[0] > 2:
+        if sys.version_info[0] > 2:  # noqa: UP036
             tz = datetime.timezone.utc
             dt = dt.replace(tzinfo=tz)
         return dt

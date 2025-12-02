@@ -73,7 +73,7 @@ class ConfigInfoFile:
         """
         retD = {}
         try:
-            if sys.version_info[0] > 2:
+            if sys.version_info[0] > 2:  # noqa: UP036
                 # Python 3.2 deprecated
                 config = ConfigParser.ConfigParser(defaults=self.__mockdefaults)
             else:
@@ -425,7 +425,7 @@ class ConfigInfoFileCache(object):
                         logger.error("failed writing backup cache file for %s", cacheFilePath)
                         return False
             with open(cacheFilePath, "wb") as cacheFile:
-                if sys.version_info[0] > 2:
+                if sys.version_info[0] > 2:  # noqa: UP036
                     cacheFile.write((template % cacheD).encode())
                 else:
                     cacheFile.write(template % cacheD)

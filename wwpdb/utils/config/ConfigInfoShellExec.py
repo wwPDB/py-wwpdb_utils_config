@@ -26,7 +26,7 @@ import os
 import sys
 import traceback
 
-if sys.version_info[0] > 2:
+if sys.version_info[0] > 2:  # noqa: UP036
     import importlib
 else:
     import imp  # pylint: disable=deprecated-module
@@ -137,7 +137,7 @@ class ConfigInfoShellExec:
         tD = {}
         try:
             fp = self.__getSitePythonCachePath(topConfigPath, siteLoc, siteId)
-            if sys.version_info[0] > 2:
+            if sys.version_info[0] > 2:  # noqa: UP036
                 # Assumes > python 3.4 - import.machinery.SourceFileLoader
                 # would be needed
                 spec = importlib.util.spec_from_file_location("ConfigInfoFileCache", fp)
@@ -205,7 +205,7 @@ class ConfigInfoShellExec:
         """
         retD = {}
         try:
-            if sys.version_info[0] > 2:
+            if sys.version_info[0] > 2:  # noqa: UP036
                 # Python 3.2 deprecates SafeConfigParser()
                 config = ConfigParser.ConfigParser()
             else:

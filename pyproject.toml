@@ -62,12 +62,15 @@ include = [
 
 #
 #=================================== Ruff lint ==============================#
+[tool.ruff]
+target-version = "py37"
+output-format = "concise"
 
 [tool.ruff.lint]
 
 #
 # ------------------------- Ruff misc. options ----------------------
-preview = true
+preview = false
 explicit-preview-rules = true
 
 ignore = [
