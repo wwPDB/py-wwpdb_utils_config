@@ -66,6 +66,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
             "D_1000200000",
             "D_1000200001",
             "1001200000",
+            "D_1200000001",
             1000200000,
             8000200001,
             8000200002,
@@ -81,6 +82,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
             "D_1000200001": "WWPDB_DEPLOY_PRODUCTION_RU",
             "1001200000": "WWPDB_DEPLOY_PRODUCTION_RU",
             1000200000: "WWPDB_DEPLOY_PRODUCTION_RU",
+            "D_1200000001": "PDBE_PROD",
             8000200001: None,
             8000200002: None,
             8000200003: None,
@@ -107,6 +109,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
             "WWPDB_DEPLOY_PRODUCTION_UCSD": (1001200001, 1001300000),
             "WWPDB_DEPLOY_BETA_RU": (8000240000, 8000250000),
             "PDBE_PROD": (1200000001, 1300000000),
+            "PDBE_PROD_EXTERNAL": (1200000001, 1300000000),
             "WWPDB_DEPLOY_PRODUCTION_PDBJ": (1300000001, 1400000000),
             "BMRB": (800000, 999999),
             "WWPDB_DEPLOY_TEST_RU": (8000210000, 8000215000),
@@ -150,6 +153,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
             for testId in self.__testIdList:
                 siteId = cfds.getSiteId(depSetId=testId)
                 logger.info(" testId %-12s siteId %20s", testId, siteId)
+                self.assertTrue(isinstance(siteId, str) or siteId is None)
                 self.assertEqual(siteId, self.__testIdLoc[testId])
         except Exception as e:  # pragma: no cover
             logger.exception("Update to get site id for dataset %s", str(e))
