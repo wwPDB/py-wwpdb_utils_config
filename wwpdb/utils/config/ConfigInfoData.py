@@ -548,6 +548,7 @@ class ConfigInfoData:
         "WWPDB_DEPLOY_PRODUCTION_PDBJ": "https://deposit-pdbj.wwpdb.org/deposition",
         "WWPDB_DEPLOY_PRODUCTION_PDBC": "https://deposit-pdbc.wwpdb.org/deposition",
         "PDBE_PROD": "https://deposit-pdbe.wwpdb.org/deposition",
+        "PDBE_PROD_EXTERNAL": "https://deposit-pdbe.wwpdb.org/deposition",
         "PDBE_LEGACY": "https://deposit-pdbe.wwpdb.org/deposition",
         "PDBE_STG": "https://wwwdev.ebi.ac.uk/pdbe-da-staging/deposition",
         "PDBE_DEV": "https://wwwdev.ebi.ac.uk/pdbe-da/deposition",
@@ -572,6 +573,7 @@ class ConfigInfoData:
         "WWPDB_DEPLOY_DEPGRP2_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/archive_msg",
         "WWPDB_DEPLOY_TEST_RU": "https://da-test-ann.rcsb.rutgers.edu/service/messaging/archive_msg",
         "PDBE_PROD": "https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg",
+        "PDBE_PROD_EXTERNAL": "https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg",
         "PDBE_LEGACY": "https://deposit-pdbe.wwpdb.org/service/messaging/archive_msg",
         "PDBE_DEV": "https://wwwdev.ebi.ac.uk/pdbe-da/service/messaging/archive_msg",
     }
@@ -589,6 +591,7 @@ class ConfigInfoData:
         "WWPDB_DEPLOY_DEPGRP2_RU": "https://ann-group-2.rcsb.rutgers.edu/service/messaging/forward_msg",
         "WWPDB_DEPLOY_TEST_RU": "https://da-test-ann.rcsb.rutgers.edu/service/messaging/forward_msg",
         "PDBE_PROD": "https://deposit-pdbe.wwpdb.org/service/messaging/forward_msg",
+        "PDBE_PROD_EXTERNAL": "https://deposit-pdbe.wwpdb.org/service/messaging/forward_msg",
         "PDBE_LEGACY": "https://deposit-pdbe.wwpdb.org/service/messaging/forward_msg",
         "PDBE_DEV": "https://wwwdev.ebi.ac.uk/pdbe-da/service/messaging/forward_msg",
     }
@@ -659,6 +662,7 @@ class ConfigInfoData:
         "PDBE_DEV": "https://dev.pdbe.org",
         "PDBE_STG": "https://dev.pdbe.org",
         "PDBE_PROD": "https://deposit-pdbe.wwpdb.org",
+        "PDBE_PROD_EXTERNAL": "https://deposit-pdbe.wwpdb.org",
         "WWPDB_DEPLOY_PRODUCTION_PDBJ": "https://onedep-contentws-pdbj.wwpdb.org",
         "WWPDB_DEPLOY_PRODUCTION_PDBC": "https://onedep-contentws-pdbc.wwpdb.org",
         "WWPDB_DEPLOY_ALPHA_RU": "https://da-ws-alpha-0.rcsb.rutgers.edu",
