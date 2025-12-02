@@ -218,127 +218,6 @@ except:  # noqa: E722 pylint: disable=bare-except
     pass
 
 
-class AliasedSiteId(str):  # noqa: SLOT000
-    """
-    A string subclass that can equal multiple site IDs.
-
-    This allows a single site ID (like PDBE_PROD) to match against multiple
-    configured site IDs (like PDBE_PROD and PDBE_PROD_EXTERNAL). When used as
-    a dictionary key, it behaves like the canonical site ID. When compared for
-    equality, it matches both the canonical ID and its aliases.
-
-    This solves the "short blanket" problem where web VMs and annotation VMs
-    need different configurations but must share dataset ownership.
-
-    Example:
-        site = AliasedSiteId('PDBE_PROD', 'PDBE_PROD_EXTERNAL')
-        site == 'PDBE_PROD'  # True
-        site == 'PDBE_PROD_EXTERNAL'  # True
-        site == 'WWPDB_DEPLOY_PRODUCTION_RU'  # False
-    """
-
-    def __new__(cls, canonical_id, *aliases):
-        """Create a new AliasedSiteId instance.
-
-        Args:
-            canonical_id: The primary/canonical site ID
-            *aliases: Additional site IDs that should compare as equal
-        """
-        instance = super().__new__(cls, canonical_id)
-        instance._canonical = canonical_id
-        instance._aliases = set(aliases)
-        instance._all_ids = {canonical_id} | instance._aliases
-        return instance
-
-    def __eq__(self, other):
-        """Override equality to match canonical ID or any alias."""
-        if isinstance(other, AliasedSiteId):
-            # Compare sets of IDs - true if any overlap
-            return bool(self._all_ids & other._all_ids)
-        # Compare with string
-        return str(other) in self._all_ids
-
-    def __ne__(self, other):
-        """Override inequality."""
-        return not self.__eq__(other)
-
-    def __hash__(self):
-        """Hash based on canonical ID so it works as dict key."""
-        return hash(self._canonical)
-
-    def __str__(self):
-        """String representation - returns the canonical ID."""
-        return self._canonical
-
-    def __repr__(self):
-        """String representation for debugging."""
-        if self._aliases:
-            return f"AliasedSiteId('{self._canonical}', aliases={self._aliases})"
-        return f"AliasedSiteId('{self._canonical}')"
-
-    def __contains__(self, item):
-        """Check if item is contained in any of the IDs."""
-        return any(item in site_id for site_id in self._all_ids)
-
-    def __add__(self, other):
-        """Concatenate with another string, returning regular string."""
-        return str(self) + str(other)
-
-    def __radd__(self, other):
-        """Right-side concatenation."""
-        return str(other) + str(self)
-
-    def __lt__(self, other):
-        """Less than comparison based on lexicographically smallest ID."""
-        self_min = min(self._all_ids)
-        if isinstance(other, AliasedSiteId):
-            other_min = min(other._all_ids)
-            return self_min < other_min
-        return self_min < str(other)
-
-    def __le__(self, other):
-        """Less than or equal comparison based on lexicographically smallest ID."""
-        self_min = min(self._all_ids)
-        if isinstance(other, AliasedSiteId):
-            other_min = min(other._all_ids)
-            return self_min <= other_min
-        return self_min <= str(other)
-
-    def __gt__(self, other):
-        """Greater than comparison based on lexicographically smallest ID."""
-        self_min = min(self._all_ids)
-        if isinstance(other, AliasedSiteId):
-            other_min = min(other._all_ids)
-            return self_min > other_min
-        return self_min > str(other)
-
-    def __ge__(self, other):
-        """Greater than or equal comparison based on lexicographically smallest ID."""
-        self_min = min(self._all_ids)
-        if isinstance(other, AliasedSiteId):
-            other_min = min(other._all_ids)
-            return self_min >= other_min
-        return self_min >= str(other)
-
-    def __copy__(self):
-        """Create a copy of this AliasedSiteId instance."""
-        return AliasedSiteId(self._canonical, *self._aliases)
-
-    def copy(self):
-        """Create a copy of this AliasedSiteId instance."""
-        return self.__copy__()  # noqa: PLC2801
-
-    @property
-    def canonical(self):
-        """Return the canonical site ID."""
-        return self._canonical
-
-    @property
-    def aliases(self):
-        """Return set of all alias IDs (excluding canonical)."""
-        return self._aliases.copy()
-
-
 class ConfigInfoData:
     """Provides access to shared and site-specific configuration information for the common
     deposition and annotation system.
@@ -628,9 +507,8 @@ class ConfigInfoData:
         "WWPDB_DEPLOY_DEPGRP1_RU": (1001400001, 1001500000),
         "WWPDB_DEPLOY_DEPGRP2_RU": (1001400001, 1001500000),
         # 'PDBE_LEGACY': (1290000001, 1300000000), #PDBE legacy are incorporated into PDBE_PROD
-        # 'PDBE_PROD': (1200000001, 1290000000),
-        # Use AliasedSiteId so PDBE_PROD matches both PDBE_PROD and PDBE_PROD_EXTERNAL
-        AliasedSiteId("PDBE_PROD", "PDBE_PROD_EXTERNAL"): (1200000001, 1300000000),
+        "PDBE_PROD": (1200000001, 1300000000),
+        'PDBE_PROD_EXTERNAL': (1200000001, 1300000000),
         "PDBE_STG": (8211000001, 8212000000),
         "PDBE_DEV": (8233000001, 8234000000),
         "PDBE_EMDB": (8212000001, 8213000000),
