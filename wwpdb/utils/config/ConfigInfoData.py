@@ -599,8 +599,8 @@ class ConfigInfoData:
 
     _regions = {
         "pdbe": ["europe", "africa", "antarctica"],
-        "pdbj": ["asia", "middle east"],
-        "rcsb": ["north america", "south america", "oceania"],
+        "pdbj": ["asia", "middle east", "oceania"],
+        "rcsb": ["north america", "south america"],
     }
     """Dictionary of geographical locations for each site"""
 
