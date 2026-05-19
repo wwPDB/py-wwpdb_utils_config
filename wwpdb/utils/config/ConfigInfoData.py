@@ -616,7 +616,7 @@ class ConfigInfoData:
     _message_subjects = {
         "general": ["Other"],
         "approval": ["Approval without corrections", "Approval with corrections"],  # See below for critical ordering
-        "meta corrections": ["Other corrections"],
+        "meta corrections": ["Metadata corrections"],
         "unlock": ["Re-upload files"],
         "release": ["Release request"],
         "release_with_citation": ["Release with citation update"],
