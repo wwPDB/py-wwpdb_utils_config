@@ -26,11 +26,12 @@ __version__ = "V0.01"
 
 import os
 import sys
+from typing import Any, Dict, Optional, TextIO
 
 from wwpdb.utils.config.ConfigInfoData import ConfigInfoData
 
 
-def getSiteId(defaultSiteId=None):
+def getSiteId(defaultSiteId: Optional[str] = None) -> str:
     """Obtain the site information from the environment or failover to the development site id."""
     siteId = str(os.getenv("WWPDB_SITE_ID", defaultSiteId))
     if siteId is None:
@@ -50,7 +51,13 @@ class ConfigInfo:
 
     """
 
-    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+    __siteId: Optional[str]
+    __verbose: bool
+    __lfh: TextIO
+    __sI: ConfigInfoData
+    __D: Dict[str, Any]
+
+    def __init__(self, siteId: Optional[str] = None, verbose: bool = True, log: TextIO = sys.stderr) -> None:
         self.__siteId = siteId
         self.__verbose = verbose
         self.__lfh = log
@@ -67,13 +74,14 @@ class ConfigInfo:
         self.__sI = ConfigInfoData(siteId=self.__siteId, verbose=self.__verbose)
         self.__D = self.__sI.getConfigDictionary()
 
-    def get(self, keyWord, default=None):
+    def get(self, keyWord: str, default: Any = None) -> Any:
         """Returns the site-specific value assigned to the input keyword or the default value -"""
         if keyWord is not None and keyWord in self.__D:
             return self.__D[keyWord]
         return default
 
-    def dump(self, ofh):
+    def dump(self, ofh: TextIO) -> None:
         """Print the current configuration dictionary ."""
-        for ky in sorted(self.__D.keys()):
-            ofh.write("+ConfigInfo.dump() key: %-40s   value: %s\n" % (ky, self.__D[ky]))
+        ofh.writelines(
+            "+ConfigInfo.dump() key: %-40s   value: %s\n" % (ky, self.__D[ky]) for ky in sorted(self.__D.keys())
+        )

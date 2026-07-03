@@ -26,6 +26,7 @@ import datetime
 import json
 import logging
 import sys
+from typing import Dict, List, Optional, TextIO, Tuple, Union, cast
 
 from oslo_concurrency import lockutils
 
@@ -42,7 +43,7 @@ class ConfigInfoDataSet:
 
     """
 
-    def __init__(self, verbose=False, log=sys.stderr):  # noqa: ARG002 pylint: disable=unused-argument
+    def __init__(self, verbose: bool = False, log: TextIO = sys.stderr) -> None:  # noqa: ARG002 pylint: disable=unused-argument
         self.__verbose = verbose
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
@@ -51,11 +52,11 @@ class ConfigInfoDataSet:
         self.__depIdAssignments = self.__cI.get("SITE_DATASET_ID_ASSIGNMENT_DICTIONARY")
         self.__depTestIdAssignments = self.__cI.get("SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY")
         self.__siteBackupD = self.__cI.get("SITE_BACKUP_DICT", default={})
-        self.__dsLocD = None
+        self.__dsLocD: Optional[Dict[str, str]] = None
         self.__lockDirPath = self.__cI.get("SITE_SERVICE_REGISTRATION_LOCKDIR_PATH", "/tmp")  # noqa: S108
         lockutils.set_defaults(self.__lockDirPath)
 
-    def getSiteId(self, depSetId):
+    def getSiteId(self, depSetId: Union[str, int]) -> Optional[str]:
         """Return siteId for the input depSetId subject to site backup details -
 
         siteBackupD[prodSite] = [backupSite1, backupSite2,...]
@@ -71,8 +72,8 @@ class ConfigInfoDataSet:
 
         return siteId
 
-    def getDataSetLocationDict(self):
-        d = {}
+    def getDataSetLocationDict(self) -> Dict[str, str]:
+        d: Dict[str, str] = {}
         try:
             d = self.__readLocationDictionary()
             return d
@@ -82,7 +83,8 @@ class ConfigInfoDataSet:
                 logger.exception("failed reading data set location dictionary")
         return d
 
-    def getDataSetLocations(self, siteId):
+    def getDataSetLocations(self, siteId: str) -> List[str]:
+        """Returns list of datasets at a particular siteId"""
         dsL = []
         try:
             d = self.__readLocationDictionary()
@@ -96,32 +98,32 @@ class ConfigInfoDataSet:
                 logger.exception("failed reading data set locations for site %r - %s", siteId, str(e))
         return []
 
-    def removeDataSets(self, dataSetIdList):
+    def removeDataSets(self, dataSetIdList: List[str]) -> bool:
         try:
             d = self.__readLocationDictionary()
             for dsId in dataSetIdList:
                 if dsId in d:
                     del d[dsId]
-            return self.__writeLocationDictionary(d)
+            return cast("bool", self.__writeLocationDictionary(d))  # type: ignore[redundant-cast,unused-ignore]
         except Exception as e:
             logger.error("failed %s", str(e))
             if self.__debug:
                 logger.exception("failed")
         return False
 
-    def writeLocationList(self, siteId, dataSetIdList):
+    def writeLocationList(self, siteId: str, dataSetIdList: List[str]) -> bool:
         try:
             d = self.__readLocationDictionary()
             for dsId in dataSetIdList:
                 d[dsId] = siteId
-            return self.__writeLocationDictionary(d)
+            return cast("bool", self.__writeLocationDictionary(d))  # type: ignore[redundant-cast,unused-ignore]
         except Exception as e:
             logger.error("failed data set locations for site %r - %s", siteId, str(e))
             if self.__debug:
                 logger.exception("failed data set locations for site %rs", siteId)
         return False
 
-    def __readLocationDictionary(self):
+    def __readLocationDictionary(self) -> Dict[str, str]:
         """Read the dictionary cotaining data set site location information.
 
         Returns: d[<data_set_id>] = <site_id> or a empty dictionary.
@@ -129,15 +131,15 @@ class ConfigInfoDataSet:
         fp = self.__cIDepUI.get_site_dataset_siteloc_file_path()
         try:
             with open(fp) as infile:
-                return json.load(infile)
+                return cast("Dict[str, str]", json.load(infile))
         except Exception as e:
             logger.error("failed reading json resource file %s - %s", fp, str(e))
             if self.__debug:
                 logger.exception("failed reading json resource file %s", fp)
         return {}
 
-    @lockutils.synchronized("configdataset.exceptionfile-lock", external=True)
-    def __writeLocationDictionary(self, dsLocD, backup=True):
+    @lockutils.synchronized("configdataset.exceptionfile-lock", external=True)  # type: ignore[untyped-decorator,unused-ignore]  # newer versions have decorator
+    def __writeLocationDictionary(self, dsLocD: Dict[str, str], backup: bool = True) -> bool:
         """Write the input dictionary cotaining exceptional data set to site correspondences,
 
         Returns: True for success or False otherwise
@@ -159,7 +161,7 @@ class ConfigInfoDataSet:
                 logger.exception("failed writing json resource file %s", fp)
         return False
 
-    def getDefaultIdRange(self, siteId):
+    def getDefaultIdRange(self, siteId: str) -> Tuple[int, int]:
         """Return the default upper and lower deposition data set identifier codes
         assigned to the input siteId.
 
@@ -175,7 +177,7 @@ class ConfigInfoDataSet:
             DEPID_START, DEPID_STOP = (-1, -1)
         return (DEPID_START, DEPID_STOP)
 
-    def getTestIdRange(self, siteId):
+    def getTestIdRange(self, siteId: str) -> Tuple[int, int]:
         """Return the upper and lower deposition data set identifier codes
         assigned to the input siteId.
 
@@ -189,11 +191,11 @@ class ConfigInfoDataSet:
             DEPID_START, DEPID_STOP = (-1, -1)
         return (DEPID_START, DEPID_STOP)
 
-    def getDefaultSiteId(self, depSetId):
+    def getDefaultSiteId(self, depSetId: str) -> Optional[str]:
         """Get the default site assignment for the input data set id."""
         return self.__getSiteId(depSetId)
 
-    def __getSiteId(self, depSetId):
+    def __getSiteId(self, depSetId: Union[str, int]) -> Optional[str]:
         """Return the siteId to which the input depSetId is within the default
         code assignment range.
 
@@ -206,7 +208,7 @@ class ConfigInfoDataSet:
                 self.__dsLocD = self.__readLocationDictionary()
             if str(depSetId)[:2] == "D_":
                 if depSetId in self.__dsLocD:
-                    return self.__dsLocD[depSetId]
+                    return self.__dsLocD[cast("str", depSetId)]  # type: ignore[redundant-cast,unused-ignore]
             else:
                 tId = "D_" + str("%010d" % int(depSetId))
                 if tId in self.__dsLocD:

@@ -34,6 +34,7 @@ import os
 import sys
 import traceback
 from optparse import SUPPRESS_HELP, OptionParser  # pylint: disable=deprecated-module
+from typing import Any, Dict, List, Optional, TextIO, Tuple
 
 from wwpdb.utils.config.ConfigInfoFile import ConfigInfoFile
 
@@ -48,7 +49,15 @@ class ConfigInfoFileExec:
 
     """
 
-    def __init__(self, mockTopPath=None, sourceDirPath=None, verbose=True, log=sys.stderr):
+    __sourceDirPath: Optional[str]
+
+    def __init__(
+        self,
+        mockTopPath: Optional[str] = None,
+        sourceDirPath: Optional[str] = None,
+        verbose: bool = True,
+        log: TextIO = sys.stderr,
+    ) -> None:
         self.__lfh = log
         self.__verbose = verbose
         self.__debug = False
@@ -60,23 +69,23 @@ class ConfigInfoFileExec:
             self.__sourceDirPath = self.__topConfigPath
 
         # Complete list of sections maintained as private namespaces
-        self.__privateSectionNameList = []
+        self.__privateSectionNameList: List[str] = []
         # additional configuration sections added to the common namespace
-        self.__extraCommonSectionNameList = []
+        self.__extraCommonSectionNameList: List[str] = []
 
-    def setPrivateSectionNames(self, sectionNameList):
+    def setPrivateSectionNames(self, sectionNameList: List[str]) -> None:
         self.__privateSectionNameList = sectionNameList
 
-    def __getPrivateSectionNames(self):
+    def __getPrivateSectionNames(self) -> List[str]:
         return self.__privateSectionNameList
 
-    def addCommonSectionNames(self, sectionNameList):
+    def addCommonSectionNames(self, sectionNameList: List[str]) -> None:
         self.__extraCommonSectionNameList = sectionNameList
 
-    def __getExtraCommonSectionNames(self):
+    def __getExtraCommonSectionNames(self) -> List[str]:
         return self.__extraCommonSectionNameList
 
-    def testConfigPath(self, accessType="read"):
+    def testConfigPath(self, accessType: str = "read") -> bool:
         ok = True
         try:
             if self.__topConfigPath is None:
@@ -95,32 +104,51 @@ class ConfigInfoFileExec:
 
         return ok
 
-    def __getCommonConfigPath(self, sectionName="common", context="common"):
+    def __getCommonConfigPath(self, sectionName: str = "common", context: str = "common") -> Tuple[str, str, str]:
+        if self.__sourceDirPath is None:
+            msg = "Source directory not set"
+            raise ValueError(msg)
         cfPath = os.path.join(self.__sourceDirPath, "common", "common.cfg")
         return cfPath, sectionName, context
 
-    def __getSiteCommonConfigPath(self, siteLoc, sectionName="site_common", context="common"):
+    def __getSiteCommonConfigPath(
+        self, siteLoc: str, sectionName: str = "site_common", context: str = "common"
+    ) -> Tuple[str, str, str]:
+        if self.__sourceDirPath is None:
+            msg = "Source directory not set"
+            raise ValueError(msg)
         cfPath = os.path.join(self.__sourceDirPath, siteLoc.lower(), "site_common", "common.cfg")
         return cfPath, sectionName, context
 
-    def __getSiteConfigPath(self, siteLoc, siteId, sectionName, context="common"):
+    def __getSiteConfigPath(
+        self, siteLoc: str, siteId: str, sectionName: str, context: str = "common"
+    ) -> Tuple[str, str, str]:
+        if self.__sourceDirPath is None:
+            msg = "Source directory not set"
+            raise ValueError(msg)
         cfPath = os.path.join(self.__sourceDirPath, siteLoc.lower(), siteId.lower(), "site.cfg")
         return cfPath, sectionName, context
 
-    def __getSitePythonCachePath(self, siteLoc, siteId):
+    def __getSitePythonCachePath(self, siteLoc: str, siteId: str) -> str:
+        if self.__topConfigPath is None:
+            msg = "Top Config directory not set"
+            raise ValueError(msg)
         cfPath = os.path.join(self.__topConfigPath, siteLoc.lower(), siteId.lower(), "ConfigInfoFileCache.py")
         return cfPath
 
-    def __getSiteJsonCachePath(self, siteLoc, siteId):
+    def __getSiteJsonCachePath(self, siteLoc: str, siteId: str) -> str:
+        if self.__topConfigPath is None:
+            msg = "Top Config directory not set"
+            raise ValueError(msg)
         cfPath = os.path.join(self.__topConfigPath, siteLoc.lower(), siteId.lower(), "ConfigInfoFileCache.json")
         return cfPath
 
-    def __getCommonConfig(self):
+    def __getCommonConfig(self) -> Dict[str, Any]:
         """Return the project common configuration options as a dictionary.
 
         Really depends on config_as_object setting to deserialize dictionary ...
         """
-        cD = {}
+        cD: Dict[str, Any] = {}
         try:
             cfPath, sectionName, _context = self.__getCommonConfigPath(sectionName="common", context="common")  # pylint: disable=unused-variable
             cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
@@ -133,7 +161,13 @@ class ConfigInfoFileExec:
 
         return cD
 
-    def __getConfigPathSectionList(self, siteLoc, siteId, extraCommonSectionNameList, privateSectionNameList):
+    def __getConfigPathSectionList(
+        self,
+        siteLoc: Optional[str],
+        siteId: Optional[str],
+        extraCommonSectionNameList: List[str],
+        privateSectionNameList: List[str],
+    ) -> List[Tuple[str, str, str]]:
         """Returns the search path of sections and configuration file paths for the input location and site.
         The site specific configuration file path is always included.   The site-common or project common
         configuration files are included only if these exist.
@@ -142,7 +176,7 @@ class ConfigInfoFileExec:
 
         Returns: [(configPath,sectionName,context), (configPath,sectionName),context), ...]
         """
-        cfPathSectionList = []
+        cfPathSectionList: List[Tuple[str, str, str]] = []
         if self.__topConfigPath is not None and siteId is not None and siteLoc is not None:
             (p, s, c) = self.__getSiteConfigPath(siteLoc=siteLoc, siteId=siteId, sectionName=siteId.lower())
             if p is not None and os.access(p, os.R_OK):
@@ -178,9 +212,9 @@ class ConfigInfoFileExec:
 
         return cfPathSectionList
 
-    def __getSiteConfig(self, siteLoc, siteId, deserialize=True):
+    def __getSiteConfig(self, siteLoc: str, siteId: str, deserialize: bool = True) -> Dict[str, Any]:
         """Return the complete site of configuration options for the input location and site."""
-        cD = {}
+        cD: Dict[str, Any] = {}
         try:
             privateSectionNameList = self.__getPrivateSectionNames()
             extraCommonSectionNameList = self.__getExtraCommonSectionNames()
@@ -190,7 +224,7 @@ class ConfigInfoFileExec:
             if self.__debug:
                 self.__lfh.write("__getSiteConfig Path list for location %r site %r\n" % (siteLoc, siteId))
                 for pTup in pathSectList:
-                    self.__lfh.write("__getSiteConfig %r\n" % pTup)
+                    self.__lfh.write("__getSiteConfig %r %r %r\n" % pTup)
             cf = ConfigInfoFile(mockTopPath=self.__mockTopPath, verbose=self.__verbose, log=self.__lfh)
             cD = cf.readConfigFileList(configPathSectionList=pathSectList)
             if deserialize:
@@ -210,7 +244,7 @@ class ConfigInfoFileExec:
             traceback.print_exc(file=self.__lfh)
         return cD
 
-    def checkConfig(self, siteLoc, siteId, deserialize=True):
+    def checkConfig(self, siteLoc: str, siteId: str, deserialize: bool = True) -> None:
         """Perform sanity checks for the configuration options for the input location and site."""
         try:
             cD = self.__getSiteConfig(siteLoc, siteId, deserialize=deserialize)
@@ -233,7 +267,7 @@ class ConfigInfoFileExec:
             self.__lfh.write("checkConfig for location %r site %r - %r\n" % (siteLoc, siteId, str(e)))
             traceback.print_exc(file=self.__lfh)
 
-    def printConfig(self, siteLoc, siteId, deserialize=True):
+    def printConfig(self, siteLoc: str, siteId: str, deserialize: bool = True) -> None:
         """Print the configuration options for the input location and site."""
         try:
             cD = self.__getSiteConfig(siteLoc, siteId, deserialize=deserialize)
@@ -250,7 +284,7 @@ class ConfigInfoFileExec:
             self.__lfh.write("printConfig failing for location %r site %r - %r\n" % (siteLoc, siteId, str(e)))
             traceback.print_exc(file=self.__lfh)
 
-    def writeConfigCache(self, siteLoc, siteId, skipEmpty=True):
+    def writeConfigCache(self, siteLoc: str, siteId: str, skipEmpty: bool = True) -> bool:
         """Write Python and JSON format cache files using the configuration options for input location and site."""
         self.__lfh.write("Starting writeConfigCache\n")
         try:
@@ -273,7 +307,7 @@ class ConfigInfoFileExec:
 
         return False
 
-    def writeLocationConfigCache(self, siteLoc, skipEmpty=True):
+    def writeLocationConfigCache(self, siteLoc: str, skipEmpty: bool = True) -> bool:
         """Write Python and JSON format cache files using the configuration options for input location and site."""
         self.__lfh.write("Starting writeLocationConfigCache\n")
         try:
@@ -312,7 +346,7 @@ class ConfigInfoFileExec:
 
         return False
 
-    def __getLocSiteD(self):
+    def __getLocSiteD(self) -> Dict[str, List[str]]:
         # Fetch custom location site details from the global common configuration file -
         comD = self.__getCommonConfig()
         siteD = {}
@@ -346,7 +380,7 @@ class ConfigInfoFileExec:
         return siteD
 
 
-def main():  # pragma: no cover
+def main() -> None:  # pragma: no cover
     usage = """usage: %prog [options]
 
     Examples:

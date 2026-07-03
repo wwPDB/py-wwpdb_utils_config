@@ -55,7 +55,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
     Test cases for checking site access status information.
     """
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.__startTime = time.time()
         logger.info("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
 
@@ -71,7 +71,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
             "SILLYSITE",
         ]
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         endTime = time.time()
         logger.info(
             "Completed %s at %s (%.4f seconds)",
@@ -80,7 +80,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
             endTime - self.__startTime,
         )
 
-    def testSiteAvailable(self):
+    def testSiteAvailable(self) -> None:
         """Test case -  return site access status."""
         try:
             cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
@@ -97,7 +97,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
             logger.exception("Determining if site is available %s", str(e))
             self.fail()
 
-    def testSiteReachable(self):
+    def testSiteReachable(self) -> None:
         """Test case -  return if the site is reachable."""
         try:
             cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
@@ -113,7 +113,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
         status = cfsa.isServiceReachable("UNKNOWN SITE", timeout=5)
         self.assertFalse(status, "Received info on nonexistant site")
 
-    def testSiteGetCorrespondence(self):
+    def testSiteGetCorrespondence(self) -> None:
         """Test case -  return if site correspondence returned"""
         cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
         status = cfsa.getCorrespondenceService("WWPDB_DEPLOY_PRODUCTION_RU")
@@ -121,7 +121,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
         status = cfsa.getCorrespondenceService("SITE_NO_EXIST")
         self.assertIsNone(status, "Found unexpected correspondece endpoint")
 
-    def testSiteGetForwarding(self):
+    def testSiteGetForwarding(self) -> None:
         """Test case -  return for site forwarding endpoint"""
         cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
         status = cfsa.getForwardingService("WWPDB_DEPLOY_PRODUCTION_RU")
@@ -129,7 +129,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
         status = cfsa.getForwardingService("SITE_NO_EXIST")
         self.assertIsNone(status, "Found unexpected forwarding endpoint")
 
-    def testSiteGetDownTimeRange(self):
+    def testSiteGetDownTimeRange(self) -> None:
         """Test case -  return for site forwarding endpoint"""
         cfsa = ConfigInfoSiteAccess(self.__verbose, self.__lfh)
         status = cfsa.getSiteDownTimeRange("WWPDB_DEPLOY_PRODUCTION_RU")
@@ -138,7 +138,7 @@ class ConfigInfoSiteAccessTests(unittest.TestCase):
         self.assertEqual(status, ("2016-08-26 06:00:00", "2016-09-02 06:00:00"), "Failed to get downtime")
 
 
-def suiteTestSiteAccess():  # pragma: no cover
+def suiteTestSiteAccess() -> unittest.TestSuite:  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoSiteAccessTests("testSiteAvailable"))
     suiteSelect.addTest(ConfigInfoSiteAccessTests("testSiteReachable"))

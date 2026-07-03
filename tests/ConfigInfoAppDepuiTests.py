@@ -21,6 +21,7 @@ import platform
 import sys
 import unittest
 import warnings
+from typing import Any, Optional, TextIO
 
 try:
     from unittest.mock import patch
@@ -55,14 +56,14 @@ TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 class MyConfigInfo(ConfigInfo):
     """A class to setup tests for DepUI config"""
 
-    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+    def __init__(self, siteId: Optional[str] = None, verbose: bool = True, log: TextIO = sys.stderr) -> None:
         self._resources_ro = "/tmp/resources"  # noqa: S108
-        self._resources_rw = None
-        self._ds_loc_path = None
-        self._archive_ui_path = None
+        self._resources_rw: Optional[str] = None
+        self._ds_loc_path: Optional[str] = None
+        self._archive_ui_path: Optional[str] = None
         super(MyConfigInfo, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
-    def get(self, keyWord, default=None):
+    def get(self, keyWord: str, default: Any = None) -> Any:
         if keyWord == "SITE_DATASET_SITELOC_FILE_PATH":
             val = self._ds_loc_path
         elif keyWord == "RO_RESOURCE_PATH":
@@ -79,7 +80,7 @@ class MyConfigInfo(ConfigInfo):
 
 
 class LegacyConfig(MyConfigInfo):
-    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+    def __init__(self, siteId: Optional[str] = None, verbose: bool = True, log: TextIO = sys.stderr) -> None:
         super(LegacyConfig, self).__init__(siteId=siteId, verbose=verbose, log=log)
         self._ds_loc_path = "/tmp/res/path"  # noqa: S108
 
@@ -87,14 +88,14 @@ class LegacyConfig(MyConfigInfo):
 class RoConfig(MyConfigInfo):
     """R/O path - as R/W not set"""
 
-    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+    def __init__(self, siteId: Optional[str] = None, verbose: bool = True, log: TextIO = sys.stderr) -> None:
         super(RoConfig, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
 
 class RwConfig(MyConfigInfo):
     """R/W path - as R/W not set"""
 
-    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+    def __init__(self, siteId: Optional[str] = None, verbose: bool = True, log: TextIO = sys.stderr) -> None:
         super(RwConfig, self).__init__(siteId=siteId, verbose=verbose, log=log)
         self._resources_rw = os.path.join(TESTOUTPUT, "depuirw")
 
@@ -102,18 +103,18 @@ class RwConfig(MyConfigInfo):
 class SplitDepositUIConfig(MyConfigInfo):
     """deposit-ui configuration"""
 
-    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+    def __init__(self, siteId: Optional[str] = None, verbose: bool = True, log: TextIO = sys.stderr) -> None:
         super(SplitDepositUIConfig, self).__init__(siteId=siteId, verbose=verbose, log=log)
         self._archive_ui_path = "/tmp/pathsomewhere"  # noqa: S108
 
 
 class ConfigInfoAppDepUITests(unittest.TestCase):
     @staticmethod
-    def testInstantiate():
+    def testInstantiate() -> None:
         """Test if instantiation of EM class works"""
         ConfigInfoAppDepUI()
 
-    def testDatasetSiteLoc(self):
+    def testDatasetSiteLoc(self) -> None:
         """Tests the dataset location options"""
 
         # Disable warnings
@@ -141,7 +142,7 @@ class ConfigInfoAppDepUITests(unittest.TestCase):
                 slPath = cia.get_site_dataset_siteloc_file_path()
                 self.assertEqual(slPath, testOutPath)
 
-    def testMessageSubjects(self):
+    def testMessageSubjects(self) -> None:
         """Tests the dataset location options"""
         ci = ConfigInfo()
         subj = ci.get("MESSAGE_SUBJECTS")
@@ -151,7 +152,7 @@ class ConfigInfoAppDepUITests(unittest.TestCase):
         self.assertTrue(len(appmess) == 1, appmess)
         self.assertTrue(appmess == ["Approval without corrections"])
 
-    def testDepositUiSupport(self):
+    def testDepositUiSupport(self) -> None:
         """Tests the deposit-ui support"""
         cia = ConfigInfoAppDepUI()
         self.assertFalse(cia.get_deposit_ui_support())

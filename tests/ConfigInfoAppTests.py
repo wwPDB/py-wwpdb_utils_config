@@ -21,6 +21,7 @@ import platform
 import sys
 import unittest
 import warnings
+from typing import Any, Optional, TextIO
 
 try:
     from unittest.mock import patch
@@ -60,10 +61,10 @@ TOPDIR = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 class MyConfigInfo(ConfigInfo):
     """A class to set SITE_EXT_DICT_MAP_EMD_FILE_PATH"""
 
-    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+    def __init__(self, siteId: Optional[str] = None, verbose: bool = True, log: TextIO = sys.stderr) -> None:
         super(MyConfigInfo, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
-    def get(self, keyWord, default=None):
+    def get(self, keyWord: str, default: Any = None) -> Any:
         if keyWord == "SITE_EXT_DICT_MAP_EMD_FILE_PATH":
             val = "/tmp/emd/emd_map_v2.cif"  # noqa: S108
         elif keyWord == "EXTENDED_CCD_SUPPORT":
@@ -77,20 +78,21 @@ class MyConfigInfo(ConfigInfo):
 
 class ConfigInfoAppTests(unittest.TestCase):
     @staticmethod
-    def testInstantiate():
+    def testInstantiate() -> None:
         """Test if instantiation of EM class works"""
         ConfigInfoAppEm()
 
-    def testResourceBased(self):
+    def testResourceBased(self) -> None:
         em = ConfigInfoAppEm()
         mf = em.get_emd_mapping_file_path()
         # print("mapping file: %s" % mf)
         self.assertIn("emd_map_v2.cif", mf)
 
-    @patch("wwpdb.utils.config.ConfigInfoApp.ConfigInfo", side_effect=MyConfigInfo)
-    def testWarningMessage(self, _mock1):  # pylint: disable=unused-argument
+    def testWarningMessage(self) -> None:
         """Tests warning if legacy used. We patch ConfigInfo to return a value"""
-        with warnings.catch_warnings(record=True) as w:
+        with patch("wwpdb.utils.config.ConfigInfoApp.ConfigInfo", side_effect=MyConfigInfo), warnings.catch_warnings(
+            record=True
+        ) as w:
             # Cause all warnings to always be triggered.
             warnings.simplefilter("always")
             # Trigger a warning.
@@ -103,7 +105,7 @@ class ConfigInfoAppTests(unittest.TestCase):
             self.assertTrue(issubclass(w[-1].category, DeprecationWarning))
             self.assertIn("but is deprecated", str(w[-1].message))
 
-    def testNoWarningMessage(self):
+    def testNoWarningMessage(self) -> None:
         """Tests warning if legacy used"""
         with warnings.catch_warnings(record=True) as w:
             # Cause all warnings to always be triggered.
@@ -119,29 +121,29 @@ class ConfigInfoAppTests(unittest.TestCase):
 
 class ConfigInfoAppComonTests(unittest.TestCase):
     @staticmethod
-    def testInstantiate():
+    def testInstantiate() -> None:
         """Test if instantiation of Common class works"""
         ConfigInfoAppCommon()
 
-    def testDictionaryPaths(self):
+    def testDictionaryPaths(self) -> None:
         """Tests that next and archive dictionaries are not mixed up"""
         cia = ConfigInfoAppCommon()
         self.assertIn("v5_next.dic", cia.get_mmcif_next_dictionary_file_path())
         self.assertIn("v50.dic", cia.get_mmcif_archive_dictionary_file_path())
 
-    def testinchiPathCorrect(self):
+    def testinchiPathCorrect(self) -> None:
         """Tests if get_site_cc_inchi_dir returns a packages path or not.  Should be tools/bin"""
         cia = ConfigInfoAppCommon()
         ipath = cia.get_site_cc_inchi_dir()
         self.assertNotIn("packages/", ipath)
 
-    def testGetIdCodeDir(self):
+    def testGetIdCodeDir(self) -> None:
         """Backwards AppsCc compatibility test"""
         cia = ConfigInfoAppCommon()
         ipath = cia.get_unused_ccd_file()
         self.assertIsNotNone(ipath)
 
-    def testGetVrptDict(self):
+    def testGetVrptDict(self) -> None:
         """Test finding path to vrpt dictionary"""
         cia = ConfigInfoAppCommon()
         ipath = cia.get_mmcif_vrpt_dictionary_file_path()
@@ -150,17 +152,17 @@ class ConfigInfoAppComonTests(unittest.TestCase):
 
 class ConfigInfoAppCcTests(unittest.TestCase):
     @staticmethod
-    def testInstantiate():
+    def testInstantiate() -> None:
         """Test if instantiation of Common class works"""
         ConfigInfoAppCc()
 
-    def testGetIdCodeDir(self):
+    def testGetIdCodeDir(self) -> None:
         """Get CC id code directory"""
         ciac = ConfigInfoAppCc()
         ipath = ciac.get_unused_ccd_file()
         self.assertIsNotNone(ipath)
 
-    def testGetExtSupport(self):
+    def testGetExtSupport(self) -> None:
         """Get CC wide support flag"""
         ciac = ConfigInfoAppCc()
         # Default value
@@ -176,11 +178,11 @@ class ConfigInfoAppCcTests(unittest.TestCase):
 
 class ConfigInfoAppValidationTests(unittest.TestCase):
     @staticmethod
-    def testInstantiate():
+    def testInstantiate() -> None:
         """Test if instantiation of Common class works"""
         ConfigInfoAppValidation()
 
-    def testGetDensityFitness(self):
+    def testGetDensityFitness(self) -> None:
         """Get CC id code directory"""
         ciaval = ConfigInfoAppValidation()
         ipath = ciaval.get_density_fitness()

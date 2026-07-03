@@ -56,7 +56,7 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
     Test cases for mapping group data sets ids to server sites ids.
     """
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.__startTime = time.time()
         logger.info("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
 
@@ -80,7 +80,7 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
             "SILLYSITE",
         ]
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         endTime = time.time()
         logger.info(
             "Completed %s at %s (%.4f seconds)",
@@ -89,7 +89,7 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
             endTime - self.__startTime,
         )
 
-    def testGetSiteLocation(self):
+    def testGetSiteLocation(self) -> None:
         """Test case -  return site location"""
         try:
             for siteId in self.__siteIdList:
@@ -101,7 +101,7 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
             logger.exception("Unable to get group site location %s", str(e))
             self.fail()
 
-    def testGetSiteGroupIdRange(self):
+    def testGetSiteGroupIdRange(self) -> None:
         """Test case -  return default id ranges selected sites."""
         try:
             cfds = ConfigInfoGroupDataSet(self.__verbose, self.__lfh)
@@ -112,7 +112,7 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
             logger.exception("Unable to get group id range %s", str(e))
             self.fail()
 
-    def testGetSiteId(self):
+    def testGetSiteId(self) -> None:
         """Test case -  translate data set id to site id."""
         try:
             cfds = ConfigInfoGroupDataSet(self.__verbose, self.__lfh)
@@ -125,19 +125,19 @@ class ConfigInfoGroupDataSetTests(unittest.TestCase):
             self.fail()
 
 
-def suiteGetSiteLocation():  # pragma: no cover
+def suiteGetSiteLocation() -> unittest.TestSuite:  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoGroupDataSetTests("testGetSiteLocation"))
     return suiteSelect
 
 
-def suiteGetSiteId():  # pragma: no cover
+def suiteGetSiteId() -> unittest.TestSuite:  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoGroupDataSetTests("testGetSiteId"))
     return suiteSelect
 
 
-def suiteGetGroupIdRange():  # pragma: no cover
+def suiteGetGroupIdRange() -> unittest.TestSuite:  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoGroupDataSetTests("testGetSiteGroupIdRange"))
     return suiteSelect

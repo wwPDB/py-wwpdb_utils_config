@@ -22,6 +22,7 @@ import datetime
 import json
 import logging
 import sys
+from typing import Dict, Optional, TextIO, Tuple, Union, cast
 
 try:
     from urllib.error import HTTPError, URLError
@@ -51,7 +52,9 @@ class ConfigInfoSiteAccess:
 
     """
 
-    def __init__(self, verbose=False, log=sys.stderr):
+    __siteAccessD: Optional[Dict[str, Tuple[str, str]]]
+
+    def __init__(self, verbose: bool = False, log: TextIO = sys.stderr) -> None:
         self.__verbose = verbose
         self.__lfh = log
         self.__debug = True
@@ -60,7 +63,7 @@ class ConfigInfoSiteAccess:
         self.__serviceD = self.__cI.get("PROJECT_DEPOSIT_SERVICE_DICTIONARY")
         self.__siteAccessD = None
 
-    def getCorrespondenceService(self, siteId):
+    def getCorrespondenceService(self, siteId: str) -> Optional[str]:
         """Get the correspondence archiving service end point for the input site -
 
         Return the service URL or None
@@ -71,10 +74,10 @@ class ConfigInfoSiteAccess:
             return None
 
         if siteId in serviceD:
-            return serviceD[siteId]
+            return cast("str", serviceD[siteId])
         return None
 
-    def getForwardingService(self, siteId):
+    def getForwardingService(self, siteId: str) -> Optional[str]:
         """Get the message forwarding service end point for the input site -
 
         Return the service URL or None
@@ -85,10 +88,10 @@ class ConfigInfoSiteAccess:
             return None
 
         if siteId in serviceD:
-            return serviceD[siteId]
+            return cast("str", serviceD[siteId])
         return None
 
-    def __getAccessDictionary(self):
+    def __getAccessDictionary(self) -> Dict[str, Tuple[str, str]]:
         """Fetch the dictionary cotaining exceptional access information for each site
         expressed as the time interval when the site is not available.    Times are
         encoded as timestamps in UTC.
@@ -99,7 +102,7 @@ class ConfigInfoSiteAccess:
         fp = self.__cICommon.get_site_access_info_file_path()
         try:
             with open(fp) as infile:
-                return json.load(infile)
+                return cast("Dict[str, Tuple[str, str]]", json.load(infile))
         except Exception as e:
             if self.__verbose:
                 logger.error("failed reading json resource file %s %s", fp, str(e))  # noqa: TRY400
@@ -107,7 +110,7 @@ class ConfigInfoSiteAccess:
                 logger.exception("failed in parsing file %s", fp)
         return {}
 
-    def isServiceReachable(self, siteId, timeout=2):
+    def isServiceReachable(self, siteId: str, timeout: int = 2) -> bool:
         # This restores the same behavior as before.
         context = ssl.create_default_context()
         context.check_hostname = False
@@ -140,7 +143,7 @@ class ConfigInfoSiteAccess:
 
         return False
 
-    def isSiteAvailable(self, siteId):
+    def isSiteAvailable(self, siteId: str) -> bool:
         """Check if there is scheduled downtime for the input deposition site.
 
         Return True if deposition site is available (i.e. no scheduled downtime)
@@ -165,7 +168,7 @@ class ConfigInfoSiteAccess:
                 return False
         return True
 
-    def getSiteDownTimeRange(self, siteId):
+    def getSiteDownTimeRange(self, siteId: str) -> Union[Tuple[str, str], Tuple[None, None]]:
         """Get the scheduled down time range for the input site.
 
         Return tuple of timestamps (UTC) or (None,None)
@@ -182,7 +185,7 @@ class ConfigInfoSiteAccess:
         return (None, None)
 
     @staticmethod
-    def __getDateTimeUTC(dateTimeStamp):
+    def __getDateTimeUTC(dateTimeStamp: str) -> datetime.datetime:
         # Converts datetie to UTC
         dt = datetime.datetime.strptime(dateTimeStamp, "%Y-%m-%d %H:%M:%S")  # noqa: DTZ007
         if sys.version_info[0] > 2:  # noqa: UP036

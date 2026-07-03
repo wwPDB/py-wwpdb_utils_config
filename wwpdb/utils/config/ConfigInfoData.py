@@ -206,9 +206,7 @@ __version__ = "V0.01"
 import os
 import sys
 import traceback
-
-if sys.version_info[0] > 2:  # noqa: UP036
-    from typing import Dict, List, Tuple  # noqa: F401
+from typing import Any, Dict, List, Optional, TextIO, Tuple  # noqa: F401
 
 # ----------------------------------------------------------------------------------------------
 #  Try to import externally cached configuration options.  Gracefully ignore any errors.
@@ -230,7 +228,7 @@ class ConfigInfoData:
 
     """
 
-    _contentTypeInfoD = {}  # type: dict
+    _contentTypeInfoD = {}  # type: Dict[str, Any]
     _contentTypeInfoBaseD = {
         "model": (["pdbx", "pdb", "pdbml", "cifeps"], "model"),
         "model-emd": (["pdbx", "xml"], "model-emd"),
@@ -681,7 +679,9 @@ class ConfigInfoData:
     _configSitePackagesDeployPath = os.path.join(_configSiteDeployPath, "tools-centos-6", "packages")
     _configSiteMachineName = "http://localhost:8000"
 
-    def __init__(self, siteId=None, verbose=True, log=sys.stderr, useCache=True):
+    def __init__(
+        self, siteId: Optional[str] = None, verbose: bool = True, log: TextIO = sys.stderr, useCache: bool = True
+    ):
         # """The list of configuration key names supported by all sites.
         # """
         self.__D = {}
@@ -787,10 +787,11 @@ class ConfigInfoData:
         self.__D["SITE_REFDATA_PROJ_NAME_PRDCC"] = ConfigInfoData._ref_data_proj_names.get("prdcc")
         self.__D["SITE_REFDATA_PROJ_NAME_PRD_FAMILY"] = ConfigInfoData._ref_data_proj_names.get("prd_family")
 
-    def getConfigDictionary(self):
+    def getConfigDictionary(self) -> Dict[str, Any]:
         return self.__D
 
-    def __addMilestoneVariants(self):  # noqa: PLR6301
+    @staticmethod
+    def __addMilestoneVariants() -> None:
         """Update base content dictionary with content milestone variants."""
         ConfigInfoData._contentTypeInfoD = {}
         for k, v in ConfigInfoData._contentTypeInfoBaseD.items():

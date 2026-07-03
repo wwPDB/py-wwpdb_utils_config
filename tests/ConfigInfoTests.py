@@ -46,39 +46,39 @@ TOPDIR = os.path.dirname(HERE)
 
 
 class ConfigInfoFileTests(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         pass
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         pass
 
-    def testGetSiteId(self):
+    def testGetSiteId(self) -> None:
         self.assertEqual(getSiteId(), "WWPDB_DEPLOY_TEST")
 
-    def testCache(self):
+    def testCache(self) -> None:
         cI = ConfigInfo()
         self.assertEqual(cI.get("VARTEST"), "Hello")
         self.assertEqual(cI.get("TESTVAR1"), "1")
         self.assertEqual(cI.get("TESTVAR2"), "2")
 
-    def testMock(self):
+    def testMock(self) -> None:
         cI = ConfigInfo()
         self.assertEqual(cI.get("DEPLOY_PATH"), os.path.join(rwMockTopPath, "da_top"))
 
-    def testBuiltin(self):
+    def testBuiltin(self) -> None:
         """Tests if common built in definitions are set"""
         cI = ConfigInfo()
         self.assertIsNotNone(cI.get("PROJECT_VAL_REL_CUTOFF"))
         self.assertIsNone(cI.get("PROJECT_RANDOM"))
 
-    def _parseTime(self, timestr):
+    def _parseTime(self, timestr: str) -> datetime:
         weeknum = datetime.today().strftime("%U")  # noqa: DTZ002
         this_year = datetime.today().strftime("%G")  # noqa: DTZ002
         mytime = f"{this_year}:{weeknum}:{timestr}"
         time_t = datetime.strptime(mytime, "%Y:%U:%a:%H:%M:%S")  # noqa: DTZ007
         return time_t
 
-    def testParseCutoff(self):
+    def testParseCutoff(self) -> None:
         """Tests if common built in definitions are set"""
         cI = ConfigInfo()
         val = cI.get("PROJECT_VAL_REL_CUTOFF")

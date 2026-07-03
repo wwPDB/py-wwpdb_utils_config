@@ -25,6 +25,7 @@ __version__ = "V0.001"
 import os
 import sys
 import traceback
+from typing import Any, Dict, List, Optional, TextIO, Tuple, cast
 
 if sys.version_info[0] > 2:  # noqa: UP036
     import importlib
@@ -58,13 +59,13 @@ class ConfigInfoShellExec:
 
     def __init__(
         self,
-        topConfigPath=None,
-        hostName=None,
-        siteLoc=None,
-        siteId=None,
-        cacheFlag=True,
-        verbose=True,  # noqa: ARG002
-        log=sys.stdout,  # noqa: ARG002
+        topConfigPath: Optional[str] = None,
+        hostName: Optional[str] = None,
+        siteLoc: Optional[str] = None,
+        siteId: Optional[str] = None,
+        cacheFlag: bool = True,
+        verbose: bool = True,  # noqa: ARG002
+        log: TextIO = sys.stdout,  # noqa: ARG002
     ):  # noqa: ARG002 pylint: disable=unused-argument
         self.__lfh = log
         self.__debug = False
@@ -93,11 +94,19 @@ class ConfigInfoShellExec:
             self.__siteLoc, self.__siteId = self.__setup(topConfigPath, hostName, siteLoc, siteId)
 
             if cacheFlag:
-                self.__cD = self.__getConfigD(self.__topConfigPath, self.__siteLoc, self.__siteId)
+                self.__cD = self.__getConfigD(
+                    cast("str", self.__topConfigPath), cast("str", self.__siteLoc), cast("str", self.__siteId)
+                )
             else:
                 self.__cD = self.__getSiteConfigRaw(self.__topConfigPath, self.__siteLoc, self.__siteId)
 
-    def __setup(self, topConfigPath, inpHostName, inpSiteLoc, inpSiteId):
+    def __setup(
+        self,
+        topConfigPath: Optional[str],
+        inpHostName: Optional[str],
+        inpSiteLoc: Optional[str],
+        inpSiteId: Optional[str],
+    ) -> Tuple[Optional[str], Optional[str]]:
         """ """
         siteLoc = None
         siteId = None
@@ -110,7 +119,7 @@ class ConfigInfoShellExec:
             siteId = inpSiteId
         elif inpHostName is not None:
             # read host mapping data
-            fp = self.__getCommonConfigPath(topConfigPath)
+            (fp, _s, _c) = self.__getCommonConfigPath(topConfigPath)
             cD = self.__readConfigTextFile(fp)
             if "HOST_SITE_DEFAULTS" in cD:
                 hnU = str(inpHostName).upper()
@@ -124,13 +133,13 @@ class ConfigInfoShellExec:
             self.__lfh.write("_setup returns siteLoc %r siteId %r\n" % (siteLoc, siteId))
         return siteLoc, siteId
 
-    def __getPrivateSectionNames(self):
+    def __getPrivateSectionNames(self) -> List[str]:
         return self.__privateSectionNameList
 
-    def __getExtraCommonSectionNames(self):
+    def __getExtraCommonSectionNames(self) -> List[str]:
         return self.__extraCommonSectionNameList
 
-    def __getConfigD(self, topConfigPath, siteLoc, siteId):
+    def __getConfigD(self, topConfigPath: str, siteLoc: str, siteId: str) -> Dict[str, Any]:
         """Load the current python cache configuration data for the input location/site
         and return a dictionary of this data.
         """
@@ -140,8 +149,8 @@ class ConfigInfoShellExec:
             if sys.version_info[0] > 2:  # noqa: UP036
                 # Assumes > python 3.4 - import.machinery.SourceFileLoader
                 # would be needed
-                spec = importlib.util.spec_from_file_location("ConfigInfoFileCache", fp)
-                oD = importlib.util.module_from_spec(spec)
+                spec = importlib.util.spec_from_file_location("ConfigInfoFileCache", fp)  # type: ignore[attr-defined]
+                oD = importlib.util.module_from_spec(spec)  # type: ignore[attr-defined]
                 spec.loader.exec_module(oD)
                 cD = oD.ConfigInfoFileCache._configD  # noqa: SLF001 # pylint: disable=protected-access
             else:
@@ -154,7 +163,7 @@ class ConfigInfoShellExec:
                 traceback.print_exc(file=self.__lfh)
         return tD
 
-    def __testConfigPath(self, topConfigPath, accessType="read"):
+    def __testConfigPath(self, topConfigPath: Optional[str], accessType: str = "read") -> bool:
         ok = True
         try:
             if topConfigPath is None:
@@ -174,22 +183,28 @@ class ConfigInfoShellExec:
         return ok
 
     @staticmethod
-    def __getCommonConfigPath(topConfigPath, sectionName="common", context="common"):
+    def __getCommonConfigPath(
+        topConfigPath: str, sectionName: str = "common", context: str = "common"
+    ) -> Tuple[str, str, str]:
         cfPath = os.path.join(topConfigPath, "common", "common.cfg")
         return cfPath, sectionName, context
 
     @staticmethod
-    def __getSiteCommonConfigPath(topConfigPath, siteLoc, sectionName="site_common", context="common"):
+    def __getSiteCommonConfigPath(
+        topConfigPath: str, siteLoc: str, sectionName: str = "site_common", context: str = "common"
+    ) -> Tuple[str, str, str]:
         cfPath = os.path.join(topConfigPath, siteLoc.lower(), "site_common", "common.cfg")
         return cfPath, sectionName, context
 
     @staticmethod
-    def __getSiteConfigPath(topConfigPath, siteLoc, siteId, sectionName, context="common"):
+    def __getSiteConfigPath(
+        topConfigPath: str, siteLoc: str, siteId: str, sectionName: str, context: str = "common"
+    ) -> Tuple[str, str, str]:
         cfPath = os.path.join(topConfigPath, siteLoc.lower(), siteId.lower(), "site.cfg")
         return cfPath, sectionName, context
 
     @staticmethod
-    def __getSitePythonCachePath(topConfigPath, siteLoc, siteId):
+    def __getSitePythonCachePath(topConfigPath: str, siteLoc: str, siteId: str) -> str:
         cfPath = os.path.join(topConfigPath, siteLoc.lower(), siteId.lower(), "ConfigInfoFileCache.py")
         return cfPath
 
@@ -197,7 +212,7 @@ class ConfigInfoShellExec:
     #     cfPath = os.path.join(topConfigPath, siteLoc.lower(), siteId.lower(), "ConfigInfoFileCache.json")
     #     return cfPath
 
-    def __readConfigTextFile(self, configFilePath):
+    def __readConfigTextFile(self, configFilePath: str) -> Dict[str, Any]:
         """Read the input configuration file and return a dictionary of configuration items
         where all configuration keys are converted to upper case.  The returned dictionary is
         organized in configuration sections (e.g. retD[sectionN.upper()]={k1:v1,k2:v2,...})
@@ -229,8 +244,13 @@ class ConfigInfoShellExec:
         return retD
 
     def __getConfigPathSectionList(
-        self, topConfigPath, siteLoc, siteId, extraCommonSectionNameList, privateSectionNameList
-    ):
+        self,
+        topConfigPath: Optional[str],
+        siteLoc: Optional[str],
+        siteId: Optional[str],
+        extraCommonSectionNameList: List[str],
+        privateSectionNameList: List[str],
+    ) -> List[Tuple[str, str, str]]:
         """Returns the search path of sections and configuration file paths for the input location and site.
         The site specific configuration file path is always included.   The site-common or project common
         configuration files are included only if these exist.
@@ -242,20 +262,20 @@ class ConfigInfoShellExec:
         cfPathSectionList = []
         if self.__topConfigPath is not None and siteId is not None and siteLoc is not None:
             (p, s, c) = self.__getSiteConfigPath(
-                topConfigPath=topConfigPath, siteLoc=siteLoc, siteId=siteId, sectionName=siteId.lower()
+                topConfigPath=cast("str", topConfigPath), siteLoc=siteLoc, siteId=siteId, sectionName=siteId.lower()
             )
             if p is not None and os.access(p, os.R_OK):
                 cfPathSectionList.append((p, s, c))
                 for cSec in extraCommonSectionNameList:
                     cfPathSectionList.append((p, cSec, "common"))
             (p, s, c) = self.__getSiteCommonConfigPath(
-                topConfigPath=topConfigPath, siteLoc=siteLoc, sectionName="site_common"
+                topConfigPath=cast("str", topConfigPath), siteLoc=siteLoc, sectionName="site_common"
             )
             if p is not None and os.access(p, os.R_OK):
                 cfPathSectionList.append((p, s, c))
                 for cSec in extraCommonSectionNameList:
                     cfPathSectionList.append((p, cSec, "common"))
-            (p, s, c) = self.__getCommonConfigPath(topConfigPath=topConfigPath, sectionName="common")
+            (p, s, c) = self.__getCommonConfigPath(topConfigPath=cast("str", topConfigPath), sectionName="common")
             if p is not None and os.access(p, os.R_OK):
                 cfPathSectionList.append((p, s, c))
                 for cSec in extraCommonSectionNameList:
@@ -265,7 +285,7 @@ class ConfigInfoShellExec:
             #
             for sectionName in privateSectionNameList:
                 (p, s, c) = self.__getSiteConfigPath(
-                    topConfigPath=topConfigPath,
+                    topConfigPath=cast("str", topConfigPath),
                     siteLoc=siteLoc,
                     siteId=siteId,
                     sectionName=sectionName,
@@ -276,7 +296,9 @@ class ConfigInfoShellExec:
 
         return cfPathSectionList
 
-    def __getSiteConfigRaw(self, topConfigPath, siteLoc, siteId, deserialize=True):
+    def __getSiteConfigRaw(
+        self, topConfigPath: Optional[str], siteLoc: Optional[str], siteId: Optional[str], deserialize: bool = True
+    ) -> Dict[str, Any]:
         """Return the complete site of configuration options for the input location and site."""
         cD = {}
         try:
@@ -301,7 +323,9 @@ class ConfigInfoShellExec:
             traceback.print_exc(file=self.__lfh)
         return cD
 
-    def __readConfigFileList(self, configPathSectionList=None):
+    def __readConfigFileList(
+        self, configPathSectionList: Optional[List[Tuple[str, str, str]]] = None
+    ) -> Dict[str, Any]:
         """Read the input list of configuration file paths/section names   [(configPath,sectionName,context), (configPath,sectionName,context),].
         Preceding files in this list may supply substition values for subsequent files through string interpolation
         such as %(replace_me)s.  The first instance of any option/value encountered in the path list is treated as authoritative.
@@ -313,7 +337,7 @@ class ConfigInfoShellExec:
         """
         retD = {}
         try:
-            defaultD = {}
+            defaultD: Dict[str, Any] = {}
             saveD = {}
             # For each configuration file in turn -- accumulated content provides default value substition values for subsequent files -
             #
@@ -369,7 +393,7 @@ class ConfigInfoShellExec:
 
         return retD
 
-    def __deserializeConfig(self, configD, optionD=None):
+    def __deserializeConfig(self, configD: Dict[str, Any], optionD: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Apply an adhoc set of filters on the input configuration dictionary.
         Input option values are assumed to be the string values returned by the configuration file parser.
 
@@ -459,10 +483,10 @@ class ConfigInfoShellExec:
 
         return retD
 
-    def printConfig(self):
+    def printConfig(self) -> bool:
         return self.__printConfig(self.__siteLoc, self.__siteId, self.__cD)
 
-    def __printConfig(self, siteLoc, siteId, cD):
+    def __printConfig(self, siteLoc: Optional[str], siteId: Optional[str], cD: Dict[str, Any]) -> bool:
         """Print the configuration options for the input location and site."""
         try:
             self.__lfh.write("read %d options for location %r site %r\n" % (len(cD), siteLoc, siteId))
@@ -474,37 +498,47 @@ class ConfigInfoShellExec:
                         self.__lfh.write(" ---  --- +++ %-45s  %r\n" % (k1, v[k1]))
                 else:
                     self.__lfh.write(" +++ %-45s  %r\n" % (k, v))
+
+            return True
         except Exception as e:  # noqa: BLE001
             self.__lfh.write("failing for location %r site %r %r\n" % (siteLoc, siteId, str(e)))
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
+        return False
 
-    def shellConfig(self, shellType="bash"):
+    def shellConfig(self, shellType: str = "bash") -> bool:
         return self.__exportConfig(
             self.__siteLoc, self.__siteId, self.__cD, expKey="OS_ENVIRONMENT", shellType=shellType
         )
 
-    def httpdConfig(self, shellType="bash"):
+    def httpdConfig(self, shellType: str = "bash") -> bool:
         return self.__exportConfig(
             self.__siteLoc, self.__siteId, self.__cD, expKey="HTTPD_SERVICES", shellType=shellType
         )
 
-    def installConfig(self, shellType="bash"):
+    def installConfig(self, shellType: str = "bash") -> bool:
         return self.__exportConfig(
             self.__siteLoc, self.__siteId, self.__cD, expKey="INSTALL_ENVIRONMENT", shellType=shellType
         )
 
-    def validationConfig(self, shellType="bash"):
+    def validationConfig(self, shellType: str = "bash") -> bool:
         return self.__exportConfig(
             self.__siteLoc, self.__siteId, self.__cD, expKey="VALIDATION_SERVICES", shellType=shellType
         )
 
-    def databaseConfig(self, shellType="bash"):
+    def databaseConfig(self, shellType: str = "bash") -> bool:
         return self.__exportConfig(
             self.__siteLoc, self.__siteId, self.__cD, expKey="DATABASE_SERVICES", shellType=shellType
         )
 
-    def __exportConfig(self, siteLoc, siteId, cD, expKey="OS_ENVIRONMENT", shellType="bash"):
+    def __exportConfig(
+        self,
+        siteLoc: Optional[str],
+        siteId: Optional[str],
+        cD: Dict[str, Any],
+        expKey: str = "OS_ENVIRONMENT",
+        shellType: str = "bash",
+    ) -> bool:
         """Print the configuration options for the input location and site."""
         try:
             if expKey in cD:
@@ -515,13 +549,16 @@ class ConfigInfoShellExec:
                         self.__lfh.write('export %s="%s"\n' % (k, v))
                     elif shellType in ["csh", "tcsh"]:
                         self.__lfh.write('setenv %s "%s"\n' % (k, v))
+            return True
         except Exception as e:  # noqa: BLE001
             if self.__debug:
                 self.__lfh.write("__exportConfig failing for location %r site %r - %r\n" % (siteLoc, siteId, str(e)))
                 traceback.print_exc(file=self.__lfh)
 
+        return False
 
-def main():  # pragma: no cover
+
+def main() -> None:  # pragma: no cover
     usage = """
     %prog [options]
 
