@@ -17,17 +17,16 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Natural Language :: English",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 2.7",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
 ]
 dependencies = [
     "oslo.concurrency",
     "python-dateutil",
 ]
 
-requires-python = ">=2.7"
+requires-python = ">=3.6"
 
 
 [project.scripts]
@@ -52,6 +51,9 @@ packages = ["wwpdb"]
 exclude = ["/wwpdb/mock-data"]
 
 #=================================== Ruff basics =============================#
+[tool.ruff]
+target-version = "py37"
+output-format = "concise"
 
 line-length = 120 # 120 is hatch's default via 'hatch init'
 include = [
@@ -62,10 +64,6 @@ include = [
 
 #
 #=================================== Ruff lint ==============================#
-[tool.ruff]
-target-version = "py37"
-output-format = "concise"
-
 [tool.ruff.lint]
 
 #
@@ -76,6 +74,7 @@ explicit-preview-rules = true
 ignore = [
   "C402",     #  Unnecessary generator (rewrite as a `dict` comprehension)
   "EXE001",   # Shebang is present but file is not executabl
+  "FA100",    # Python 3.6 prevents us Add `from __future__ import annotations` to simplify `typing.Optional
   "FBT002",   # Boolean default positional argument in function definition
   "FBT001",   # Boolean-typed positional argument in function definition
   "FURB113",  # Use `stPL.extend(...)` instead of repeatedly calling `stPL.append()`
@@ -127,7 +126,7 @@ format = [
 format-python = ["ruff format", "ruff check --fix-only"]
 
 # 'check' only checks but never fixes
-check = ["ruff check --no-fix .", "mypy --non-interactive --install-types -p wwpdb -p tests"]
+check = ["ruff check --no-fix .", "mypy --non-interactive --install-types -p wwpdb -p tests --strict"]
 
 # only checks with ruff (mypy has a lot of false positives)
 check-ruff = "ruff check --no-fix . {args}"
@@ -152,6 +151,7 @@ module = ["oslo_concurrency.*", "wwpdb.*"]
 ignore_missing_imports = true
 
 [tool.mypy]
+python_version = "3.10"
 exclude = [
 	"test-output",
 ]
