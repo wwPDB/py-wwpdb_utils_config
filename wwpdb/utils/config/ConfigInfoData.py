@@ -556,6 +556,7 @@ class ConfigInfoData:
         # 'PDBE_DEV': 'https://dev.pdbe.org/deposition',
         "WWPDB_DEPLOY_ALPHA_RU": "https://da-dep-alpha-0.rcsb.rutgers.edu/deposition",
         "WWPDB_DEPLOY_TEST_RU": "https://da-test-dep.rcsb.rutgers.edu/deposition",
+        "WWPDB_DEPUI_TEST_RU": "https://onedep-depui-test.wwpdb.org",
         "WWPDB_DEPLOY_VALSRV2_RU": "https://validate-rcsb-east.wwpdb.org/validservice",
         "WWPDB_DEPLOY_VALSRV2_UCSD": "https://validate-rcsb-west.wwpdb.org/validservice",
     }
