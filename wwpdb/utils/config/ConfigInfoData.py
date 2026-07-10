@@ -203,10 +203,11 @@ __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
+import inspect
 import os
 import sys
 import traceback
-from typing import Any, Dict, List, Optional, TextIO, Tuple  # noqa: F401
+from typing import Any, ClassVar, Dict, List, Optional, TextIO, Tuple  # noqa: F401
 
 # ----------------------------------------------------------------------------------------------
 #  Try to import externally cached configuration options.  Gracefully ignore any errors.
@@ -228,8 +229,8 @@ class ConfigInfoData:
 
     """
 
-    _contentTypeInfoD = {}  # type: Dict[str, Any]
-    _contentTypeInfoBaseD = {
+    _contentTypeInfoD: ClassVar[Dict[str, Any]] = {}
+    _contentTypeInfoBaseD: ClassVar[Dict[str, Tuple[List[str], str]]] = {
         "model": (["pdbx", "pdb", "pdbml", "cifeps"], "model"),
         "model-emd": (["pdbx", "xml"], "model-emd"),
         "model-aux": (["pdbx"], "model-aux"),
@@ -420,7 +421,7 @@ class ConfigInfoData:
         "pcm-missing-data": (["csv"], "pcm-missing-data"),
         "deposit-to-archive-wfcfg": (["json"], "deposit-to-archive-wfcfg"),
         "any": (["any"], "any"),
-    }  # type: Dict[str, Tuple[List[str], str]]
+    }
     """Base dictionary of supported file formats for each recognized content type.
        An acronym for each content type is included.  The acronym is used in the
        filename template.
@@ -441,8 +442,8 @@ class ConfigInfoData:
        the content type (e.g. content type  model will have milestones model-upload, model-deposit,
        model-annotate, model-review, and model-release).
     """
-    _contentMilestoneL = ["upload", "upload-convert", "deposit", "annotate", "release", "review"]
-    _fileFormatExtensionD = {
+    _contentMilestoneL: ClassVar[List[str]] = ["upload", "upload-convert", "deposit", "annotate", "release", "review"]
+    _fileFormatExtensionD: ClassVar[Dict[str, str]] = {
         "pdbx": "cif",
         "pdb": "pdb",
         "cifeps": "cifeps",
@@ -496,7 +497,7 @@ class ConfigInfoData:
 
     #   WARNING -  changing the following assignments may have serious downstream consequences.
     #              Any modifications must agreed project-wide -
-    _siteDataSetIdAssignmentD = {
+    _siteDataSetIdAssignmentD: ClassVar[Dict[str, Tuple[int, int]]] = {
         "WWPDB_DEPLOY_LEGACY_RU": (1000000001, 1000199999),
         "WWPDB_DEPLOY_PRODUCTION_RU": (1000200000, 1001200000),
         # 'WWPDB_DEPLOY_NEXT_RU': (1000200000, 1001200000),
@@ -524,20 +525,20 @@ class ConfigInfoData:
         "UNASSIGNED": (800000, 999999),
     }
     """Dictionary of site-level deposition data set identifier assignment ranges"""
-    _siteGroupDataSetIdAssignmentD = {
+    _siteGroupDataSetIdAssignmentD: ClassVar[Dict[str, Tuple[int, int]]] = {
         "WWPDB_DEPLOY_DEPGRP1_RU": (1000000, 2000000),
         "WWPDB_DEPLOY_DEPGRP2_RU": (1000000, 2000000),
         "UNASSIGNED": (0000000, 1000000),
     }
     """Dictionary of site-level group deposition data set identifier assignment ranges"""
 
-    _siteDataSetTestIdAssignmentD = {
+    _siteDataSetTestIdAssignmentD: ClassVar[Dict[str, Tuple[int, int]]] = {
         "WWPDB_DEPLOY_LCLTEST_RU": (8000231000, 8000232000),
         "WWPDB_DEPLOY_TEST_RU": (8000215000, 8000220000),
     }
     """Dictionary of site-level IDs that can be used for creating test sessions. Do not add for production servers"""
 
-    _projectDepositSiteServiceD = {
+    _projectDepositSiteServiceD: ClassVar[Dict[str, str]] = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://deposit.wwpdb.org/deposition",
         "WWPDB_DEPLOY_NEXT_RU": "https://deposit.wwpdb.org/deposition",
         "WWPDB_DEPLOY_LEGACY_RU": "https://deposit-legacy.wwpdb.org/deposition",
@@ -559,7 +560,7 @@ class ConfigInfoData:
     }
     """Dictionary of well known project deposition service entry points"""
 
-    _projectCorrespondSiteServiceD = {
+    _projectCorrespondSiteServiceD: ClassVar[Dict[str, str]] = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://da-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg",
         "WWPDB_DEPLOY_PRODUCTION_UCSD": "https://dna1.rcsb.org/service/messaging/archive_msg",
         "WWPDB_DEPLOY_LEGACY_RU": "https://da-legacy-ann-1.rcsb.rutgers.edu/service/messaging/archive_msg",
@@ -577,7 +578,7 @@ class ConfigInfoData:
     }
     """Dictionary of well known project correspondence archive service end points"""
 
-    _projectForwardingSiteServiceD = {
+    _projectForwardingSiteServiceD: ClassVar[Dict[str, str]] = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://da-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg",
         "WWPDB_DEPLOY_PRODUCTION_UCSD": "https://dna1.rcsb.org/service/messaging/forward_msg",
         "WWPDB_DEPLOY_LEGACY_RU": "https://da-legacy-ann-1.rcsb.rutgers.edu/service/messaging/forward_msg",
@@ -595,14 +596,14 @@ class ConfigInfoData:
     }
     """Dictionary of well known project message forwarding service end points"""
 
-    _regions = {
+    _regions: ClassVar[Dict[str, List[str]]] = {
         "pdbe": ["europe", "africa", "antarctica"],
         "pdbj": ["asia", "middle east", "oceania"],
         "rcsb": ["north america", "south america"],
     }
     """Dictionary of geographical locations for each site"""
 
-    _production_sites = {
+    _production_sites: ClassVar[Dict[str, str]] = {
         "pdbe": "PDBE_PROD",
         "pdbj": "WWPDB_DEPLOY_PRODUCTION_PDBJ",
         "rcsb": "WWPDB_DEPLOY_PRODUCTION_RU",
@@ -611,7 +612,7 @@ class ConfigInfoData:
     """names of sites used in production"""
 
     # subjects for messages - used in the depUI and communication
-    _message_subjects = {
+    _message_subjects: ClassVar[Dict[str, List[str]]] = {
         "general": ["Other"],
         "approval": ["Approval without corrections", "Approval with corrections"],  # See below for critical ordering
         "meta corrections": ["Metadata corrections"],
@@ -627,17 +628,17 @@ class ConfigInfoData:
         "withdrawal": ["Withdrawal"],
         "hold extension": ["Hold expiration"],
         "major issues": ["Response to issues"],
-    }  # type: Dict[str, List[str]]
+    }
 
-    _communication_release_message_subjects = []  # type: List[str]
+    _communication_release_message_subjects: ClassVar[List[str]] = []
     _communication_release_message_subjects.extend(_message_subjects.get("release", "??"))
     _communication_release_message_subjects.extend(_message_subjects.get("release_with_citation", "???"))
     _communication_release_message_subjects.extend(_message_subjects.get("citation", "???"))
 
-    _communication_approval_no_correct = [_message_subjects.get("approval", ["???"])[0]]
+    _communication_approval_no_correct: ClassVar[List[str]] = [_message_subjects.get("approval", ["???"])[0]]
 
     # mmCIF dictionary
-    _pdbx_dictionary_name_dict = {
+    _pdbx_dictionary_name_dict: ClassVar[Dict[str, str]] = {
         "ARCHIVE_CURRENT": "mmcif_pdbx_v50",
         "ARCHIVE_NEXT": "mmcif_pdbx_v50",
         "DEPOSIT": "mmcif_pdbx_v5_next",
@@ -645,7 +646,7 @@ class ConfigInfoData:
     }
 
     # CCD and PRD variables
-    _ref_data_proj_names = {
+    _ref_data_proj_names: ClassVar[Dict[str, str]] = {
         "cvs_path": "/cvs-ligands",
         "ccd": "ligand-dict-v3",
         "prd": "prd-v3",
@@ -653,7 +654,7 @@ class ConfigInfoData:
         "prd_family": "family-v3",
     }
 
-    _projectContentWSiteServiceD = {
+    _projectContentWSiteServiceD: ClassVar[Dict[str, str]] = {
         "WWPDB_DEPLOY_PRODUCTION_RU": "https://onedep-contentws-rcsb.wwpdb.org",
         "WWPDB_DEPLOY_LEGACY_RU": "https://onedep-contentws-rcsb.wwpdb.org",
         "WWPDB_DEPLOY_TEST_RU": "https://da-test-dep.rcsb.rutgers.edu",
@@ -668,7 +669,7 @@ class ConfigInfoData:
     }
     """Dictionary of well known contentws forwarding service urls"""
 
-    _valRelCutoffD = {"start": "Fri:09:00:00", "end": "Fri:23:59:59"}
+    _valRelCutoffD: ClassVar[Dict[str, str]] = {"start": "Fri:09:00:00", "end": "Fri:23:59:59"}
     """Local cutoff blackout weekday/time for producing validation reports"""
     #
     # ----------------------------------------------------------------------------------------------
@@ -694,10 +695,10 @@ class ConfigInfoData:
             """The site identification is obtained from the environmental variable `WWPDB_SITE_ID`
             """
 
-        if self.__verbose and self.__siteId is None:
+        if self.__verbose and self.__siteId is None:  # Will never happen with str() above
             self.__lfh.write(
                 "%s.%s WARNING - no siteId assigned in constructor or found in the environemt (WWPDB_SITE_ID).\n"
-                % (self.__class__.__name__, sys._getframe().f_code.co_name)  # noqa: SLF001
+                % (self.__class__.__name__, inspect.currentframe().f_code.co_name)  # noqa: SLF001
             )
 
         #
@@ -715,18 +716,28 @@ class ConfigInfoData:
                 cls = ConfigInfoFileCache()
                 cacheD = cls.getConfigDictionary(siteId=self.__siteId)
                 if self.__debug:
+                    frame = inspect.currentframe()
+                    if frame:
+                        co_name = frame.f_code.co_name
+                    else:
+                        co_name = "<unknown>"
                     self.__lfh.write(
                         "%s.%s Imported cached configuration dictionary length %d for site %s\n"
-                        % (self.__class__.__name__, sys._getframe().f_code.co_name, len(cacheD), self.__siteId)  # noqa: SLF001
+                        % (self.__class__.__name__, co_name, len(cacheD), self.__siteId)  # noqa: SLF001
                     )
                 if len(cacheD) > 0:
                     readCache = True
                     self.__D = cacheD
             except:  # noqa: E722 pylint: disable=bare-except
                 if self.__debug:
+                    frame = inspect.currentframe()
+                    if frame:
+                        co_name = frame.f_code.co_name
+                    else:
+                        co_name = "<unknown>"
                     self.__lfh.write(
                         "%s.%s failed importing cache for site %s\n"
-                        % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId)
+                        % (self.__class__.__name__, co_name, self.__siteId)
                     )  # noqa: SLF001
                     traceback.print_exc(file=self.__lfh)
                 readCache = False
@@ -735,18 +746,28 @@ class ConfigInfoData:
             # Use fall back configuration options for now  -- to be deprecated in the future --
             #
             if not readCache and self.__siteId is not None and self.__debug:
+                frame = inspect.currentframe()
+                if frame:
+                    co_name = frame.f_code.co_name
+                else:
+                    co_name = "<unknown>"
                 self.__lfh.write(
                     "%s.%s No configuration for site %s\n"
-                    % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId)
+                    % (self.__class__.__name__, co_name, self.__siteId)
                 )  # noqa: SLF001
                 # self.__setup(self.__siteId)
                 # if self.__verbose:
                 #    self.__lfh.write("%s.%s Cache not used imported fallback configuration dictionary length %d for site %s\n" %
                 #                     (self.__class__.__name__, sys._getframe().f_code.co_name, len(self.__D), self.__siteId))
         elif self.__siteId is not None and self.__debug:
+            frame = inspect.currentframe()
+            if frame:
+                co_name = frame.f_code.co_name
+            else:
+                co_name = "<unknown>"
             self.__lfh.write(
                 "%s.%s No configuration for site %s\n"
-                % (self.__class__.__name__, sys._getframe().f_code.co_name, self.__siteId)
+                % (self.__class__.__name__, co_name, self.__siteId)
             )  # noqa: SLF001
             # self.__setup(self.__siteId)
             # if self.__verbose:

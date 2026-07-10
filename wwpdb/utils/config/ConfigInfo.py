@@ -34,7 +34,7 @@ from wwpdb.utils.config.ConfigInfoData import ConfigInfoData
 def getSiteId(defaultSiteId: Optional[str] = None) -> str:
     """Obtain the site information from the environment or failover to the development site id."""
     siteId = str(os.getenv("WWPDB_SITE_ID", defaultSiteId))
-    if siteId is None:
+    if siteId is None:  # str used above - this will never happen
         siteId = "WWPDB_DEPLOY"
     return siteId
 
@@ -66,7 +66,7 @@ class ConfigInfo:
             self.__siteId = str(os.getenv("WWPDB_SITE_ID", None)).upper()
             """The site identification is obtained from the environmental variable `WWPDB_SITE_ID`
             """
-        if self.__siteId is None:
+        if self.__siteId is None:  # str() above ensure will be a string...
             self.__lfh.write(
                 "++ERROR - ConfigInfo()  no site identifier in constructor or WWPDB_SITE_ID in environment.\n"
             )

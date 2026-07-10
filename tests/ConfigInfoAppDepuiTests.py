@@ -74,7 +74,7 @@ class MyConfigInfo(ConfigInfo):
             val = self._archive_ui_path
         else:
             # sys.stderr.write("XXXXX Unknown site config fetching %s\n" % keyWord)
-            val = super(MyConfigInfo, self).get(keyWord=keyWord, default=default)
+            val = super(MyConfigInfo, self).get(keyWord=keyWord, default=default)  # pragma: no cover
 
         return val
 

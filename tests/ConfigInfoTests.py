@@ -16,9 +16,12 @@ __email__ = "peisach@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
+import io
 import os
 import platform
 import unittest
+
+# from unittest import mock
 from datetime import datetime
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -54,12 +57,26 @@ class ConfigInfoFileTests(unittest.TestCase):
 
     def testGetSiteId(self) -> None:
         self.assertEqual(getSiteId(), "WWPDB_DEPLOY_TEST")
+        # # Test fallback - with no environment set
+        # with mock.patch.dict(os.environ):
+        #     # Remove WWPDB_SITE_ID if exists
+        #     os.environ.pop("WWPDB_SITE_ID", None)
+        #     self.assertEqual(getSiteId(), "WWPDB_DEPLOY")
 
     def testCache(self) -> None:
         cI = ConfigInfo()
         self.assertEqual(cI.get("VARTEST"), "Hello")
         self.assertEqual(cI.get("TESTVAR1"), "1")
         self.assertEqual(cI.get("TESTVAR2"), "2")
+
+    def testDump(self) -> None:
+        cI = ConfigInfo()
+        stream = io.StringIO()
+        cI.dump(stream)
+        stream.seek(0)
+        data = stream.readlines()
+        self.assertTrue(len(data) > 50, "Dump ConfigInfo too small")
+        stream.close()
 
     def testMock(self) -> None:
         cI = ConfigInfo()

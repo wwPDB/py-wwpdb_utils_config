@@ -158,6 +158,5 @@ exclude = [
 
 # ------------------------ ruff disable until typing added
 [tool.ruff.lint.per-file-ignores]
-"awwpdb/utils/config/ConfigInfoData.py" = ["RUF012"]  # typing.ClassVar
-"wwpdb/utils/config/ConfigInfoData.py" = ["SLF001", "RUF012", "F401"]  # Private member access, should use typing.ClassVar, do not remove unused imports
+#"wwpdb/utils/config/ConfigInfoData.py" = ["SLF001", "RUF012", "F401"]  # Private member access, should use typing.ClassVar, do not remove unused imports
 
