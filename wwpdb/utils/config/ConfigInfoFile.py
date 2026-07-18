@@ -32,6 +32,7 @@ import os
 import shutil
 import sys
 from fnmatch import fnmatchcase
+from typing import Any, Dict, List, Optional, TextIO, Tuple, cast
 
 try:
     import ConfigParser  # type: ignore[import-not-found]
@@ -46,14 +47,16 @@ class ConfigInfoFile:
     Provides access to site-specific configuration information stored in flat files and cache files.
     """
 
-    def __init__(self, verbose=False, log=sys.stderr, mockTopPath=None):  # noqa: ARG002 pylint: disable=unused-argument
+    __mockdefaults: Dict[str, str]
+
+    def __init__(self, verbose: bool = False, log: TextIO = sys.stderr, mockTopPath: Optional[str] = None) -> None:  # noqa: ARG002 pylint: disable=unused-argument
         self.__debug = True
         if mockTopPath:
             self.__mockdefaults = {"test_mockpath_env": mockTopPath}
         else:
             self.__mockdefaults = {}
 
-    def readSiteConfig(self, siteId, configFilePath):
+    def readSiteConfig(self, siteId: str, configFilePath: str) -> Dict[str, Any]:
         """Read the input configuration file and return a configuration dictionary for
         the input site.  This corresponds to the items and values within the configuration
         section identified by the input site identifier.   All configuration sections and
@@ -65,7 +68,7 @@ class ConfigInfoFile:
             return d[siteId]
         return {}
 
-    def readConfig(self, configFilePath):
+    def readConfig(self, configFilePath: str) -> Dict[str, Dict[str, Any]]:
         """Read the input configuration file and return a dictionary of configuration items
         where all configuration keys are converted to upper case.  The returned dictionary is
         organized in configuration sections (e.g. retD[sectionN.upper()]={k1:v1,k2:v2,...})
@@ -94,7 +97,7 @@ class ConfigInfoFile:
 
         return retD
 
-    def readConfigFileList(self, configPathSectionList=None):
+    def readConfigFileList(self, configPathSectionList: Optional[List[Tuple[str, str, str]]] = None) -> Dict[str, Any]:
         """Read the input list of configuration file paths/section names   [(configPath,sectionName,context), (configPath,sectionName,context),].
         Preceding files in this list may supply substition values for subsequent files through string interpolation
         such as %(replace_me)s.  The first instance of any option/value encountered in the path list is treated as authoritative.
@@ -108,7 +111,7 @@ class ConfigInfoFile:
         """
         retD = {}
         try:
-            defaultD = {}
+            defaultD: Dict[str, Any] = {}
             saveD = {}
             # For each configuration file in turn -- accumulated content provides default value substition values for subsequent files -
             #
@@ -163,7 +166,14 @@ class ConfigInfoFile:
 
         return retD
 
-    def writeConfig(self, configFilePath, sectionL, sectionD, requireBackup=True, sortKeys=True):
+    def writeConfig(
+        self,
+        configFilePath: str,
+        sectionL: List[str],
+        sectionD: Dict[str, Dict[str, Any]],
+        requireBackup: bool = True,
+        sortKeys: bool = True,
+    ) -> bool:
         """Write configuration file for the key-value options in the input section dictionary.
 
         Section names and option keys are converted to lower case.   Option values are
@@ -200,7 +210,7 @@ class ConfigInfoFile:
                 logger.exception("failing %s", str(e))
         return False
 
-    def deserializeConfig(self, configD, optionD=None):
+    def deserializeConfig(self, configD: Dict[str, Any], optionD: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
         """Apply an adhoc set of filters on the input configuration dictionary.
         Input option values are assumed to be the string values returned by the configuration file parser.
 
@@ -290,7 +300,7 @@ class ConfigInfoFile:
 
         return retD
 
-    def serializeConfig(self, configD, optionD=None):
+    def serializeConfig(self, configD: Dict[str, Any], optionD: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
         """Apply an adhoc set of filters on the input configuration dictionary.
         Input option values are assumed to be python objects to be converted to strings for output
         by the configuration file writer
@@ -351,7 +361,7 @@ class ConfigInfoFile:
         return retD
 
     @staticmethod
-    def __copyWithTimeStamp(filePath):
+    def __copyWithTimeStamp(filePath: str) -> bool:
         try:
             bckupPath = filePath + datetime.datetime.now().strftime("-%Y-%m-%d-%H-%M-%S")  # noqa: DTZ005
             shutil.copyfile(filePath, bckupPath)
@@ -361,7 +371,7 @@ class ConfigInfoFile:
 
         return False
 
-    def writePythonConfigCache(self, cacheD, cacheFilePath, withBackup=True):
+    def writePythonConfigCache(self, cacheD: Dict[str, Any], cacheFilePath: str, withBackup: bool = True) -> bool:
         """Write a Python cache file containing configuration option data in the input cache dictionary.
         This cache file wraps the configuration dictionary with a class in a module that can be imported.
 
@@ -436,7 +446,7 @@ class ConfigInfoFileCache(object):
                 logger.exception("failed writing %s", cacheFilePath)
         return False
 
-    def writeJsonConfigCache(self, cacheD, cacheFilePath, withBackup=True):
+    def writeJsonConfigCache(self, cacheD: Dict[str, Any], cacheFilePath: str, withBackup: bool = True) -> bool:
         """Write a JSON cache file containing configuration option data in the input cache dictionary."""
         try:
             if os.access(cacheFilePath, os.R_OK):
@@ -454,11 +464,11 @@ class ConfigInfoFileCache(object):
                 logger.exception("failed writing %s - %s", cacheFilePath, str(e))
         return False
 
-    def readJsonConfigCache(self, cacheFilePath):
+    def readJsonConfigCache(self, cacheFilePath: str) -> Dict[str, Any]:
         """Read a JSON cache file and return a dictionary containing configuration option data."""
         try:
             with open(cacheFilePath) as infile:
-                return json.load(infile)
+                return cast("Dict[str, Any]", json.load(infile))
         except Exception as e:
             logger.info("failed reading %s - %s", cacheFilePath, str(e))
             if self.__debug:

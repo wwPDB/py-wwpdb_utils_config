@@ -24,6 +24,7 @@ import platform
 import sys
 import time
 import unittest
+from typing import List, Union
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TOPDIR = os.path.dirname(HERE)
@@ -55,13 +56,13 @@ class ConfigInfoDataSetTests(unittest.TestCase):
     Test cases for mapping data sets ids to server sites ids.
     """
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.__startTime = time.time()
         logger.debug("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
 
         self.__lfh = sys.stdout
         self.__verbose = True
-        self.__testIdList = [
+        self.__testIdList: List[Union[str, int]] = [
             "D_1",
             "D_1000200000",
             "D_1000200001",
@@ -122,7 +123,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
             "WWPDB_DEPLOY_PRODUCTION_RU": (-1, -1),
         }
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         endTime = time.time()
         logger.debug(
             "Completed %s at %s (%.4f seconds)",
@@ -131,7 +132,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
             endTime - self.__startTime,
         )
 
-    def testGetSiteIdRange(self):
+    def testGetSiteIdRange(self) -> None:
         """Test case -  return default id ranges selected sites."""
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
@@ -146,7 +147,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
             logger.exception("Failure in getting id range %s", str(e))
             self.fail()
 
-    def testGetSiteId(self):
+    def testGetSiteId(self) -> None:
         """Test case -  translate data set id to site id."""
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
@@ -159,7 +160,7 @@ class ConfigInfoDataSetTests(unittest.TestCase):
             logger.exception("Update to get site id for dataset %s", str(e))
             self.fail()
 
-    def testGetSiteIdTestRange(self):
+    def testGetSiteIdTestRange(self) -> None:
         """Test case -  return default id ranges selected sites."""
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
@@ -175,19 +176,19 @@ class ConfigInfoDataSetTests(unittest.TestCase):
             self.fail()
 
 
-def suiteGetSiteId():  # pragma: no cover
+def suiteGetSiteId() -> unittest.TestSuite:  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoDataSetTests("testGetSiteId"))
     return suiteSelect
 
 
-def suiteGetIdTestRange():  # pragma: no cover
+def suiteGetIdTestRange() -> unittest.TestSuite:  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoDataSetTests("testGetSiteIdTestRange"))
     return suiteSelect
 
 
-def suiteGetIdRange():  # pragma: no cover
+def suiteGetIdRange() -> unittest.TestSuite:  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ConfigInfoDataSetTests("testGetSiteIdRange"))
     return suiteSelect

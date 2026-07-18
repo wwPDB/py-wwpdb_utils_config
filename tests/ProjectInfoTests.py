@@ -52,11 +52,11 @@ class ProjectInfoTests(unittest.TestCase):
     Test cases for mapping data sets ids to server sites ids.
     """
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.__startTime = time.time()
         logger.debug("Starting %s at %s", self.id(), time.strftime("%Y %m %d %H:%M:%S", time.localtime()))
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         endTime = time.time()
         logger.debug(
             "Completed %s at %s (%.4f seconds)",
@@ -65,27 +65,31 @@ class ProjectInfoTests(unittest.TestCase):
             endTime - self.__startTime,
         )
 
-    def testGetVersion(self):
+    def testGetVersion(self) -> None:
         """Test case -  get project version"""
         pvi = ProjectVersionInfo()
         vers = pvi.getVersion()
         self.assertNotEqual(vers, "unknown")
 
-    def testGetVersionFile(self):
+    def testGetVersionFile(self) -> None:
         """Test case -  get project version"""
         pvi = ProjectVersionInfo()
         versfile = pvi.getVersionFile()
         self.assertIsNotNone(versfile)
 
-    @patch.object(ProjectVersionInfo, "getVersionFile", return_value="/tmp/non-exsitant-file/one-hopes")  # noqa: S108
-    def testGetVersionMissing(self, mock_pvi):
+    def testGetVersionMissing(self) -> None:
         """Test case -  get project version - missing version"""
-        pvi = ProjectVersionInfo()
-        vers = pvi.getVersion()
-        self.assertEqual(vers, "unknown")
-        self.assertTrue(mock_pvi.called)
+        with patch.object(
+            ProjectVersionInfo,
+            "getVersionFile",
+            return_value="/tmp/non-exsitant-file/one-hopes",  # noqa: S108
+        ) as mock_pvi:
+            pvi = ProjectVersionInfo()
+            vers = pvi.getVersion()
+            self.assertEqual(vers, "unknown")
+            self.assertTrue(mock_pvi.called)
 
-    def testGetVersionUnparseable(self):
+    def testGetVersionUnparseable(self) -> None:
         """Test case -  get project version - json file unparseable"""
         bad_file = os.path.join(TESTOUTPUT, "badversion.json")
         with open(bad_file, "w") as fout:
@@ -103,7 +107,7 @@ class ProjectInfoTests(unittest.TestCase):
             self.assertTrue(mock_pvi.called)
 
 
-def suiteProjectVersion():  # pragma: no cover
+def suiteProjectVersion() -> unittest.TestSuite:  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(ProjectInfoTests("testGetVersion"))
     suiteSelect.addTest(ProjectInfoTests("testGetVersionFile"))

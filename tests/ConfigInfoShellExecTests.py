@@ -43,18 +43,18 @@ from wwpdb.utils.config.ConfigInfoShellExec import ConfigInfoShellExec  # noqa: 
 
 
 class ConfigDataSetExecTests(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.__cise = ConfigInfoShellExec(siteId="WWPDB_DEPLOY_TEST", siteLoc="rcsb-east", verbose=True, log=sys.stdout)
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         pass
 
-    def testPrintConfig(self):
+    def testPrintConfig(self) -> None:
         """Tests printing configuration"""
         self.__cise.printConfig()
         # Returns nothing useful
 
-    def testGetConfig(self):
+    def testGetConfig(self) -> None:
         """Iterates through all get functions"""
         self.__cise.shellConfig()
         self.__cise.shellConfig("tcsh")
@@ -63,7 +63,7 @@ class ConfigDataSetExecTests(unittest.TestCase):
         self.__cise.validationConfig()
         self.__cise.databaseConfig()
 
-    def testBrokenConfig(self):
+    def testBrokenConfig(self) -> None:
         """Tests error handling"""
         ConfigInfoShellExec(
             topConfigPath="/tmp/ab12s",  # noqa: S108
@@ -73,7 +73,7 @@ class ConfigDataSetExecTests(unittest.TestCase):
             log=sys.stdout,  # noqa: S108
         )  # noqa: S108
 
-    def testHostnameLookup(self):
+    def testHostnameLookup(self) -> None:
         """Tests locating by host name - no cache"""
         tcise = ConfigInfoShellExec(
             siteId="WWPDB_DEPLOY_TEST", hostName="testhost.test.com", verbose=True, cacheFlag=False, log=sys.stdout

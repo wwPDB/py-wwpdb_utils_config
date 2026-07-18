@@ -46,23 +46,23 @@ TOPDIR = os.path.dirname(HERE)
 
 
 class ConfigDataSetExecTests(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         pass
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         pass
 
-    def testCheckConfig(self):
+    def testCheckConfig(self) -> None:
         cidse = ConfigInfoDataSetExec()
         cidse.checkConfig()
         # Nothing to check here
 
-    def testPrintConfig(self):
+    def testPrintConfig(self) -> None:
         cidse = ConfigInfoDataSetExec()
         cidse.printConfig("WWPDB_DEPLOY_PRODUCTION_RU")
         # Nothing to check here
 
-    def testSetRemoveLocations(self):
+    def testSetRemoveLocations(self) -> None:
         cidse = ConfigInfoDataSetExec()
         tset = ["D_800002", "D_800003"]
         status = cidse.setLocations("WWPDB_DEPLOY_DUMMY_RU", tset)

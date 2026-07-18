@@ -21,6 +21,7 @@ import logging
 import sys
 import traceback
 from optparse import OptionParser  # pylint: disable=deprecated-module
+from typing import List, TextIO
 
 from wwpdb.utils.config.ConfigInfoDataSet import ConfigInfoDataSet
 
@@ -35,28 +36,28 @@ class ConfigInfoDataSetExec:
 
     """
 
-    def __init__(self, verbose=True, log=sys.stderr):
+    def __init__(self, verbose: bool = True, log: TextIO = sys.stderr) -> None:
         self.__lfh = log
         self.__verbose = verbose
 
-    def checkConfig(self):
+    def checkConfig(self) -> None:
         """Perform read check for the data set configuration file."""
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             d = cfds.getDataSetLocationDict()
             self.__lfh.write("Alternate site location dictionary length = %d\n" % len(d))
-            sD = {}
+            sD: dict[str, int] = {}
             for ky in d:
                 if d[ky] not in sD:
                     sD[d[ky]] = 0
                 sD[d[ky]] += 1
-            for ky, val in sD.values():
+            for ky, val in sD.items():
                 self.__lfh.write("  Site %-40r   count %8d\n" % (ky, val))
         except Exception as e:  # noqa: BLE001
             self.__lfh.write("checkConfig failing %r\n" % str(e))
             traceback.print_exc(file=self.__lfh)
 
-    def printConfig(self, siteId):
+    def printConfig(self, siteId: str) -> None:
         """Print the configuration options for the input site."""
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
@@ -71,7 +72,7 @@ class ConfigInfoDataSetExec:
             self.__lfh.write("printConfig failing for site %r - %r\n" % (siteId, str(e)))
             traceback.print_exc(file=self.__lfh)
 
-    def setLocations(self, siteId, dataSetIdList):
+    def setLocations(self, siteId: str, dataSetIdList: List[str]) -> bool:
         """Set the site location for the input data list."""
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
@@ -79,17 +80,19 @@ class ConfigInfoDataSetExec:
         except Exception as e:  # noqa: BLE001
             self.__lfh.write("setLocations failing for site %r - %r\n" % (siteId, str(e)))
             traceback.print_exc(file=self.__lfh)
+        return False
 
-    def removeDataSets(self, dataSetIdList):
+    def removeDataSets(self, dataSetIdList: List[str]) -> bool:
         try:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             return cfds.removeDataSets(dataSetIdList)
         except Exception as e:  # noqa: BLE001
             self.__lfh.write("removeDataSets failing %s\n" % str(e))
             traceback.print_exc(file=self.__lfh)
+        return False
 
 
-def main():  # pragma: no cover
+def main() -> None:  # pragma: no cover
     usage = """usage: %prog [options]
 
     Examples:

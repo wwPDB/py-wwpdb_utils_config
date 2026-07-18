@@ -18,6 +18,7 @@ __version__ = "V0.01"
 
 import logging
 import sys
+from typing import Dict, Optional, TextIO, Tuple, cast  # pylint: disable=unused-import
 
 from wwpdb.utils.config.ConfigInfo import ConfigInfo
 
@@ -31,13 +32,15 @@ class ConfigInfoGroupDataSet:
 
     """
 
-    def __init__(self, verbose=False, log=sys.stderr):  # noqa: ARG002 pylint: disable=unused-argument
+    def __init__(self, verbose: bool = False, log: TextIO = sys.stderr) -> None:  # noqa: ARG002 pylint: disable=unused-argument
         self.__verbose = verbose
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
-        self.__groupIdAssignments = self.__cI.get("SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY")
+        self.__groupIdAssignments = cast(
+            "Dict[str, tuple[int, int]]", self.__cI.get("SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY")
+        )
 
-    def getDefaultGroupIdRange(self, siteId):
+    def getDefaultGroupIdRange(self, siteId: str) -> Tuple[int, int]:
         """Return the default upper and lower group deposition data set identifier codes
         assigned to the input siteId.
 
@@ -53,11 +56,11 @@ class ConfigInfoGroupDataSet:
             GID_START, GID_STOP = (-1, -1)
         return (GID_START, GID_STOP)
 
-    def getDefaultSiteId(self, groupId):
+    def getDefaultSiteId(self, groupId: str) -> Optional[str]:
         """Get the default site assignment for the input group data set id."""
         return self.__getSiteIdForGroup(groupId)
 
-    def __getSiteIdForGroup(self, groupId):
+    def __getSiteIdForGroup(self, groupId: str) -> Optional[str]:
         """Return the siteId to which the input groupId is within the default
         code assignment range.
 

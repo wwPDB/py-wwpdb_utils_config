@@ -19,6 +19,7 @@ import os
 import platform
 import sys
 import unittest
+from typing import Any, Optional, TextIO
 
 try:
     from unittest.mock import patch
@@ -53,11 +54,11 @@ TOPDIR = os.path.dirname(HERE)
 class MyConfigInfo(ConfigInfo):
     """A class to setup tests for Messaging Communication"""
 
-    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
-        self._msgdbname = None
+    def __init__(self, siteId: Optional[str] = None, verbose: bool = True, log: TextIO = sys.stderr) -> None:
+        self._msgdbname: Optional[str] = None
         super(MyConfigInfo, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
-    def get(self, keyWord, default=None):
+    def get(self, keyWord: str, default: Any = None) -> Any:
         if keyWord == "SITE_MESSAGE_DB_NAME":
             val = self._msgdbname
         else:  # pragma: no cover
@@ -68,29 +69,29 @@ class MyConfigInfo(ConfigInfo):
 
 
 class StandardConfig(MyConfigInfo):
-    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+    def __init__(self, siteId: Optional[str] = None, verbose: bool = True, log: TextIO = sys.stderr) -> None:
         super(StandardConfig, self).__init__(siteId=siteId, verbose=verbose, log=log)
 
 
 class TestConfig(MyConfigInfo):
-    def __init__(self, siteId=None, verbose=True, log=sys.stderr):
+    def __init__(self, siteId: Optional[str] = None, verbose: bool = True, log: TextIO = sys.stderr) -> None:
         super(TestConfig, self).__init__(siteId=siteId, verbose=verbose, log=log)
         self._msgdbname = "WWPDB_MESSAGING"
 
 
 class ConfigInfoAppMessagingTests(unittest.TestCase):
     @staticmethod
-    def testInstantiate():
+    def testInstantiate() -> None:
         """Test if instantiation works"""
         ConfigInfoAppMessaging()
 
-    def testDefaultValues(self):
+    def testDefaultValues(self) -> None:
         """Test default values"""
         with patch("wwpdb.utils.config.ConfigInfoApp.ConfigInfo", side_effect=StandardConfig) as _mock_method:  # noqa: F841
             cim = ConfigInfoAppMessaging()
             self.assertFalse(cim.get_msgdb_support())
 
-    def testAlteredValues(self):
+    def testAlteredValues(self) -> None:
         """Test override values"""
         with patch("wwpdb.utils.config.ConfigInfoApp.ConfigInfo", side_effect=TestConfig) as _mock_method:  # noqa: F841
             cim = ConfigInfoAppMessaging()

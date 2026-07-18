@@ -45,13 +45,13 @@ TOPDIR = os.path.dirname(HERE)
 
 
 class ConfigInfoFileExecTests(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         pass
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         pass
 
-    def testConfigPath(self):
+    def testConfigPath(self) -> None:
         cif = ConfigInfoFileExec(mockTopPath=mockTopPath)
 
         status = cif.testConfigPath()
@@ -59,12 +59,12 @@ class ConfigInfoFileExecTests(unittest.TestCase):
         status = cif.testConfigPath("write")
         self.assertTrue(status, "testconfig write access")
 
-    def testPrintConfig(self):
+    def testPrintConfig(self) -> None:
         cif = ConfigInfoFileExec(mockTopPath=mockTopPath)
         # Test coverage
         cif.printConfig("rcsb-east", "WWPDB_DEPLOY_TEST")
 
-    def testWriteConfig(self):
+    def testWriteConfig(self) -> None:
         """Test writing config file"""
         subtestdir = os.path.join(TESTOUTPUT, "testconfig")
         testout = os.path.join(subtestdir, "site-config", "rcsb-east", "wwpdb_deploy_test", "ConfigInfoFileCache.json")
@@ -77,14 +77,14 @@ class ConfigInfoFileExecTests(unittest.TestCase):
             os.environ["TOP_WWPDB_SITE_CONFIG_DIR"] = os.path.join(subtestdir, "site-config")
             cif = ConfigInfoFileExec(mockTopPath=subtestdir)
             cif.writeConfigCache(siteLoc="rcsb-east", siteId="WWPDB_DEPLOY_TEST")
-        except Exception as e:  # noqa: BLE001 pragma: no cover
+        except Exception as e:  # noqa: BLE001 # pragma: no cover
             self.fail("Error testing writing config %s" % str(e))
 
         os.environ["TOP_WWPDB_SITE_CONFIG_DIR"] = saveconf
 
         self.assertTrue(os.path.exists(testout))
 
-    def testWriteLocationConfig(self):
+    def testWriteLocationConfig(self) -> None:
         """Test writing config file"""
         subtestdir = os.path.join(TESTOUTPUT, "testconfig")
         testout = os.path.join(subtestdir, "site-config", "rcsb-east", "wwpdb_deploy_test", "ConfigInfoFileCache.json")
@@ -97,7 +97,7 @@ class ConfigInfoFileExecTests(unittest.TestCase):
             os.environ["TOP_WWPDB_SITE_CONFIG_DIR"] = os.path.join(subtestdir, "site-config")
             cif = ConfigInfoFileExec(mockTopPath=subtestdir)
             cif.writeLocationConfigCache(siteLoc="rcsb-east")
-        except Exception as e:  # noqa: BLE001 pragma: no cover
+        except Exception as e:  # noqa: BLE001  # pragma: no cover
             self.fail("Error testing writing config %s" % str(e))
 
         os.environ["TOP_WWPDB_SITE_CONFIG_DIR"] = saveconf

@@ -22,6 +22,7 @@ import json
 import logging
 import os
 import os.path
+from typing import Optional
 
 from wwpdb.utils.config.ConfigInfoApp import ConfigInfoAppCommon
 
@@ -29,18 +30,21 @@ logger = logging.getLogger(__name__)
 
 
 class ProjectVersionInfo:
-    def __init__(self, siteId=None):
+    def __init__(self, siteId: Optional[str] = None) -> None:
         self.__cICommon = ConfigInfoAppCommon(siteId)
         self.__top_webapps_path = self.__cICommon.get_site_web_apps_top_path()
 
-    def getVersionFile(self):
+    def getVersionFile(self) -> str:
         """
         returns the version json file path
         :return str: version json file path
         """
+        if self.__top_webapps_path is None:
+            msg = "Site web apps top path not set in config info"
+            raise ValueError(msg)
         return os.path.join(self.__top_webapps_path, "version.json")
 
-    def getVersion(self):
+    def getVersion(self) -> str:
         """Returns version number of system or "unknown" """
 
         try:
@@ -48,7 +52,9 @@ class ProjectVersionInfo:
             if os.path.exists(file_name):
                 with open(file_name) as fp:
                     version_dict = json.load(fp)
-                return version_dict["Version"]
+                verstr = version_dict["Version"]
+                if isinstance(verstr, str):
+                    return verstr
             return "unknown"
         except Exception as e:
             logger.exception(e)

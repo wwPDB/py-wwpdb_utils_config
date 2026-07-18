@@ -16,9 +16,12 @@ __email__ = "peisach@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
+import io
 import os
 import platform
 import unittest
+
+# from unittest import mock
 from datetime import datetime
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -46,39 +49,53 @@ TOPDIR = os.path.dirname(HERE)
 
 
 class ConfigInfoFileTests(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         pass
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         pass
 
-    def testGetSiteId(self):
+    def testGetSiteId(self) -> None:
         self.assertEqual(getSiteId(), "WWPDB_DEPLOY_TEST")
+        # # Test fallback - with no environment set
+        # with mock.patch.dict(os.environ):
+        #     # Remove WWPDB_SITE_ID if exists
+        #     os.environ.pop("WWPDB_SITE_ID", None)
+        #     self.assertEqual(getSiteId(), "WWPDB_DEPLOY")
 
-    def testCache(self):
+    def testCache(self) -> None:
         cI = ConfigInfo()
         self.assertEqual(cI.get("VARTEST"), "Hello")
         self.assertEqual(cI.get("TESTVAR1"), "1")
         self.assertEqual(cI.get("TESTVAR2"), "2")
 
-    def testMock(self):
+    def testDump(self) -> None:
+        cI = ConfigInfo()
+        stream = io.StringIO()
+        cI.dump(stream)
+        stream.seek(0)
+        data = stream.readlines()
+        self.assertTrue(len(data) > 50, "Dump ConfigInfo too small")
+        stream.close()
+
+    def testMock(self) -> None:
         cI = ConfigInfo()
         self.assertEqual(cI.get("DEPLOY_PATH"), os.path.join(rwMockTopPath, "da_top"))
 
-    def testBuiltin(self):
+    def testBuiltin(self) -> None:
         """Tests if common built in definitions are set"""
         cI = ConfigInfo()
         self.assertIsNotNone(cI.get("PROJECT_VAL_REL_CUTOFF"))
         self.assertIsNone(cI.get("PROJECT_RANDOM"))
 
-    def _parseTime(self, timestr):
+    def _parseTime(self, timestr: str) -> datetime:
         weeknum = datetime.today().strftime("%U")  # noqa: DTZ002
         this_year = datetime.today().strftime("%G")  # noqa: DTZ002
         mytime = f"{this_year}:{weeknum}:{timestr}"
         time_t = datetime.strptime(mytime, "%Y:%U:%a:%H:%M:%S")  # noqa: DTZ007
         return time_t
 
-    def testParseCutoff(self):
+    def testParseCutoff(self) -> None:
         """Tests if common built in definitions are set"""
         cI = ConfigInfo()
         val = cI.get("PROJECT_VAL_REL_CUTOFF")
