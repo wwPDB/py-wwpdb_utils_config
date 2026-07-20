@@ -191,6 +191,9 @@
 # 26-May-2023 zf   add 'xml-check-report' for xml checking report
 # 26-Aug-2024 zf   add 'pcm-missing-data' content type and 'csv' format
 # 19-Dec-2024 my   add 'nmrif' content type, NMRIF/NMR-STAR file containing NMR DepUI metadata (DAOTHER-8905)
+# 06-Jul-2026 zf   add 'metal-containing-data' content type for metal containing residue information
+# 06-Jul-2026 zf   add 'missing-metal-coordination-data' content type for missing metal coordination information in CCD
+# 06-Jul-2026 zf   add 'findgeo-annotation' and 'metalcoord-annotation' content type for metal coordination annotation
 ##
 """
 Container for general and site-specific configuration data.
@@ -420,6 +423,10 @@ class ConfigInfoData:
         "manifest-session-bundle": (["json"], "manifest-session-bundle"),
         "pcm-missing-data": (["csv"], "pcm-missing-data"),
         "deposit-to-archive-wfcfg": (["json"], "deposit-to-archive-wfcfg"),
+        "metal-containing-data": (["txt"], "metal-containing-data"),
+        "missing-metal-coordination-data": (["csv"], "missing-metal-coordination-data"),
+        "findgeo-annotation": (["json"], "findgeo-annotation"),
+        "metalcoord-annotation": (["json"], "metalcoord-annotation"),
         "any": (["any"], "any"),
     }
     """Base dictionary of supported file formats for each recognized content type.
