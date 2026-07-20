@@ -744,8 +744,7 @@ class ConfigInfoData:
                     else:
                         co_name = "<unknown>"
                     self.__lfh.write(
-                        "%s.%s failed importing cache for site %s\n"
-                        % (self.__class__.__name__, co_name, self.__siteId)
+                        "%s.%s failed importing cache for site %s\n" % (self.__class__.__name__, co_name, self.__siteId)
                     )  # noqa: SLF001
                     traceback.print_exc(file=self.__lfh)
                 readCache = False
@@ -760,8 +759,7 @@ class ConfigInfoData:
                 else:
                     co_name = "<unknown>"
                 self.__lfh.write(
-                    "%s.%s No configuration for site %s\n"
-                    % (self.__class__.__name__, co_name, self.__siteId)
+                    "%s.%s No configuration for site %s\n" % (self.__class__.__name__, co_name, self.__siteId)
                 )  # noqa: SLF001
                 # self.__setup(self.__siteId)
                 # if self.__verbose:
@@ -773,10 +771,7 @@ class ConfigInfoData:
                 co_name = frame.f_code.co_name
             else:
                 co_name = "<unknown>"
-            self.__lfh.write(
-                "%s.%s No configuration for site %s\n"
-                % (self.__class__.__name__, co_name, self.__siteId)
-            )  # noqa: SLF001
+            self.__lfh.write("%s.%s No configuration for site %s\n" % (self.__class__.__name__, co_name, self.__siteId))  # noqa: SLF001
             # self.__setup(self.__siteId)
             # if self.__verbose:
             #    self.__lfh.write("%s.%s Imported fallback configuration dictionary length %d for site %s\n" %
