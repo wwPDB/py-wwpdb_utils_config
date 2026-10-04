@@ -21,7 +21,7 @@ import logging
 import sys
 import traceback
 from optparse import OptionParser  # pylint: disable=deprecated-module
-from typing import List, TextIO
+from typing import Dict, List, TextIO
 
 from wwpdb.utils.config.ConfigInfoDataSet import ConfigInfoDataSet
 
@@ -46,7 +46,7 @@ class ConfigInfoDataSetExec:
             cfds = ConfigInfoDataSet(self.__verbose, self.__lfh)
             d = cfds.getDataSetLocationDict()
             self.__lfh.write("Alternate site location dictionary length = %d\n" % len(d))
-            sD: dict[str, int] = {}
+            sD: Dict[str, int] = {}
             for ky in d:
                 if d[ky] not in sD:
                     sD[d[ky]] = 0

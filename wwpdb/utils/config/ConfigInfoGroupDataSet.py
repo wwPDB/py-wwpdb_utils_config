@@ -37,7 +37,7 @@ class ConfigInfoGroupDataSet:
         self.__debug = True
         self.__cI = ConfigInfo(siteId=None, verbose=self.__verbose)
         self.__groupIdAssignments = cast(
-            "Dict[str, tuple[int, int]]", self.__cI.get("SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY")
+            "Dict[str, Tuple[int, int]]", self.__cI.get("SITE_GROUP_DATASET_ID_ASSIGNMENT_DICTIONARY")
         )
 
     def getDefaultGroupIdRange(self, siteId: str) -> Tuple[int, int]:
