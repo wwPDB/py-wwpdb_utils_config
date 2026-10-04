@@ -26,9 +26,11 @@ __version__ = "V0.01"
 
 import os
 import sys
-from typing import Any, Dict, Optional, TextIO
+from typing import Any, Dict, Optional, TextIO, TypeVar, Union, overload
 
 from wwpdb.utils.config.ConfigInfoData import ConfigInfoData
+
+_T = TypeVar("_T")
 
 
 def getSiteId(defaultSiteId: Optional[str] = None) -> str:
@@ -74,7 +76,17 @@ class ConfigInfo:
         self.__sI = ConfigInfoData(siteId=self.__siteId, verbose=self.__verbose)
         self.__D = self.__sI.getConfigDictionary()
 
-    def get(self, keyWord: str, default: Any = None) -> Any:
+    # fmt: off
+    @overload
+    def get(self, keyWord: str) -> Any:
+        ...
+
+    @overload
+    def get(self, keyWord: str, default: _T) -> Union[Any, _T]:
+        ...
+    # fmt: on
+
+    def get(self, keyWord: str, default: Optional[_T] = None) -> Union[Any, Optional[_T]]:
         """Returns the site-specific value assigned to the input keyword or the default value -"""
         if keyWord is not None and keyWord in self.__D:
             return self.__D[keyWord]

@@ -20,11 +20,13 @@ import logging
 import os.path
 import sys
 import warnings
-from typing import Any, Dict, Optional, TextIO, cast
+from typing import Any, Dict, Optional, TextIO, TypeVar, Union, cast, overload
 
 from wwpdb.utils.config.ConfigInfo import ConfigInfo
 
 logger: logging.Logger = logging.getLogger(__name__)
+
+_T = TypeVar("_T")
 
 
 class NoReferenceError(ValueError):
@@ -91,7 +93,17 @@ class ConfigInfoAppBase:
             val = default
         return val
 
-    def _getValue(self, key: str, default: Any = None) -> Any:  # XXXX str?
+    # fmt: off
+    @overload
+    def _getValue(self, key: str) -> Any:
+        ...
+
+    @overload
+    def _getValue(self, key: str, default: _T) -> Union[Any, _T]:
+        ...
+    # fmt: on
+
+    def _getValue(self, key: str, default: Optional[_T] = None) -> Union[Any, Optional[_T]]:
         val = self._cI.get(key)
         if val is None:
             val = default

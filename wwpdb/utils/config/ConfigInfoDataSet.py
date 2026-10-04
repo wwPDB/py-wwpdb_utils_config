@@ -51,7 +51,7 @@ class ConfigInfoDataSet:
         # Default data set id range assignments
         self.__depIdAssignments = self.__cI.get("SITE_DATASET_ID_ASSIGNMENT_DICTIONARY")
         self.__depTestIdAssignments = self.__cI.get("SITE_DATASET_TEST_ID_ASSIGNMENT_DICTIONARY")
-        self.__siteBackupD = self.__cI.get("SITE_BACKUP_DICT", default={})
+        self.__siteBackupD: Dict[str, List[str]] = self.__cI.get("SITE_BACKUP_DICT", default={})
         self.__dsLocD: Optional[Dict[str, str]] = None
         self.__lockDirPath = self.__cI.get("SITE_SERVICE_REGISTRATION_LOCKDIR_PATH", "/tmp")  # noqa: S108
         lockutils.set_defaults(self.__lockDirPath)

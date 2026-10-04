@@ -107,7 +107,6 @@ class ConfigInfoShellExec:
         inpSiteLoc: Optional[str],
         inpSiteId: Optional[str],
     ) -> Tuple[Optional[str], Optional[str]]:
-        """ """
         siteLoc = None
         siteId = None
         if topConfigPath is None:
